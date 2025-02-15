@@ -5,6 +5,8 @@ import App from "./comps/App"
 import ForumCreateForm from "./comps/ForumCreateForm"
 import ThreadletAPI from "./api/api"
 import { Routes } from "discord-api-types/v10"
+import PostCreateForm from "./comps/PostCreateForm"
+import ForumView from "./comps/ForumView"
 
 // Will eventually store the authenticated user's access_token
 let auth: Awaited<ReturnType<typeof discordSdk.commands.authenticate>>
@@ -17,7 +19,9 @@ const forums = await api.getForums()
 
 export const app = new App(forums)
 export const views = {
-	forumCreateForm: new ForumCreateForm()
+	forumCreateForm: new ForumCreateForm(),
+	postCreateForm:  new PostCreateForm(),
+	forumView: new ForumView()
 } as const
 
 setupDiscordSdk().then(async () => {

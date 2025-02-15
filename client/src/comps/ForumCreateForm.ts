@@ -1,7 +1,7 @@
-import { api } from "../main";
-import Form from "./Form";
-import FormButton from "./FormButton";
-import FormTextInput from "./FormTextInput";
+import { api } from "../main"
+import Form from "./Form"
+import FormButton from "./FormButton"
+import FormTextInput from "./FormTextInput"
 
 export default class ForumCreateForm extends Form {
 
@@ -11,11 +11,15 @@ export default class ForumCreateForm extends Form {
 		super("forum-create-view", "Create Forum")
 		this.element.classList.add("view")
 
-		this.nameInput = new FormTextInput("forum-name", "Forum Name", 0, 128)
+		this.nameInput = new FormTextInput("forum-name", "Forum Name", 0, 64)
 		const submitButton = new FormButton("form-submit", "Create", () => submit(this))
 
 		this.body.appendChild(this.nameInput.element)
 		this.body.appendChild(submitButton.element)
+	}
+
+	reset() {
+		this.nameInput.clear()
 	}
 
 }

@@ -17,6 +17,7 @@ const port = config.port
 const dbSetup = await fs.readFile("./setup_db.sql", { encoding: "utf-8" })
 const db = new Database("threadlet.db")
 db.pragma("journal_mode = WAL")
+db.pragma("foreign_keys = ON")
 db.exec(dbSetup)
 
 const smt = db.prepare("SELECT * FROM forums") // debug
@@ -73,6 +74,50 @@ app.post("/api/forums", (req, res) => {
 		res.status(200).send(forum)
 	} catch (e) {
 		console.error("[ERR] could not create forum:", e)
+		res.sendStatus(500)
+	}
+})
+
+app.get("/api/forums/:id", (req, res) => {
+	const forumId = req.params.id
+
+	try {
+		const forum = getForum.get(forumId)
+		res.status(200).send(forum)
+	} catch (e) {
+		console.error("[ERR] could not get forums:", e)
+		res.sendStatus(500)
+	}
+})
+
+const getPosts = db.prepare(`SELECT * FROM posts WHERE forum_id = ?`)
+app.get("/api/forums/:id/posts", (req, res) => {
+	const data = req.body
+	const forumId = req.params.id
+
+	try {
+		const posts = getPosts.all(forumId)
+		res.status(200).send(posts)
+	} catch (e) {
+		console.error("[ERR] could not get posts:", e)
+		res.sendStatus(500)
+	}
+})
+
+const postPost = db.prepare(`INSERT INTO posts (id, forum_id, name, description) VALUES (?, ?, ?, ?)`)
+const getPost  = db.prepare(`SELECT * FROM posts WHERE id = ?`)
+app.post("/api/forums/:id/posts", (req, res) => {
+	const data = req.body
+	const forumId = req.params.id
+	console.log("New post:", forumId, data)
+
+	try {
+		const id = generateId()
+		postPost.run(id, forumId, data.name, data.description)
+		const post = getPost.get(id)
+		res.status(200).send(post)
+	} catch (e) {
+		console.error("[ERR] could not create post:", e)
 		res.sendStatus(500)
 	}
 })

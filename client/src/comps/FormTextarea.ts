@@ -1,12 +1,11 @@
 import Component from "./Component"
 
-export default class FormTextInput extends Component {
+export default class FormTextarea extends Component {
 
-	constructor(id: string, placeholder: string, min: number = 0, max: number = 16) {
-		super("input", id, "form-input form-text-input")
+	constructor(id: string, placeholder: string, min: number = 0, max: number = 256) {
+		super("textarea", id, "form-input form-textarea")
 
 		const elem = this.element as HTMLInputElement
-		elem.type = "text"
 		elem.placeholder = placeholder
 		elem.minLength = min
 		elem.maxLength = max

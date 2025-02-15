@@ -1,3 +1,4 @@
+import { Forum } from "../api/types";
 import { app, views } from "../main";
 import Component from "./Component";
 import FormButton from "./FormButton";
@@ -5,13 +6,13 @@ import ForumTab from "./ForumTab";
 
 export default class ChannelList extends Component {
 
-	constructor(forums: Array<any>) {
+	constructor(forums: Array<Forum>) {
 		super("div", "channels")
 
-		this.update(forums)
+		this.reset(forums)
 	}
 
-	update(forums: Array<any>) {
+	reset(forums: Array<Forum>) {
 		for (let child of Array.from(this.element.children)) {
 			child.remove()
 		}
@@ -20,7 +21,9 @@ export default class ChannelList extends Component {
 		this.element.appendChild(createButton.element)
 		
 		for (let forum of forums) {
-			this.element.appendChild(new ForumTab(forum).element)
+			const tab = new ForumTab(forum)
+			tab.element.addEventListener("click", () => app.renderView(views.forumView, forum))
+			this.element.appendChild(tab.element)
 		}
 	}
 
