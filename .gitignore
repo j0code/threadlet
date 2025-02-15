@@ -1,0 +1,7 @@
+dist
+config.yson
+.env
+node_modules
+threadlet.db
+threadlet.db-shm
+threadlet.db-wal
