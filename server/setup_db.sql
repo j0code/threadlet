@@ -16,12 +16,12 @@ CREATE TABLE IF NOT EXISTS forums (
 );
 
 CREATE TABLE IF NOT EXISTS posts (
-	id          TEXT(16)   NOT NULL PRIMARY KEY,
-	forum_id    TEXT(16)   NOT NULL REFERENCES forums(id),
-	poster_id   TEXT(20)   NOT NULL REFERENCES users(id), -- snowflake
-	name        TEXT(128)  NOT NULL,
-	description TEXT(4096) NOT NULL,
-	created_at  DATE       NOT NULL DEFAULT CURRENT_TIMESTAMP
+	id          TEXT(16)    NOT NULL PRIMARY KEY,
+	forum_id    TEXT(16)    NOT NULL REFERENCES forums(id),
+	poster_id   TEXT(20)    NOT NULL REFERENCES users(id), -- snowflake
+	name        TEXT(128)   NOT NULL,
+	description TEXT(16384) NOT NULL,
+	created_at  DATE        NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS sessions (
