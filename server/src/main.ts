@@ -23,16 +23,25 @@ db.pragma("journal_mode = WAL")
 db.pragma("foreign_keys = ON")
 db.exec(dbSetup)
 
-const smt = db.prepare("SELECT * FROM forums") // debug
-console.log(smt.all()) // debug
+const dbStmt = {
+	createUser:    db.prepare(`INSERT OR IGNORE INTO users (id) VALUES (?)`),
+	getSession:    db.prepare(`SELECT * FROM sessions WHERE token = ? AND expires_at > datetime('now')`),
+	createSession: db.prepare(`INSERT INTO sessions (id, user_id, token) VALUES (?, ?, ?)`),
+	getForums:     db.prepare(`SELECT * FROM forums`),
+	getForum:      db.prepare(`SELECT * FROM forums WHERE id = ?`),
+	createForum:   db.prepare(`INSERT INTO forums (id, owner_id, name) VALUES (?, ?, ?)`),
+	getPosts:      db.prepare(`SELECT * FROM posts WHERE forum_id = ?`),
+	getPost:       db.prepare(`SELECT * FROM posts WHERE id = ?`),
+	createPost:    db.prepare(`INSERT INTO posts (id, forum_id, poster_id, name, description) VALUES (?, ?, ?, ?, ?)`)
+} as const
+
+console.log(dbStmt.getForums.all()) // debug
 
 const app = express()
 
 // Allow express to parse JSON bodies
 app.use(express.json())
 
-const createUser    = db.prepare(`INSERT OR IGNORE INTO users (id) VALUES (?)`)
-const createSession = db.prepare(`INSERT INTO sessions (id, user_id, token) VALUES (?, ?, ?)`)
 app.post("/api/token", async (req, res) => {
 	// Exchange the code for an access_token
 	const response = await fetch(`https://discord.com/api/oauth2/token`, {
@@ -60,8 +69,8 @@ app.post("/api/token", async (req, res) => {
 
 	// Create or update user in db + create session
 	try {
-		createUser.run(user.id)
-		createSession.run(generateId(), user.id, access_token)
+		dbStmt.createUser.run(user.id)
+		dbStmt.createSession.run(generateId(), user.id, access_token)
 	} catch (e) {
 		console.error("[ERR] could not create session:", e)
 		res.status(500).send({ status: 500, detail: "session creation failed" })
@@ -72,10 +81,9 @@ app.post("/api/token", async (req, res) => {
 	res.send({access_token})
 })
 
-const getForums = db.prepare(`SELECT * FROM forums`)
 app.get("/api/forums", (req, res) => {
 	try {
-		const forums = getForums.all()
+		const forums = dbStmt.getForums.all()
 		res.status(200).send(forums)
 	} catch (e) {
 		console.error("[ERR] could not get forums:", e)
@@ -83,8 +91,6 @@ app.get("/api/forums", (req, res) => {
 	}
 })
 
-const postForum = db.prepare(`INSERT INTO forums (id, owner_id, name) VALUES (?, ?, ?)`)
-const getForum  = db.prepare(`SELECT * FROM forums WHERE id = ?`)
 app.post("/api/forums", async (req, res) => {
 	const session = await checkAuth(req.headers.authorization)
 	if (!session) {
@@ -103,9 +109,9 @@ app.post("/api/forums", async (req, res) => {
 
 	try {
 		const id = generateId()
-		postForum.run(id, user.id, data.name)
-		const forum = getForum.get(id)
-		res.status(200).send(forum)
+		dbStmt.createForum.run(id, user.id, data.name)
+		const forum = dbStmt.getForum.get(id)
+		res.status(201).send(forum)
 	} catch (e) {
 		console.error("[ERR] could not create forum:", e)
 		res.status(500).send({ status: 500, detail: "forum creation failed" })
@@ -116,7 +122,7 @@ app.get("/api/forums/:id", (req, res) => {
 	const forumId = req.params.id
 
 	try {
-		const forum = getForum.get(forumId)
+		const forum = dbStmt.getForum.get(forumId)
 		res.status(200).send(forum)
 	} catch (e) {
 		console.error("[ERR] could not get forum:", e)
@@ -124,12 +130,11 @@ app.get("/api/forums/:id", (req, res) => {
 	}
 })
 
-const getPosts = db.prepare(`SELECT * FROM posts WHERE forum_id = ?`)
 app.get("/api/forums/:id/posts", (req, res) => {
 	const forumId = req.params.id
 
 	try {
-		const posts = getPosts.all(forumId)
+		const posts = dbStmt.getPosts.all(forumId)
 		res.status(200).send(posts)
 	} catch (e) {
 		console.error("[ERR] could not get posts:", e)
@@ -137,8 +142,6 @@ app.get("/api/forums/:id/posts", (req, res) => {
 	}
 })
 
-const postPost = db.prepare(`INSERT INTO posts (id, forum_id, poster_id, name, description) VALUES (?, ?, ?, ?, ?)`)
-const getPost  = db.prepare(`SELECT * FROM posts WHERE id = ?`)
 app.post("/api/forums/:id/posts", async (req, res) => {
 	const session = await checkAuth(req.headers.authorization)
 	if (!session) {
@@ -157,7 +160,7 @@ app.post("/api/forums/:id/posts", async (req, res) => {
 	console.log("New post:", forumId, data)
 
 	try {
-		getForum.get(forumId)
+		dbStmt.getForum.get(forumId)
 	} catch (e) {
 		console.error("[ERR] could not get forum:", e)
 		res.status(404).send({ status: 404, detail: "forum not found" })
@@ -165,9 +168,9 @@ app.post("/api/forums/:id/posts", async (req, res) => {
 
 	try {
 		const id = generateId()
-		postPost.run(id, forumId, user.id, data.name, data.description)
-		const post = getPost.get(id)
-		res.status(200).send(post)
+		dbStmt.createPost.run(id, forumId, user.id, data.name, data.description)
+		const post = dbStmt.getPost.get(id)
+		res.status(201).send(post)
 	} catch (e) {
 		console.error("[ERR] could not create post:", e)
 		res.status(500).send({ status: 500, detail: "post creation failed" })
@@ -187,12 +190,11 @@ function randomHex(length: number) {
 	crypto.getRandomValues(buffer)
 
 	let id: string[] = []
-	buffer.forEach(value => id.push(value.toString(16)))
+	buffer.forEach(value => id.push(value.toString(16).padStart(2, "0")))
 	
 	return id.join("")
 }
 
-const getSession = db.prepare(`SELECT * FROM sessions WHERE token = ? AND expires_at > datetime('now')`)
 async function checkAuth(authHeader: string | undefined): Promise<Session | null> {
 	if (!authHeader) return null
 
@@ -200,7 +202,7 @@ async function checkAuth(authHeader: string | undefined): Promise<Session | null
 	if (parts.length != 2 || parts[0] != "Bearer") return null
 
 	try {
-		const session = await getSession.get(parts[1])
+		const session = await dbStmt.getSession.get(parts[1])
 		// expiration is checked by sql query
 
 		return session as Session // TODO: proper parsing
