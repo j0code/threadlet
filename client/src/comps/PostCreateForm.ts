@@ -1,5 +1,5 @@
 import { Forum } from "../api/types"
-import { api } from "../main"
+import { api, app, views } from "../main"
 import Form from "./Form"
 import FormButton from "./FormButton"
 import FormTextarea from "./FormTextarea"
@@ -32,6 +32,7 @@ export default class PostCreateForm extends Form {
 	reset(forum: Forum) {
 		this.titleElement.textContent = `(${forum.name}) Create Post`
 		this.nameInput.clear()
+		this.descriptionInput.clear()
 
 		this.currentForumId = forum.id
 	}
@@ -46,4 +47,6 @@ async function submit(forumId: string, form: PostCreateForm) {
 	console.log("Create Post:", name)
 	const post = await api.postPost(forumId, { name, description })
 	console.log("Done. Post:", post)
+
+	app.renderView(views.postView, post)
 }

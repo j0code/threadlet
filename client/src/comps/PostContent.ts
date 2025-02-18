@@ -1,0 +1,25 @@
+import { Post } from "../api/types"
+import { markdownToHtml } from "../md"
+import Component from "./Component"
+
+export default class PostContent extends Component {
+
+	readonly currentPostId: string | undefined
+
+	readonly descriptionElement: HTMLDivElement
+
+	constructor() {
+		super("div", "post-content")
+
+		this.descriptionElement = document.createElement("div")
+		this.descriptionElement.className = "post-description"
+
+		this.element.appendChild(this.descriptionElement)
+	}
+
+	reset(post: Post) {
+		if (post.id == this.currentPostId) return
+		this.descriptionElement.innerHTML = markdownToHtml(post.description)
+	}
+
+}

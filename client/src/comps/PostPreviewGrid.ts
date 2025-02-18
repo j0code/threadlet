@@ -10,11 +10,11 @@ export default class PostPreviewGrid extends Component {
 	}
 
 	async reset(forum: Forum) {
+		const posts = await api.getPosts(forum.id)
+
 		for (let child of Array.from(this.element.children)) {
 			child.remove()
 		}
-
-		const posts = await api.getPosts(forum.id)
 		
 		for (let post of posts) {
 			const preview = new PostPreview(post)

@@ -75,6 +75,18 @@ body {
 	background-color: var(--background-primary);
 }
 
+#view-head {
+	display: flex;
+	margin: 30px 20px;
+	justify-content: center;
+}
+
+.view-title {
+	text-align: center;
+	font-weight: bold;
+	font-size: 24px;
+}
+
 .form {
 	box-sizing: border-box;
 }
@@ -152,6 +164,7 @@ body {
 	border-radius: 5px;
 	padding: 10px;
 	gap: 10px;
+	overflow: hidden;
 }
 
 .post-preview-title {
@@ -160,6 +173,7 @@ body {
 
 .post-preview-description {
 	flex: 1 0 auto;
+	overflow: hidden;
 }
 
 @media (prefers-color-scheme: light) {

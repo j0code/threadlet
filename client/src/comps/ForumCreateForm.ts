@@ -1,4 +1,4 @@
-import { api } from "../main"
+import { api, app, views } from "../main"
 import Form from "./Form"
 import FormButton from "./FormButton"
 import FormTextInput from "./FormTextInput"
@@ -31,4 +31,6 @@ async function submit(form: ForumCreateForm) {
 	console.log("Create Forum:", name)
 	const forum = await api.postForum({ name })
 	console.log("Done. Forum:", forum)
+
+	app.renderView(views.forumView, forum)
 }

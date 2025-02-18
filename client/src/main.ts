@@ -1,12 +1,15 @@
 import { DiscordSDK } from "@discord/embedded-app-sdk"
 import { REST } from '@discordjs/rest'
 import "../style.css"
+import "../md.css"
+import "highlight.js/styles/github-dark.min.css";
 import App from "./comps/App"
 import ForumCreateForm from "./comps/ForumCreateForm"
 import ThreadletAPI from "./api/api"
 import { Routes } from "discord-api-types/v10"
 import PostCreateForm from "./comps/PostCreateForm"
 import ForumView from "./comps/ForumView"
+import PostView from "./comps/PostView"
 
 // Will eventually store the authenticated user's access_token
 let auth: Awaited<ReturnType<typeof discordSdk.commands.authenticate>>
@@ -19,7 +22,8 @@ export let app: App
 export const views = {
 	forumCreateForm: new ForumCreateForm(),
 	postCreateForm:  new PostCreateForm(),
-	forumView: new ForumView()
+	forumView: new ForumView(),
+	postView: new PostView(),
 } as const
 
 setupDiscordSdk().then(async () => {

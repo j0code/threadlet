@@ -3,22 +3,20 @@ import { api, app, views } from "../main"
 import FormButton from "./FormButton"
 import PostPreviewGrid from "./PostPreviewGrid"
 import View from "./View"
+import ViewHead from "./ViewHead"
 
 export default class ForumView extends View {
 
 	private currentForumId?: string
 
-	public readonly titleElement: HTMLSpanElement
+	public readonly head: ViewHead
 	public readonly previews: PostPreviewGrid
 
 	constructor() {
-		super("div", "forum-view")
-		this.element.classList.add("view")
+		super("div", "forum-view", "view")
 
-		this.titleElement = document.createElement("span")
-		this.titleElement.className = "forum-name"
-		this.titleElement.textContent = "POST"
-		this.element.appendChild(this.titleElement)
+		this.head = new ViewHead("FORUM")
+		this.element.appendChild(this.head.element)
 
 		const createPostBtn = new FormButton("create-post-button", "(+) New Post", async () => {
 			if (this.currentForumId) {
@@ -35,9 +33,7 @@ export default class ForumView extends View {
 	}
 
 	async reset(forum: Forum) {
-		if (this.currentForumId == forum.id) return
-		this.titleElement.textContent = forum.name
-
+		this.head.reset(forum.name)
 		this.previews.reset(forum)
 
 		this.currentForumId = forum.id
