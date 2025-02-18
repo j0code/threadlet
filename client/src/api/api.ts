@@ -1,45 +1,68 @@
+import ThreadletAPIError from "./ThreadletAPIError"
 import { type Forum, type Post } from "./types"
 
 const API_ROOT = "/.proxy/api"
 
 export default class ThreadletAPI {
 
-	constructor() {
+	private readonly access_token: string
 
+	constructor(access_token: string) {
+		this.access_token = access_token
 	}
 
 	getForums(): Promise<Forum[]> {
-		return get("/forums") // TODO: proper parsing
+		return get("/forums", this.access_token) // TODO: proper parsing
 	}
 
 	postForum(forum: Omit<Forum, "id" | "created_at">): Promise<Forum> {
-		return post("/forums", forum) // TODO: proper parsing
+		return post("/forums", this.access_token, forum) // TODO: proper parsing
 	}
 
 	getForum(forumId: string): Promise<Forum[]> {
-		return get(`/forums/${forumId}`) // TODO: proper parsing
+		return get(`/forums/${forumId}`, this.access_token) // TODO: proper parsing
 	}
 
 	getPosts(forumId: string): Promise<Post[]> {
-		return get(`/forums/${forumId}/posts`) // TODO: proper parsing
+		return get(`/forums/${forumId}/posts`, this.access_token) // TODO: proper parsing
 	}
 
 	postPost(forumId: string, _post: Omit<Post, "id" | "created_at" | "forum_id">): Promise<Post> {
-		return post(`/forums/${forumId}/posts`, _post) // TODO: proper parsing
+		return post(`/forums/${forumId}/posts`, this.access_token, _post) // TODO: proper parsing
 	}
 
 }
 
-function get(route: string) {
-	return fetch(`${API_ROOT}${route}`).then(res => res.json())
+function get(route: string, token: string) {
+	return fetch(`${API_ROOT}${route}`, {
+		method: "GET",
+		headers: {
+			"Authorization": `Bearer ${token}`
+		}
+	})
+	.then(async res => ({ res, data: await res.json()}))
+	.then(({res, data}) => {
+		if (!res.ok) {
+			throw new ThreadletAPIError(route, res.status, res.statusText, "GET", null, data)
+		}
+		return data
+	})
 }
 
-function post(route: string, data: any) {
+function post(route: string, token: string, requestBody: any) {
 	return fetch(`${API_ROOT}${route}`, {
 		method: "POST",
 		headers: {
-			"Content-Type": "application/json"
+			"Content-Type": "application/json",
+			"Authorization": `Bearer ${token}`
 		},
-		body: JSON.stringify(data)
-	}).then(res => res.json())
+		body: JSON.stringify(requestBody)
+	}).then(async res => ({ res, data: await res.json()}))
+	.then(({res, data}) => {
+		if (!res.ok) {
+			console.log(res, data)
+			throw new ThreadletAPIError(route, res.status, res.statusText, "POST", requestBody, data)
+		}
+		return data
+	})
 }

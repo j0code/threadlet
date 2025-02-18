@@ -2,6 +2,9 @@ import YSON from "@j0code/yson"
 import express from "express"
 import Database from "better-sqlite3"
 import fs from "fs/promises"
+import { REST } from "@discordjs/rest"
+import { APIUser, Routes } from "discord-api-types/v10"
+import { Session } from "./types.js"
 
 type Config = {
 	port: number,
@@ -28,6 +31,8 @@ const app = express()
 // Allow express to parse JSON bodies
 app.use(express.json())
 
+const createUser    = db.prepare(`INSERT OR IGNORE INTO users (id) VALUES (?)`)
+const createSession = db.prepare(`INSERT INTO sessions (id, user_id, token) VALUES (?, ?, ?)`)
 app.post("/api/token", async (req, res) => {
 	// Exchange the code for an access_token
 	const response = await fetch(`https://discord.com/api/oauth2/token`, {
@@ -46,6 +51,23 @@ app.post("/api/token", async (req, res) => {
 	// Retrieve the access_token from the response
 	const { access_token } = await response.json()
 
+	// Fetch user
+	const user = await fetchDiscordUser(access_token)
+	if (!user) {
+		res.status(500).send({ status: 500, detail: "Discord user not found" })
+		return
+	}
+
+	// Create or update user in db + create session
+	try {
+		createUser.run(user.id)
+		createSession.run(generateId(), user.id, access_token)
+	} catch (e) {
+		console.error("[ERR] could not create session:", e)
+		res.status(500).send({ status: 500, detail: "session creation failed" })
+		return
+	}
+
 	// Return the access_token to our client as { access_token: "..."}
 	res.send({access_token})
 })
@@ -57,24 +79,36 @@ app.get("/api/forums", (req, res) => {
 		res.status(200).send(forums)
 	} catch (e) {
 		console.error("[ERR] could not get forums:", e)
-		res.sendStatus(500)
+		res.status(500).send({ status: 500, detail: "forums query failed" })
 	}
 })
 
-const postForum = db.prepare(`INSERT INTO forums (id, name) VALUES (?, ?)`)
+const postForum = db.prepare(`INSERT INTO forums (id, owner_id, name) VALUES (?, ?, ?)`)
 const getForum  = db.prepare(`SELECT * FROM forums WHERE id = ?`)
-app.post("/api/forums", (req, res) => {
+app.post("/api/forums", async (req, res) => {
+	const session = await checkAuth(req.headers.authorization)
+	if (!session) {
+		res.status(401).send({ status: 401, detail: "session invalid or expired" })
+		return
+	}
+
+	const user = await fetchDiscordUser(session.token)
+	if (!user) {
+		res.status(500).send({ status: 500, detail: "Discord user not found" })
+		return
+	}
+
 	const data = req.body
-	console.log("New forum:", data)
+	console.log("New forum:", user.username, data)
 
 	try {
 		const id = generateId()
-		postForum.run(id, data.name)
+		postForum.run(id, user.id, data.name)
 		const forum = getForum.get(id)
 		res.status(200).send(forum)
 	} catch (e) {
 		console.error("[ERR] could not create forum:", e)
-		res.sendStatus(500)
+		res.status(500).send({ status: 500, detail: "forum creation failed" })
 	}
 })
 
@@ -85,14 +119,13 @@ app.get("/api/forums/:id", (req, res) => {
 		const forum = getForum.get(forumId)
 		res.status(200).send(forum)
 	} catch (e) {
-		console.error("[ERR] could not get forums:", e)
-		res.sendStatus(500)
+		console.error("[ERR] could not get forum:", e)
+		res.status(500).send({ status: 500, detail: "forum query failed" })
 	}
 })
 
 const getPosts = db.prepare(`SELECT * FROM posts WHERE forum_id = ?`)
 app.get("/api/forums/:id/posts", (req, res) => {
-	const data = req.body
 	const forumId = req.params.id
 
 	try {
@@ -100,25 +133,44 @@ app.get("/api/forums/:id/posts", (req, res) => {
 		res.status(200).send(posts)
 	} catch (e) {
 		console.error("[ERR] could not get posts:", e)
-		res.sendStatus(500)
+		res.status(500).send({ status: 500, detail: "posts query failed" })
 	}
 })
 
-const postPost = db.prepare(`INSERT INTO posts (id, forum_id, name, description) VALUES (?, ?, ?, ?)`)
+const postPost = db.prepare(`INSERT INTO posts (id, forum_id, poster_id, name, description) VALUES (?, ?, ?, ?, ?)`)
 const getPost  = db.prepare(`SELECT * FROM posts WHERE id = ?`)
-app.post("/api/forums/:id/posts", (req, res) => {
+app.post("/api/forums/:id/posts", async (req, res) => {
+	const session = await checkAuth(req.headers.authorization)
+	if (!session) {
+		res.status(401).send({ status: 401, detail: "session invalid or expired" })
+		return
+	}
+
+	const user = await fetchDiscordUser(session.token)
+	if (!user) {
+		res.status(500).send({ status: 500, detail: "Discord user not found" })
+		return
+	}
+
 	const data = req.body
 	const forumId = req.params.id
 	console.log("New post:", forumId, data)
 
 	try {
+		getForum.get(forumId)
+	} catch (e) {
+		console.error("[ERR] could not get forum:", e)
+		res.status(404).send({ status: 404, detail: "forum not found" })
+	}
+
+	try {
 		const id = generateId()
-		postPost.run(id, forumId, data.name, data.description)
+		postPost.run(id, forumId, user.id, data.name, data.description)
 		const post = getPost.get(id)
 		res.status(200).send(post)
 	} catch (e) {
 		console.error("[ERR] could not create post:", e)
-		res.sendStatus(500)
+		res.status(500).send({ status: 500, detail: "post creation failed" })
 	}
 })
 
@@ -127,11 +179,49 @@ app.listen(port, () => {
 })
 
 function generateId(): string {
-	const buffer = new Uint8Array(8)
+	return randomHex(16)
+}
+
+function randomHex(length: number) {
+	const buffer = new Uint8Array(length / 2) // half because each byte is 2 hex digits
 	crypto.getRandomValues(buffer)
 
 	let id: string[] = []
 	buffer.forEach(value => id.push(value.toString(16)))
 	
 	return id.join("")
+}
+
+const getSession = db.prepare(`SELECT * FROM sessions WHERE token = ? AND expires_at > datetime('now')`)
+async function checkAuth(authHeader: string | undefined): Promise<Session | null> {
+	if (!authHeader) return null
+
+	const parts = authHeader.split(" ")
+	if (parts.length != 2 || parts[0] != "Bearer") return null
+
+	try {
+		const session = await getSession.get(parts[1])
+		// expiration is checked by sql query
+
+		return session as Session // TODO: proper parsing
+	} catch (e) {
+		console.error("[ERR] could not get session:", parts[1], e)
+		return null
+	}
+}
+
+async function fetchDiscordUser(access_token: string): Promise<APIUser | null> {
+	const rest = new REST({ version: '10', authPrefix: "Bearer" })
+	rest.setToken(access_token)
+
+	try {
+		const user = await rest.get(Routes.user())
+		if (!user || typeof user != "object" || !("id" in user)) {
+			throw "user id missing from response"
+		}
+		return user as APIUser // TODO: proper parsing
+	} catch (e) {
+		console.error("[ERR] could not fetch user:", e)
+		return null
+	}
 }

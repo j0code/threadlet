@@ -22,6 +22,7 @@ export default class ForumView extends View {
 
 		const createPostBtn = new FormButton("create-post-button", "(+) New Post", async () => {
 			if (this.currentForumId) {
+				console.log("forumId:", this.currentForumId)
 				const forum = await api.getForum(this.currentForumId)
 
 				app.renderView(views.postCreateForm, forum)
@@ -34,6 +35,7 @@ export default class ForumView extends View {
 	}
 
 	async reset(forum: Forum) {
+		if (this.currentForumId == forum.id) return
 		this.titleElement.textContent = forum.name
 
 		this.previews.reset(forum)

@@ -10,8 +10,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@discordjs/rest": "^2.4.3",
     "@j0code/yson": "npm:@jsr/j0code__yson@^1.2.4",
     "better-sqlite3": "^11.8.1",
+    "discord-api-types": "^0.37.119",
     "express": "^4.21.2"
   },
   "devDependencies": {

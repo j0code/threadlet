@@ -13,11 +13,9 @@ let auth: Awaited<ReturnType<typeof discordSdk.commands.authenticate>>
 let rest: REST
 
 const discordSdk = new DiscordSDK(import.meta.env.VITE_DISCORD_CLIENT_ID)
-export const api = new ThreadletAPI()
+export let api: ThreadletAPI
+export let app: App
 
-const forums = await api.getForums()
-
-export const app = new App(forums)
 export const views = {
 	forumCreateForm: new ForumCreateForm(),
 	postCreateForm:  new PostCreateForm(),
@@ -26,9 +24,6 @@ export const views = {
 
 setupDiscordSdk().then(async () => {
 	console.log("Discord SDK is authenticated")
-
-	const forums = await fetch("/.proxy/api/forums").then(res => res.json())
-
 	
 	document.getElementById("loadingScreen")!.remove()
 	document.body.appendChild(app.element)
@@ -100,4 +95,8 @@ async function setupDiscordSdk() {
 	}
 
 	rest = new REST({ version: '10', authPrefix: "Bearer" }).setToken(auth.access_token)
+	api  = new ThreadletAPI(access_token)
+
+	const forums = await api.getForums()
+	app = new App(forums)
 }
