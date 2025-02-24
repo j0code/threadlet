@@ -1,10 +1,10 @@
 import YSON from "@j0code/yson"
-import express from "express"
+import express, { type Request, type RequestHandler, type Response } from "express"
 import Database from "better-sqlite3"
 import fs from "fs/promises"
 import { REST } from "@discordjs/rest"
 import { APIUser, Routes } from "discord-api-types/v10"
-import { Session } from "./types.js"
+import { type Session } from "./types.js"
 
 type Config = {
 	port: number,
@@ -84,7 +84,7 @@ app.post("/api/token", async (req, res) => {
 	res.send({access_token})
 })
 
-app.get("/api/forums", (req, res) => {
+app.get("/api/forums", secureApiCall((_, res) => {
 	try {
 		const forums = dbStmt.getForums.all()
 		res.status(200).send(forums)
@@ -92,21 +92,9 @@ app.get("/api/forums", (req, res) => {
 		console.error("[ERR] could not get forums:", e)
 		res.status(500).send({ status: 500, detail: "forums query failed" })
 	}
-})
+}))
 
-app.post("/api/forums", async (req, res) => {
-	const session = await checkAuth(req.headers.authorization)
-	if (!session) {
-		res.status(401).send({ status: 401, detail: "session invalid or expired" })
-		return
-	}
-
-	const user = await fetchDiscordUser(session.token)
-	if (!user) {
-		res.status(500).send({ status: 500, detail: "Discord user not found" })
-		return
-	}
-
+app.post("/api/forums", secureApiCall(async (req, res, user) => {
 	const data = req.body
 	console.log("New forum:", user.username, data)
 
@@ -119,9 +107,9 @@ app.post("/api/forums", async (req, res) => {
 		console.error("[ERR] could not create forum:", e)
 		res.status(500).send({ status: 500, detail: "forum creation failed" })
 	}
-})
+}))
 
-app.get("/api/forums/:id", (req, res) => {
+app.get("/api/forums/:id", secureApiCall((req, res) => {
 	const forumId = req.params.id
 
 	try {
@@ -131,9 +119,9 @@ app.get("/api/forums/:id", (req, res) => {
 		console.error("[ERR] could not get forum:", e)
 		res.status(500).send({ status: 500, detail: "forum query failed" })
 	}
-})
+}))
 
-app.get("/api/forums/:id/posts", (req, res) => {
+app.get("/api/forums/:id/posts", secureApiCall((req, res) => {
 	const forumId = req.params.id
 
 	try {
@@ -143,21 +131,9 @@ app.get("/api/forums/:id/posts", (req, res) => {
 		console.error("[ERR] could not get posts:", e)
 		res.status(500).send({ status: 500, detail: "posts query failed" })
 	}
-})
+}))
 
-app.post("/api/forums/:id/posts", async (req, res) => {
-	const session = await checkAuth(req.headers.authorization)
-	if (!session) {
-		res.status(401).send({ status: 401, detail: "session invalid or expired" })
-		return
-	}
-
-	const user = await fetchDiscordUser(session.token)
-	if (!user) {
-		res.status(500).send({ status: 500, detail: "Discord user not found" })
-		return
-	}
-
+app.post("/api/forums/:id/posts", secureApiCall(async (req, res, _, user) => {
 	const data = req.body
 	const forumId = req.params.id
 	console.log("New post:", forumId, data)
@@ -179,9 +155,9 @@ app.post("/api/forums/:id/posts", async (req, res) => {
 		console.error("[ERR] could not create post:", e)
 		res.status(500).send({ status: 500, detail: "post creation failed" })
 	}
-})
+}))
 
-app.get("/api/users/:id", async (req, res) => {
+app.get("/api/users/:id", secureApiCall(async (req, res) => {
 	const userId = req.params.id
 
 	try {
@@ -204,21 +180,9 @@ app.get("/api/users/:id", async (req, res) => {
 		console.error("[ERR] could not get user:", e)
 		res.status(500).send({ status: 500, detail: "user query failed" })
 	}
-})
+}))
 
-app.post("/api/forums/:forum_id/posts/:post_id/messages", async (req, res) => {
-	const session = await checkAuth(req.headers.authorization)
-	if (!session) {
-		res.status(401).send({ status: 401, detail: "session invalid or expired" })
-		return
-	}
-
-	const user = await fetchDiscordUser(session.token)
-	if (!user) {
-		res.status(500).send({ status: 500, detail: "Discord user not found" })
-		return
-	}
-
+app.post("/api/forums/:forum_id/posts/:post_id/messages", secureApiCall(async (req, res, user) => {
 	const data = req.body
 	const forumId = req.params.forum_id
 	const postId  = req.params.post_id
@@ -246,7 +210,7 @@ app.post("/api/forums/:forum_id/posts/:post_id/messages", async (req, res) => {
 		console.error("[ERR] could not message post:", e)
 		res.status(500).send({ status: 500, detail: "message creation failed" })
 	}
-})
+}))
 
 app.listen(port, () => {
 	console.log(`Server listening at http://localhost:${port}`)
@@ -296,5 +260,23 @@ async function fetchDiscordUser(access_token: string): Promise<APIUser | null> {
 	} catch (e) {
 		console.error("[ERR] could not fetch user:", access_token, e)
 		return null
+	}
+}
+
+function secureApiCall(handler: (req: Request, res: Response, user: APIUser, session: Session) => void): RequestHandler {
+	return async (req, res) => {
+		const session = await checkAuth(req.headers.authorization)
+		if (!session) {
+			res.status(401).send({ status: 401, detail: "session invalid or expired" })
+			return
+		}
+
+		const user = await fetchDiscordUser(session.token)
+		if (!user) {
+			res.status(500).send({ status: 500, detail: "Discord user not found" })
+			return
+		}
+
+		handler(req, res, user, session)
 	}
 }
