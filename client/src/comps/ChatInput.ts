@@ -25,9 +25,10 @@ export default class ChatInput extends Component {
 		chatInput.setAttribute("placeholder", "Message #channel")
 		chatInput.addEventListener("keypress", e => {
 			if (e.code == "Enter" && !e.shiftKey) {
-				console.log("Send MSG:", chatInput.innerText)
-				chatInput.innerHTML = ""
 				e.preventDefault()
+				const content = chatInput.innerText.trim()
+				if (content == "") return
+				chatInput.innerHTML = ""
 
 				async function createMessage() {
 					const forum_id = postView.getCurrentForumId()
@@ -36,10 +37,11 @@ export default class ChatInput extends Component {
 						throw new Error("TODO")
 					}
 
-					const msg = await api.createMessage(forum_id, post_id, { content: chatInput.innerText })
+					const msg = await api.createMessage(forum_id, post_id, { content })
 					console.log(msg)
 				}
 
+				console.log("Send MSG:", chatInput.innerText)
 				createMessage()
 			}
 		})

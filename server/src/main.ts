@@ -25,17 +25,22 @@ db.exec(dbSetup)
 
 const dbStmt = {
 	createUser:    db.prepare(`INSERT OR IGNORE INTO users (id) VALUES (?)`),
+
 	getSessionFromToken: db.prepare(`SELECT * FROM sessions WHERE token = ? AND expires_at > datetime('now')`),
 	getSessionFromId:    db.prepare(`SELECT * FROM sessions WHERE user_id = ? AND expires_at > datetime('now') ORDER BY created_at DESC LIMIT 1`),
 	createSession: db.prepare(`INSERT INTO sessions (id, user_id, token) VALUES (?, ?, ?)`),
+
 	getForums:     db.prepare(`SELECT * FROM forums`),
 	getForum:      db.prepare(`SELECT * FROM forums WHERE id = ?`),
 	createForum:   db.prepare(`INSERT INTO forums (id, owner_id, name) VALUES (?, ?, ?)`),
+
 	getPosts:      db.prepare(`SELECT * FROM posts WHERE forum_id = ?`),
 	getPost:       db.prepare(`SELECT * FROM posts WHERE id = ?`),
 	createPost:    db.prepare(`INSERT INTO posts (id, forum_id, poster_id, name, description) VALUES (?, ?, ?, ?, ?)`),
+
+	getMessages:   db.prepare(`SELECT messages.*, forum_id FROM messages INNER JOIN posts ON post_id = posts.id WHERE posts.id = ?`),
+	getMessage:    db.prepare(`SELECT messages.*, forum_id FROM messages INNER JOIN posts ON post_id = posts.id WHERE messages.id = ?`),
 	createMessage: db.prepare(`INSERT INTO messages (id, post_id, author_id, content) VALUES (?, ?, ?, ?)`),
-	getMessage:    db.prepare(`SELECT messages.*, forum_id FROM messages INNER JOIN posts ON post_id = posts.id WHERE messages.id = ?`)
 } as const
 
 console.log(dbStmt.getForums.all()) // debug
@@ -133,7 +138,7 @@ app.get("/api/forums/:id/posts", secureApiCall((req, res) => {
 	}
 }))
 
-app.post("/api/forums/:id/posts", secureApiCall(async (req, res, _, user) => {
+app.post("/api/forums/:id/posts", secureApiCall(async (req, res, user) => {
 	const data = req.body
 	const forumId = req.params.id
 	console.log("New post:", forumId, data)
@@ -146,13 +151,14 @@ app.post("/api/forums/:id/posts", secureApiCall(async (req, res, _, user) => {
 		return
 	}
 
+	const id = generateId()
 	try {
-		const id = generateId()
 		dbStmt.createPost.run(id, forumId, user.id, data.name, data.description)
 		const post = dbStmt.getPost.get(id)
 		res.status(201).send(post)
 	} catch (e) {
 		console.error("[ERR] could not create post:", e)
+		console.log(id, forumId, user.id, data.name, data.description)
 		res.status(500).send({ status: 500, detail: "post creation failed" })
 	}
 }))
@@ -209,6 +215,32 @@ app.post("/api/forums/:forum_id/posts/:post_id/messages", secureApiCall(async (r
 	} catch (e) {
 		console.error("[ERR] could not message post:", e)
 		res.status(500).send({ status: 500, detail: "message creation failed" })
+	}
+}))
+
+app.get("/api/forums/:forum_id/posts/:post_id/messages", secureApiCall(async (req, res) => {
+	const forumId = req.params.forum_id
+	const postId  = req.params.post_id
+
+	try {
+		const post = dbStmt.getPost.get(postId)
+		// @ts-expect-error TODO: use API types
+		if (post.forum_id != forumId) {
+			res.status(404).send({ status: 404, detail: "post not found" })
+			return
+		}
+	} catch (e) {
+		console.error("[ERR] could not get post:", e)
+		res.status(404).send({ status: 404, detail: "post not found" })
+		return
+	}
+
+	try {
+		const messages = dbStmt.getMessages.all(postId)
+		res.status(200).send(messages)
+	} catch (e) {
+		console.error("[ERR] could not get messages:", e)
+		res.status(500).send({ status: 500, detail: "messages query failed" })
 	}
 }))
 

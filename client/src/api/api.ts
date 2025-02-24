@@ -40,9 +40,9 @@ export default class ThreadletAPI {
 		return post(`/forums/${forumId}/posts/${postId}/messages`, this.access_token, msg) // TODO: proper parsing
 	}
 
-	/*getMessage(forumId: string): Promise<Forum> {
-		return get(`/forums/${forumId}`, this.access_token) // TODO: proper parsing
-	}*/
+	getMessages(forumId: string, postId: string): Promise<Message[]> {
+		return get(`/forums/${forumId}/posts/${postId}/messages`, this.access_token) // TODO: proper parsing
+	}
 
 }
 
