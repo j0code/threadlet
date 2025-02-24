@@ -1,7 +1,8 @@
 import ThreadletAPIError from "./ThreadletAPIError"
-import { type Forum, type Post } from "./types"
+import { type User, type Forum, type Post } from "./types"
 
 const API_ROOT = "/.proxy/api"
+const CDN_URL  = "https://cdn.discordapp.com"
 
 export default class ThreadletAPI {
 
@@ -19,7 +20,7 @@ export default class ThreadletAPI {
 		return post("/forums", this.access_token, forum) // TODO: proper parsing
 	}
 
-	getForum(forumId: string): Promise<Forum[]> {
+	getForum(forumId: string): Promise<Forum> {
 		return get(`/forums/${forumId}`, this.access_token) // TODO: proper parsing
 	}
 
@@ -29,6 +30,10 @@ export default class ThreadletAPI {
 
 	postPost(forumId: string, _post: Omit<Post, "id" | "created_at" | "forum_id">): Promise<Post> {
 		return post(`/forums/${forumId}/posts`, this.access_token, _post) // TODO: proper parsing
+	}
+
+	getUser(userId: string): Promise<User> {
+		return get(`/users/${userId}`, this.access_token) // TODO: proper parsing
 	}
 
 }

@@ -5,7 +5,7 @@ export default class ViewHead extends Component {
 	titleElement: HTMLSpanElement;
 
 	constructor(title: string) {
-		super("div", "view-head")
+		super("div", { classes: ["view-head"] })
 
 		this.titleElement = document.createElement("span")
 		this.titleElement.className = "view-title"

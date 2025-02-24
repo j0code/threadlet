@@ -3,7 +3,7 @@ import Component from "./Component"
 export default class FormTextInput extends Component {
 
 	constructor(id: string, placeholder: string, min: number = 0, max: number = 16) {
-		super("input", id, "form-input form-text-input")
+		super("input", { id, classes: ["form-input", "form-text-input"] })
 
 		const elem = this.element as HTMLInputElement
 		elem.type = "text"

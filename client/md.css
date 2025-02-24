@@ -1,41 +1,46 @@
-.post-description {
+.md {
 	font-family: "Segoe UI", system-ui, Helvetica, Arial, sans-serif;
 	line-height: 1.6;
 	color: light-dark(#24292e, #ffffff);
-	padding: 16px;
 }
 
-.post-description code {
+.md code {
 	background-color: rgba(175,184,193,0.2);
 	padding: 0.2em 0.4em;
 	border-radius: 6px;
 	font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
 }
 
-.post-description pre {
+.md pre {
 	background-color: light-dark(#f6f8fa, rgba(175,184,193,0.2));
 	padding: 16px;
 	border-radius: 6px;
 	overflow: auto;
 }
 
-.post-description pre code {
+.md pre code.hljs {
+	padding: 0px;
 	background-color: unset;
 }
 
-.post-description table {
+.md table {
 	border-collapse: collapse;
 	margin: 16px 0;
 }
 
-.post-description td, .post-description th {
+.md td, .md th {
 	border: 1px solid #dfe2e5;
 	padding: 6px 13px;
 }
 
-.post-description blockquote {
+.md blockquote {
 	border-left: 4px solid #dfe2e5;
 	color: #6a737d;
 	margin: 0;
 	padding: 0 16px;
+}
+
+.md img {
+	max-width: 100%;
+	max-height: 50vh;
 }

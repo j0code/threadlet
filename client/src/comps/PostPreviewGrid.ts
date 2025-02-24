@@ -6,7 +6,7 @@ import PostPreview from "./PostPreview";
 export default class PostPreviewGrid extends Component {
 
 	constructor() {
-		super("div", "post-previews")
+		super("div", { id: "post-previews" })
 	}
 
 	async reset(forum: Forum) {

@@ -25,7 +25,8 @@ db.exec(dbSetup)
 
 const dbStmt = {
 	createUser:    db.prepare(`INSERT OR IGNORE INTO users (id) VALUES (?)`),
-	getSession:    db.prepare(`SELECT * FROM sessions WHERE token = ? AND expires_at > datetime('now')`),
+	getSessionFromToken: db.prepare(`SELECT * FROM sessions WHERE token = ? AND expires_at > datetime('now')`),
+	getSessionFromId:    db.prepare(`SELECT * FROM sessions WHERE user_id = ? AND expires_at > datetime('now') ORDER BY created_at DESC LIMIT 1`),
 	createSession: db.prepare(`INSERT INTO sessions (id, user_id, token) VALUES (?, ?, ?)`),
 	getForums:     db.prepare(`SELECT * FROM forums`),
 	getForum:      db.prepare(`SELECT * FROM forums WHERE id = ?`),
@@ -177,6 +178,32 @@ app.post("/api/forums/:id/posts", async (req, res) => {
 	}
 })
 
+app.get("/api/users/:id", async (req, res) => {
+	const userId = req.params.id
+	console.log("get user", userId)
+
+	try {
+		const session = dbStmt.getSessionFromId.get(userId) as Session | undefined
+		if (!session) {
+			console.error("[ERR] no session", userId)
+			res.status(500).send({ status: 500, detail: "no available session" })
+			return
+		}
+
+		const user = await fetchDiscordUser(session.token)
+
+		if (!user) {
+			res.status(500).send({ status: 500, detail: "Discord refused (e.g. expired token)" })
+			return
+		}
+
+		res.status(200).send({ id: user.id, name: user.global_name, avatar: user.avatar, bot: user.bot })
+	} catch (e) {
+		console.error("[ERR] could not get user:", e)
+		res.status(500).send({ status: 500, detail: "user query failed" })
+	}
+})
+
 app.listen(port, () => {
 	console.log(`Server listening at http://localhost:${port}`)
 })
@@ -202,7 +229,7 @@ async function checkAuth(authHeader: string | undefined): Promise<Session | null
 	if (parts.length != 2 || parts[0] != "Bearer") return null
 
 	try {
-		const session = await dbStmt.getSession.get(parts[1])
+		const session = await dbStmt.getSessionFromToken.get(parts[1])
 		// expiration is checked by sql query
 
 		return session as Session // TODO: proper parsing
@@ -223,7 +250,7 @@ async function fetchDiscordUser(access_token: string): Promise<APIUser | null> {
 		}
 		return user as APIUser // TODO: proper parsing
 	} catch (e) {
-		console.error("[ERR] could not fetch user:", e)
+		console.error("[ERR] could not fetch user:", access_token, e)
 		return null
 	}
 }

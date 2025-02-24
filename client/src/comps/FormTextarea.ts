@@ -3,7 +3,7 @@ import Component from "./Component"
 export default class FormTextarea extends Component {
 
 	constructor(id: string, placeholder: string, min: number = 0, max: number = 256) {
-		super("textarea", id, "form-input form-textarea")
+		super("textarea", { id, classes: ["form-input", "form-textarea"] })
 
 		const elem = this.element as HTMLInputElement
 		elem.placeholder = placeholder

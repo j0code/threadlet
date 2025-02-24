@@ -13,8 +13,7 @@ export default class PostCreateForm extends Form {
 	readonly descriptionInput: FormTextarea
 
 	constructor() {
-		super("post-create-view", "Create Post")
-		this.element.classList.add("view")
+		super("Create Post", { id: "post-create-view", classes: ["view"] } )
 
 		this.nameInput = new FormTextInput("post-name", "Post Name", 0, 128)
 		this.descriptionInput = new FormTextarea("post-description", "Post Description", 0, 4096)

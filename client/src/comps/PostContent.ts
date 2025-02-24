@@ -1,5 +1,6 @@
 import { Post } from "../api/types"
 import { markdownToHtml } from "../md"
+import Author from "./PostAuthor"
 import Component from "./Component"
 
 export default class PostContent extends Component {
@@ -9,10 +10,10 @@ export default class PostContent extends Component {
 	readonly descriptionElement: HTMLDivElement
 
 	constructor() {
-		super("div", "post-content")
+		super("div", { id: "post-content" })
 
 		this.descriptionElement = document.createElement("div")
-		this.descriptionElement.className = "post-description"
+		this.descriptionElement.className = "post-description md"
 
 		this.element.appendChild(this.descriptionElement)
 	}

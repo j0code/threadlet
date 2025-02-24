@@ -56,7 +56,9 @@ marked.use({ extensions: [underlineExtension], renderer: linkRenderer}, markedHi
 	emptyLangClass: "hljs",
 	langPrefix: "hljs language-",
 	highlight(code, lang, info) {
-		const language = hljs.getLanguage(lang) ? lang : "plaintext"
+		const supported = hljs.getLanguage(lang)
+		const language = supported ? lang : "plaintext"
+		if (!supported) code = `${lang}\n${code}` // BUG: this for some reason includes text before ``` on the same line :/
 		return hljs.highlight(code, { language }).value
 	}
 }))

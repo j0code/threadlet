@@ -7,7 +7,7 @@ export default class PostPreview extends Component {
 	readonly post: Post
 
 	constructor(post: Post) {
-		super("div", `post-preview-${post.id}`, "post-preview")
+		super("div", { id: `post-preview-${post.id}`, classes: ["post-preview"] })
 
 		this.post = post
 

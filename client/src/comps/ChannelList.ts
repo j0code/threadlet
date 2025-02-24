@@ -7,7 +7,7 @@ import ForumTab from "./ForumTab";
 export default class ChannelList extends Component {
 
 	constructor(forums: Array<Forum>) {
-		super("div", "channels")
+		super("div", { id: "channels" })
 
 		this.reset(forums)
 	}

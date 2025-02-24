@@ -8,8 +8,7 @@ export default class ForumCreateForm extends Form {
 	readonly nameInput: FormTextInput
 
 	constructor() {
-		super("forum-create-view", "Create Forum")
-		this.element.classList.add("view")
+		super("Create Forum", { id: "forum-create-view" , classes: ["view"] })
 
 		this.nameInput = new FormTextInput("forum-name", "Forum Name", 0, 64)
 		const submitButton = new FormButton("form-submit", "Create", () => submit(this))

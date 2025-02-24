@@ -1,28 +1,32 @@
 import { Post } from "../api/types"
+import PostAuthor from "./PostAuthor"
 import PostContent from "./PostContent"
 import View from "./View"
-import ViewHead from "./ViewHead"
+import { api } from "../main"
 
 export default class PostView extends View {
 
 	private currentPostId?: string
 
-	public readonly head: ViewHead
 	public readonly content: PostContent
+	public readonly author: PostAuthor
 
 	constructor() {
-		super("div", "post-view", "view")
+		super("div", { id: "post-view" })
 
-		this.head = new ViewHead("FORUM")
 		this.content = new PostContent()
+		this.author  = new PostAuthor()
 
-		this.element.appendChild(this.head.element)
-		this.element.appendChild(this.content.element)
+		this.body.appendChild(this.author.element)
+		this.body.appendChild(this.content.element)
 	}
 
 	async reset(post: Post) {
 		this.head.reset(post.name)
 		this.content.reset(post)
+
+		const user = await api.getUser(post.poster_id)
+		this.author.reset(user)
 
 		this.currentPostId = post.id
 	}

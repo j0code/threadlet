@@ -3,7 +3,7 @@ import Component from "./Component";
 export default class ForumTab extends Component {
 
 	constructor(forum: any) {
-		super("div", "tab-forum", "list-tab")
+		super("div", { id: "tab-forum", classes: ["list-tab"] })
 
 		this.element.textContent = forum.name
 	}
