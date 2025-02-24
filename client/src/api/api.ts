@@ -1,5 +1,5 @@
 import ThreadletAPIError from "./ThreadletAPIError"
-import { type User, type Forum, type Post } from "./types"
+import { type User, type Forum, type Post, ForumOptions, PostOptions, MessageOptions, Message } from "./types"
 
 const API_ROOT = "/.proxy/api"
 const CDN_URL  = "https://cdn.discordapp.com"
@@ -16,7 +16,7 @@ export default class ThreadletAPI {
 		return get("/forums", this.access_token) // TODO: proper parsing
 	}
 
-	postForum(forum: Omit<Forum, "id" | "created_at">): Promise<Forum> {
+	createForum(forum: ForumOptions): Promise<Forum> {
 		return post("/forums", this.access_token, forum) // TODO: proper parsing
 	}
 
@@ -28,13 +28,21 @@ export default class ThreadletAPI {
 		return get(`/forums/${forumId}/posts`, this.access_token) // TODO: proper parsing
 	}
 
-	postPost(forumId: string, _post: Omit<Post, "id" | "created_at" | "forum_id" | "poster_id">): Promise<Post> {
+	createPost(forumId: string, _post: PostOptions): Promise<Post> {
 		return post(`/forums/${forumId}/posts`, this.access_token, _post) // TODO: proper parsing
 	}
 
 	getUser(userId: string): Promise<User> {
 		return get(`/users/${userId}`, this.access_token) // TODO: proper parsing
 	}
+
+	createMessage(forumId: string, postId: string, msg: MessageOptions): Promise<Message> {
+		return post(`/forums/${forumId}/posts/${postId}/messages`, this.access_token, msg) // TODO: proper parsing
+	}
+
+	/*getMessage(forumId: string): Promise<Forum> {
+		return get(`/forums/${forumId}`, this.access_token) // TODO: proper parsing
+	}*/
 
 }
 

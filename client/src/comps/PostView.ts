@@ -7,6 +7,7 @@ import ChatInput from "./ChatInput"
 
 export default class PostView extends View {
 
+	private currentForumId?: string
 	private currentPostId?: string
 
 	public readonly content: PostContent
@@ -18,7 +19,7 @@ export default class PostView extends View {
 
 		this.content   = new PostContent()
 		this.author    = new PostAuthor()
-		this.chatInput = new ChatInput()
+		this.chatInput = new ChatInput(this)
 
 		this.body.appendChild(this.author.element)
 		this.body.appendChild(this.content.element)
@@ -32,7 +33,16 @@ export default class PostView extends View {
 		const user = await api.getUser(post.poster_id)
 		this.author.reset(user)
 
-		this.currentPostId = post.id
+		this.currentForumId = post.forum_id
+		this.currentPostId  = post.id
+	}
+
+	getCurrentPostId() {
+		return this.currentPostId
+	}
+
+	getCurrentForumId() {
+		return this.currentForumId
 	}
 
 }

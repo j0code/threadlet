@@ -1,9 +1,11 @@
+import { api } from "../main"
 import Component from "./Component"
+import PostView from "./PostView"
 
 // Credits to DeepSeek-R1, wow (edited though)
 export default class ChatInput extends Component {
 
-	constructor() {
+	constructor(postView: PostView) {
 		super("div", { id: "chat-input-container" })
 
 		// Create file upload button
@@ -24,7 +26,21 @@ export default class ChatInput extends Component {
 		chatInput.addEventListener("keypress", e => {
 			if (e.code == "Enter" && !e.shiftKey) {
 				console.log("Send MSG:", chatInput.innerText)
+				chatInput.innerHTML = ""
 				e.preventDefault()
+
+				async function createMessage() {
+					const forum_id = postView.getCurrentForumId()
+					const post_id  = postView.getCurrentPostId()
+					if (!forum_id || !post_id) {
+						throw new Error("TODO")
+					}
+
+					const msg = await api.createMessage(forum_id, post_id, { content: chatInput.innerText })
+					console.log(msg)
+				}
+
+				createMessage()
 			}
 		})
 		chatInput.addEventListener('input', () => { // this fixes weird browser behavior

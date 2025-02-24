@@ -24,4 +24,8 @@ export default class App extends Component {
 		this.currentView = view
 	}
 
+	getCurrentView() {
+		return this.currentView
+	}
+
 }

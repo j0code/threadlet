@@ -44,7 +44,7 @@ async function submit(forumId: string, form: PostCreateForm) {
 	if (!name || !description) return
 
 	console.log("Create Post:", name)
-	const post = await api.postPost(forumId, { name, description })
+	const post = await api.createPost(forumId, { name, description })
 	console.log("Done. Post:", post)
 
 	app.renderView(views.postView, post)

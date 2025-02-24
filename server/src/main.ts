@@ -33,7 +33,9 @@ const dbStmt = {
 	createForum:   db.prepare(`INSERT INTO forums (id, owner_id, name) VALUES (?, ?, ?)`),
 	getPosts:      db.prepare(`SELECT * FROM posts WHERE forum_id = ?`),
 	getPost:       db.prepare(`SELECT * FROM posts WHERE id = ?`),
-	createPost:    db.prepare(`INSERT INTO posts (id, forum_id, poster_id, name, description) VALUES (?, ?, ?, ?, ?)`)
+	createPost:    db.prepare(`INSERT INTO posts (id, forum_id, poster_id, name, description) VALUES (?, ?, ?, ?, ?)`),
+	createMessage: db.prepare(`INSERT INTO messages (id, post_id, author_id, content) VALUES (?, ?, ?, ?)`),
+	getMessage:    db.prepare(`SELECT messages.*, forum_id FROM messages INNER JOIN posts ON post_id = posts.id WHERE messages.id = ?`)
 } as const
 
 console.log(dbStmt.getForums.all()) // debug
@@ -165,6 +167,7 @@ app.post("/api/forums/:id/posts", async (req, res) => {
 	} catch (e) {
 		console.error("[ERR] could not get forum:", e)
 		res.status(404).send({ status: 404, detail: "forum not found" })
+		return
 	}
 
 	try {
@@ -180,7 +183,6 @@ app.post("/api/forums/:id/posts", async (req, res) => {
 
 app.get("/api/users/:id", async (req, res) => {
 	const userId = req.params.id
-	console.log("get user", userId)
 
 	try {
 		const session = dbStmt.getSessionFromId.get(userId) as Session | undefined
@@ -201,6 +203,48 @@ app.get("/api/users/:id", async (req, res) => {
 	} catch (e) {
 		console.error("[ERR] could not get user:", e)
 		res.status(500).send({ status: 500, detail: "user query failed" })
+	}
+})
+
+app.post("/api/forums/:forum_id/posts/:post_id/messages", async (req, res) => {
+	const session = await checkAuth(req.headers.authorization)
+	if (!session) {
+		res.status(401).send({ status: 401, detail: "session invalid or expired" })
+		return
+	}
+
+	const user = await fetchDiscordUser(session.token)
+	if (!user) {
+		res.status(500).send({ status: 500, detail: "Discord user not found" })
+		return
+	}
+
+	const data = req.body
+	const forumId = req.params.forum_id
+	const postId  = req.params.post_id
+	console.log("New message:", forumId, postId, data)
+
+	try {
+		const post = dbStmt.getPost.get(postId)
+		// @ts-expect-error TODO: use API types
+		if (post.forum_id != forumId) {
+			res.status(404).send({ status: 404, detail: "post not found" })
+			return
+		}
+	} catch (e) {
+		console.error("[ERR] could not get post:", e)
+		res.status(404).send({ status: 404, detail: "post not found" })
+		return
+	}
+
+	try {
+		const id = generateId()
+		dbStmt.createMessage.run(id, postId, user.id, data.content)
+		const msg = dbStmt.getMessage.get(id)
+		res.status(201).send(msg)
+	} catch (e) {
+		console.error("[ERR] could not message post:", e)
+		res.status(500).send({ status: 500, detail: "message creation failed" })
 	}
 })
 

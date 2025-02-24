@@ -28,7 +28,7 @@ async function submit(form: ForumCreateForm) {
 	if (!name) return
 
 	console.log("Create Forum:", name)
-	const forum = await api.postForum({ name })
+	const forum = await api.createForum({ name })
 	console.log("Done. Forum:", forum)
 
 	app.renderView(views.forumView, forum)
