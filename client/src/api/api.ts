@@ -28,7 +28,7 @@ export default class ThreadletAPI {
 		return get(`/forums/${forumId}/posts`, this.access_token) // TODO: proper parsing
 	}
 
-	postPost(forumId: string, _post: Omit<Post, "id" | "created_at" | "forum_id">): Promise<Post> {
+	postPost(forumId: string, _post: Omit<Post, "id" | "created_at" | "forum_id" | "poster_id">): Promise<Post> {
 		return post(`/forums/${forumId}/posts`, this.access_token, _post) // TODO: proper parsing
 	}
 
