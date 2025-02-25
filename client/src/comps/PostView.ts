@@ -11,22 +11,26 @@ export default class PostView extends View {
 	private currentForumId?: string
 	private currentPostId?: string
 
-	public readonly content: PostContent
 	public readonly author: PostAuthor
+	public readonly content: PostContent
 	public readonly msgList: MessageList
 	public readonly chatInput: ChatInput
 
 	constructor() {
 		super("div", { id: "post-view" })
 
-		this.content   = new PostContent()
 		this.author    = new PostAuthor()
+		this.content   = new PostContent()
 		this.msgList   = new MessageList()
 		this.chatInput = new ChatInput(this)
 
+		const container = document.createElement("div")
+		container.className = "post-container"
+		container.appendChild(this.content.element)
+		container.appendChild(this.msgList.element)
+
 		this.body.appendChild(this.author.element)
-		this.body.appendChild(this.content.element)
-		this.body.appendChild(this.msgList.element)
+		this.body.appendChild(container)
 		this.element.appendChild(this.chatInput.element)
 	}
 

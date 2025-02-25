@@ -8,7 +8,7 @@ export default class Message extends Component {
 		super("div", { id: `message-${msg.id}`, classes: ["message"] })
 
 		const content = document.createElement("div")
-		content.className = "message content md"
+		content.className = "message-content md"
 		content.innerHTML = markdownToHtml(msg.content)
 
 		this.element.appendChild(content)
