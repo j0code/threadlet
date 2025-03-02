@@ -1,5 +1,5 @@
 import ThreadletAPIError from "./ThreadletAPIError.js"
-import { type User, type Forum, type Post, type ForumOptions, type PostOptions, type MessageOptions, type Message } from "./types.js"
+import { User, Forum, Post, type ForumOptions, type PostOptions, type MessageOptions, Message } from "./types.js"
 
 /**
  * Threadlet API
@@ -24,8 +24,11 @@ export default class ThreadletAPI {
 	 * @returns all forums
 	 * @throws {ThreadletAPIError}
 	 */
-	getForums(): Promise<Forum[]> {
-		return this.get("/forums") // TODO: proper parsing
+	async getForums(): Promise<Forum[]> {
+		const data = await this.get("/forums")
+		Forum.array().parse(data)
+
+		return data
 	}
 
 	/**
@@ -34,8 +37,11 @@ export default class ThreadletAPI {
 	 * @returns the forum
 	 * @throws {ThreadletAPIError}
 	 */
-	createForum(forum: ForumOptions): Promise<Forum> {
-		return this.post("/forums", forum) // TODO: proper parsing
+	async createForum(forum: ForumOptions): Promise<Forum> {
+		const data = await this.post("/forums", forum)
+		Forum.parse(data)
+
+		return data
 	}
 
 	/**
@@ -44,8 +50,11 @@ export default class ThreadletAPI {
 	 * @returns the forum
 	 * @throws {ThreadletAPIError}
 	 */
-	getForum(forumId: string): Promise<Forum> {
-		return this.get(`/forums/${forumId}`) // TODO: proper parsing
+	async getForum(forumId: string): Promise<Forum> {
+		const data = await this.get(`/forums/${forumId}`)
+		Forum.parse(data)
+
+		return data
 	}
 
 	/**
@@ -54,8 +63,11 @@ export default class ThreadletAPI {
 	 * @returns all posts in the forum
 	 * @throws {ThreadletAPIError}
 	 */
-	getPosts(forumId: string): Promise<Post[]> {
-		return this.get(`/forums/${forumId}/posts`) // TODO: proper parsing
+	async getPosts(forumId: string): Promise<Post[]> {
+		const data = await this.get(`/forums/${forumId}/posts`)
+		Post.array().parse(data)
+
+		return data
 	}
 
 	/**
@@ -65,8 +77,11 @@ export default class ThreadletAPI {
 	 * @returns the post
 	 * @throws {ThreadletAPIError}
 	 */
-	createPost(forumId: string, post: PostOptions): Promise<Post> {
-		return this.post(`/forums/${forumId}/posts`, post) // TODO: proper parsing
+	async createPost(forumId: string, post: PostOptions): Promise<Post> {
+		const data = await this.post(`/forums/${forumId}/posts`, post)
+		Post.parse(data)
+
+		return data
 	}
 
 	/**
@@ -75,8 +90,11 @@ export default class ThreadletAPI {
 	 * @returns the user
 	 * @throws {ThreadletAPIError}
 	 */
-	getUser(userId: string): Promise<User> {
-		return this.get(`/users/${userId}`) // TODO: proper parsing
+	async getUser(userId: string): Promise<User> {
+		const data = await this.get(`/users/${userId}`)
+		User.parse(data)
+
+		return data
 	}
 
 	/**
@@ -87,8 +105,11 @@ export default class ThreadletAPI {
 	 * @returns the message
 	 * @throws {ThreadletAPIError}
 	 */
-	createMessage(forumId: string, postId: string, msg: MessageOptions): Promise<Message> {
-		return this.post(`/forums/${forumId}/posts/${postId}/messages`, msg) // TODO: proper parsing
+	async createMessage(forumId: string, postId: string, msg: MessageOptions): Promise<Message> {
+		const data = await this.post(`/forums/${forumId}/posts/${postId}/messages`, msg)
+		Message.parse(data)
+
+		return data
 	}
 
 	/**
@@ -97,8 +118,11 @@ export default class ThreadletAPI {
 	 * @param postId id of the post
 	 * @returns all messages on the post
 	 */
-	getMessages(forumId: string, postId: string): Promise<Message[]> {
-		return this.get(`/forums/${forumId}/posts/${postId}/messages`) // TODO: proper parsing
+	async getMessages(forumId: string, postId: string): Promise<Message[]> {
+		const data = await this.get(`/forums/${forumId}/posts/${postId}/messages`)
+		Message.array().parse(data)
+
+		return data
 	}
 
 	private get(route: string) {

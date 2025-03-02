@@ -1,6 +1,6 @@
 {
 	"name": "@j0code/threadlet-api",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"license": "GPL-3.0-or-later",
 	"exports": {
 		".": "./src/api.ts",
