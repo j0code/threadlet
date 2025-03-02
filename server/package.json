@@ -8,11 +8,12 @@
   "main": "dist/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"build": "tsc",
+    "build": "tsc",
     "dev": "tsc --watch"
   },
   "dependencies": {
     "@discordjs/rest": "^2.4.3",
+    "@j0code/threadlet-api": "npm:@jsr/j0code__threadlet-api@^0.0.2",
     "@j0code/yson": "npm:@jsr/j0code__yson@^1.2.4",
     "better-sqlite3": "^11.8.1",
     "discord-api-types": "^0.37.119",
