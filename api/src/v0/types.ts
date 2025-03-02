@@ -69,7 +69,6 @@ export const Message: ObjSchema<Message> = z.object({
 	forum_id: z.string(),
 	post_id: z.string(),
 	author_id: z.string(),
-	name: z.string(),
 	content: z.string(),
 	edited_at: z.string(),
 	created_at: z.string()
