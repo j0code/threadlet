@@ -7,7 +7,9 @@
   "type": "module",
   "main": "dist/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"build": "tsc",
+    "dev": "tsc --watch"
   },
   "dependencies": {
     "@discordjs/rest": "^2.4.3",
