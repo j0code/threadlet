@@ -33,6 +33,11 @@ export function getApp(config: Config): Application {
 			return
 		}
 		const { access_token } = data
+		if (!access_token || typeof access_token != "string") {
+			console.error("[ERR]: received no access token from Discord", data)
+			res.status(400).send({ status: 500, detail: "no access token provided" })
+			return
+		}
 	
 		// Fetch user
 		const user = await fetchDiscordUser(access_token)

@@ -6,7 +6,7 @@ import "highlight.js/styles/github-dark.min.css"
 import App from "./comps/App"
 import ForumCreateForm from "./comps/ForumCreateForm"
 import ThreadletAPI from "@j0code/threadlet-api/v0"
-import { Routes } from "discord-api-types/v10"
+import { APIUser, Routes } from "discord-api-types/v10"
 import PostCreateForm from "./comps/PostCreateForm"
 import ForumView from "./comps/ForumView"
 import PostView from "./comps/PostView"
@@ -18,6 +18,7 @@ let rest: REST
 const discordSdk = new DiscordSDK(import.meta.env.VITE_DISCORD_CLIENT_ID)
 export let api: ThreadletAPI
 export let app: App
+export let clientUser: APIUser
 
 export const views = {
 	forumCreateForm: new ForumCreateForm(),
@@ -51,10 +52,7 @@ setupDiscordSdk().then(async () => {
 		} catch (ignore) {}
 	}
 
-	/*const textTagString = `User: ${auth.user.global_name}<br>Guild: ${guildName}`
-	const textTag = document.createElement('p')
-	textTag.innerHTML = textTagString
-	app.appendChild(textTag)*/
+	clientUser = await rest.get(Routes.user()) as APIUser
 })
 	
 async function setupDiscordSdk() {

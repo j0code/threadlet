@@ -44,3 +44,11 @@
 	max-width: 100%;
 	max-height: 50vh;
 }
+
+.md > :first-child {
+    margin-top: 0px;
+}
+
+.md > :last-child {
+    margin-bottom: 0px;
+}

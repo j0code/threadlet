@@ -10,13 +10,15 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 
-	--hover-bg: rgba(255 255 255 / 0.314);
+	--hover-bg: rgba(255 255 255 / 0.08);
 	--background-primary: #242424;
 	--background-secondary: #202020;
 	--sidebar-width: 200px;
 	--gap: 20px;
 	--gap-half: calc(var(--gap) / 2);
 	--scrollbar-thickness: 16px;
+	--message-hover-bg: rgba(0 0 0 / 0.08);
+	--text-muted: darkgray;
 }
 
 a {
@@ -88,7 +90,6 @@ body {
 .view-body, .form-body {
 	display: flex;
 	flex-direction: column;
-	padding: var(--gap);
 	overflow: hidden auto;
 }
 
@@ -105,6 +106,7 @@ body {
 
 .form {
 	box-sizing: border-box;
+	padding-inline: var(--gap);
 }
 
 .form-head {
@@ -155,6 +157,7 @@ body {
 }
 
 #create-post-button {
+	margin-inline: var(--gap);
 }
 
 #post-previews {
@@ -164,6 +167,7 @@ body {
 	flex-wrap: wrap;
 	flex: 1 0 auto;
 	gap: var(--gap);
+	padding-inline: var(--gap);
 	align-content: flex-start;
 }
 
@@ -193,6 +197,7 @@ body {
 	flex-direction: row;
 	align-items: center;
 	gap: var(--gap);
+	padding-inline: var(--gap);
 }
 
 .post-author-avatar {
@@ -209,7 +214,7 @@ body {
 	flex-direction: column;
 	flex: 1 1 auto;
 	overflow: hidden;
-	margin-right: calc(var(--scrollbar-thickness) * -1);
+	gap: var(--gap);
 }
 
 #post-content,
@@ -224,11 +229,56 @@ body {
 }
 
 #messages {
+	display: flex;
+	flex-direction: column;
 	flex: 1 1 auto;
+	gap: var(--gap-half);
 }
 
 .post-description {
 	overflow-wrap: break-word;
+	padding-inline: var(--gap);
+}
+
+.message {
+	display: flex;
+	flex-direction: row;
+	padding-left: var(--gap);
+	padding-right: 5px;
+	padding-block: 5px;
+}
+
+.message:hover {
+	background-color: var(--message-hover-bg);
+}
+
+.message-aside {
+	width: calc(50px + var(--gap));
+	display: flex;
+	align-items: flex-start;
+}
+
+.message-author-avatar {
+	width: 50px;
+	aspect-ratio: 1 / 1;
+	border-radius: 100%;
+}
+
+.message-main {
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+}
+
+.message-header {
+	min-height: 19px;
+	gap: var(--gap-half);
+    display: flex;
+}
+
+.message-timestamp {
+	color: var(--text-muted);
+	font-size: 0.9em;
 }
 
 @media (prefers-color-scheme: light) {
