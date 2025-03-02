@@ -79,7 +79,5 @@ export const User: ObjSchema<User> = z.object({
 	id: z.string(),
 	name: z.string(),
 	avatar: z.string().nullable(),
-	bot: z.boolean(),
-	edited_at: z.string(),
-	created_at: z.string()
+	bot: z.boolean()
 })

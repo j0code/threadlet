@@ -147,7 +147,7 @@ export function getApp(config: Config): Application {
 				return
 			}
 	
-			res.status(200).send({ id: user.id, name: user.global_name, avatar: user.avatar, bot: user.bot })
+			res.status(200).send({ id: user.id, name: user.global_name, avatar: user.avatar, bot: user.bot ?? false })
 		} catch (e) {
 			console.error("[ERR] could not get user:", e)
 			res.status(500).send({ status: 500, detail: "user query failed" })
