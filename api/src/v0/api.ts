@@ -1,4 +1,5 @@
-import ThreadletAPIError from "../ThreadletAPIError.js"
+import { ZodType } from "zod"
+import ThreadletAPIError, { ThreadletZodError } from "../ThreadletAPIError.js"
 import { User, Forum, Post, type ForumOptions, type PostOptions, type MessageOptions, Message } from "./types.js"
 
 const API_VERSION = "v0"
@@ -27,10 +28,7 @@ export default class ThreadletAPI {
 	 * @throws {ThreadletAPIError}
 	 */
 	async getForums(): Promise<Forum[]> {
-		const data = await this.get("/forums")
-		Forum.array().parse(data)
-
-		return data
+		return this.get("/forums", Forum.array())
 	}
 
 	/**
@@ -40,10 +38,7 @@ export default class ThreadletAPI {
 	 * @throws {ThreadletAPIError}
 	 */
 	async createForum(forum: ForumOptions): Promise<Forum> {
-		const data = await this.post("/forums", forum)
-		Forum.parse(data)
-
-		return data
+		return this.post("/forums", forum, Forum)
 	}
 
 	/**
@@ -53,10 +48,7 @@ export default class ThreadletAPI {
 	 * @throws {ThreadletAPIError}
 	 */
 	async getForum(forumId: string): Promise<Forum> {
-		const data = await this.get(`/forums/${forumId}`)
-		Forum.parse(data)
-
-		return data
+		return this.get(`/forums/${forumId}`, Forum)
 	}
 
 	/**
@@ -66,10 +58,7 @@ export default class ThreadletAPI {
 	 * @throws {ThreadletAPIError}
 	 */
 	async getPosts(forumId: string): Promise<Post[]> {
-		const data = await this.get(`/forums/${forumId}/posts`)
-		Post.array().parse(data)
-
-		return data
+		return this.get(`/forums/${forumId}/posts`, Post.array())
 	}
 
 	/**
@@ -80,10 +69,7 @@ export default class ThreadletAPI {
 	 * @throws {ThreadletAPIError}
 	 */
 	async createPost(forumId: string, post: PostOptions): Promise<Post> {
-		const data = await this.post(`/forums/${forumId}/posts`, post)
-		Post.parse(data)
-
-		return data
+		return this.post(`/forums/${forumId}/posts`, post, Post)
 	}
 
 	/**
@@ -93,10 +79,7 @@ export default class ThreadletAPI {
 	 * @throws {ThreadletAPIError}
 	 */
 	async getUser(userId: string): Promise<User> {
-		const data = await this.get(`/users/${userId}`)
-		User.parse(data)
-
-		return data
+		return this.get(`/users/${userId}`, User)
 	}
 
 	/**
@@ -108,10 +91,7 @@ export default class ThreadletAPI {
 	 * @throws {ThreadletAPIError}
 	 */
 	async createMessage(forumId: string, postId: string, msg: MessageOptions): Promise<Message> {
-		const data = await this.post(`/forums/${forumId}/posts/${postId}/messages`, msg)
-		Message.parse(data)
-
-		return data
+		return this.post(`/forums/${forumId}/posts/${postId}/messages`, msg, Message)
 	}
 
 	/**
@@ -121,13 +101,10 @@ export default class ThreadletAPI {
 	 * @returns all messages on the post
 	 */
 	async getMessages(forumId: string, postId: string): Promise<Message[]> {
-		const data = await this.get(`/forums/${forumId}/posts/${postId}/messages`)
-		Message.array().parse(data)
-
-		return data
+		return this.get(`/forums/${forumId}/posts/${postId}/messages`, Message.array())
 	}
 
-	private get(route: string) {
+	private get<T>(route: string, schema: ZodType<T>): Promise<T> {
 		return fetch(`${this.API_ROOT}${route}`, {
 			method: "GET",
 			headers: {
@@ -139,11 +116,17 @@ export default class ThreadletAPI {
 			if (!res.ok) {
 				throw new ThreadletAPIError(route, res.status, res.statusText, "GET", null, data)
 			}
-			return data
+
+			const { data: parsedData, error } = schema.safeParse(data)
+			if (error) {
+				throw new ThreadletZodError(route, res.status, res.statusText, "GET", null, error, data)
+			}
+
+			return parsedData
 		})
 	}
 
-	private post(route: string, requestBody: any) {
+	private post<T>(route: string, requestBody: any, schema: ZodType<T>): Promise<T> {
 		return fetch(`${this.API_ROOT}${route}`, {
 			method: "POST",
 			headers: {
@@ -157,6 +140,12 @@ export default class ThreadletAPI {
 				console.log(res, data)
 				throw new ThreadletAPIError(route, res.status, res.statusText, "POST", requestBody, data)
 			}
+
+			const { data: parsedData, error } = schema.safeParse(data)
+			if (error) {
+				throw new ThreadletZodError(route, res.status, res.statusText, "POST", requestBody, error, data)
+			}
+
 			return data
 		})
 	}
