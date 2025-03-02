@@ -2,6 +2,10 @@ import { CDN as DiscordCDN } from "@discordjs/rest"
 
 const cdn = new DiscordCDN()
 
+/**
+ * Interface to interact with the Discord and Threadlet CDN
+ * @module
+ */
 export default class CDN {
 
 	static avatar(userId: string, avatarHash: string | null): string {

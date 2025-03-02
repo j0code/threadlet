@@ -1,3 +1,9 @@
+/**
+ * API types
+ * @module
+ */
+
+/** */
 export type Forum = {
 	id: string,
 	name: string,

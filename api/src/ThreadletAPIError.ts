@@ -1,3 +1,9 @@
+/**
+ * Threadlet API Error
+ * 
+ * Provides additional info for debugging
+ * @module
+ */
 export default class ThreadletAPIError extends Error {
 
 	route: string
