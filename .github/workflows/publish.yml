@@ -19,7 +19,7 @@ jobs:
         working-directory: ./api
         run: |
           npm i
-          git checkout -- api/package-lock.json
+          git checkout -- ./package-lock.json
 
       - name: Publish package
         working-directory: ./api
