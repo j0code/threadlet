@@ -1,9 +1,10 @@
 {
 	"name": "@j0code/threadlet-api",
 	"version": "0.0.0",
+	"license": "GPL-3.0-or-later",
 	"exports": {
-		".": "./api.ts",
-		"./cdn": "./cdn.ts",
-		"./types": "./types.ts"
+		".": "./src/api.ts",
+		"./cdn": "./src/cdn.ts",
+		"./types": "./src/types.ts"
 	}
 }
