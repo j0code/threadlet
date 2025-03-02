@@ -23,7 +23,7 @@ export default class ThreadletAPIError extends Error {
 		this.rawError = rawError
 	}
 
-	get message() {
+	get message(): string {
 		const meta = {
 			route: this.route,
 			status: this.status,
