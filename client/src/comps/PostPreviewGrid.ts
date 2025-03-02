@@ -1,4 +1,4 @@
-import { Forum } from "../api/types";
+import { Forum } from "@j0code/threadlet-api/types";
 import { api } from "../main";
 import Component from "./Component";
 import PostPreview from "./PostPreview";

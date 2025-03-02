@@ -1,6 +1,6 @@
 import Component from "./Component"
-import { User } from "../api/types"
-import CDN from "../api/cdn"
+import { User } from "@j0code/threadlet-api/types"
+import CDN from "@j0code/threadlet-api/cdn"
 
 export default class PostAuthor extends Component {
 

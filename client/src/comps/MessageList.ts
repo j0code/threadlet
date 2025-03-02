@@ -1,4 +1,4 @@
-import { Message as APIMessage, type Post } from "../api/types"
+import { type Post } from "@j0code/threadlet-api/types"
 import { api } from "../main"
 import Component from "./Component"
 import Message from "./Message"

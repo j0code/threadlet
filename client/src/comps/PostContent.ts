@@ -1,6 +1,5 @@
-import { Post } from "../api/types"
+import { Post } from "@j0code/threadlet-api/types"
 import { markdownToHtml } from "../md"
-import Author from "./PostAuthor"
 import Component from "./Component"
 
 export default class PostContent extends Component {

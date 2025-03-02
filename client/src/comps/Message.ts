@@ -1,4 +1,4 @@
-import { type Message as APIMessage } from "../api/types"
+import { type Message as APIMessage } from "@j0code/threadlet-api/types"
 import { markdownToHtml } from "../md"
 import Component from "./Component"
 

@@ -1,4 +1,4 @@
-import { Post } from "../api/types"
+import { Post } from "@j0code/threadlet-api/types"
 import { app, views } from "../main"
 import Component from "./Component"
 

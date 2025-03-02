@@ -1,4 +1,4 @@
-import { Marked, MarkedExtension, RendererObject, TokenizerAndRendererExtension, TokenizerObject } from "marked"
+import { Marked, RendererObject, TokenizerAndRendererExtension } from "marked"
 import { markedHighlight } from "marked-highlight"
 import hljs from "highlight.js"
 import DOMPurify from "dompurify"
