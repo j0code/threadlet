@@ -15,7 +15,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Publish package
+      - name: Change dir and generate node_modules
         run: |
           cd ./api
-          npx jsr publish
+          npm i
+          git checkout -- .
+
+      - name: Publish package
+        run: npx jsr publish
