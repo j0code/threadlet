@@ -6,5 +6,11 @@
 		".": "./src/api.ts",
 		"./cdn": "./src/cdn.ts",
 		"./types": "./src/types.ts"
+	},
+	"publish": {
+		"include": [
+			"LICENSE",
+			"src/**/*.ts"
+		]
 	}
 }
