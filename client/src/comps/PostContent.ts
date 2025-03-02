@@ -1,4 +1,4 @@
-import { Post } from "@j0code/threadlet-api/types"
+import { Post } from "@j0code/threadlet-api/v0/types"
 import { markdownToHtml } from "../md"
 import Component from "./Component"
 

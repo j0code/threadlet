@@ -10,7 +10,7 @@ export function getApp(config: Config): Application {
 
 	app.post(`/token`, async (req, res) => {
 		// Exchange the code for an access_token
-		const response = await fetch(`https://discord.com/oauth2/token`, {
+		const response = await fetch(`https://discord.com/api/oauth2/token`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
@@ -24,7 +24,15 @@ export function getApp(config: Config): Application {
 		})
 	
 		// Retrieve the access_token from the response
-		const { access_token } = await response.json()
+		let data: any
+		try {
+			data = await response.json()
+		} catch (e) {
+			console.error("[ERR]: received invalid json from Discord", e)
+			res.status(500).send({ status: 500, detail: "received invalid json from Discord" })
+			return
+		}
+		const { access_token } = data
 	
 		// Fetch user
 		const user = await fetchDiscordUser(access_token)

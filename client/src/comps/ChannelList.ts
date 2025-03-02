@@ -1,4 +1,4 @@
-import { Forum } from "@j0code/threadlet-api/types";
+import { Forum } from "@j0code/threadlet-api/v0/types";
 import { app, views } from "../main";
 import Component from "./Component";
 import FormButton from "./FormButton";

@@ -1,4 +1,4 @@
-import { Post } from "@j0code/threadlet-api/types"
+import { Post } from "@j0code/threadlet-api/v0/types"
 import PostAuthor from "./PostAuthor"
 import PostContent from "./PostContent"
 import View from "./View"

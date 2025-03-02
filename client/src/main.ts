@@ -5,7 +5,7 @@ import "../md.css"
 import "highlight.js/styles/github-dark.min.css"
 import App from "./comps/App"
 import ForumCreateForm from "./comps/ForumCreateForm"
-import ThreadletAPI from "@j0code/threadlet-api"
+import ThreadletAPI from "@j0code/threadlet-api/v0"
 import { Routes } from "discord-api-types/v10"
 import PostCreateForm from "./comps/PostCreateForm"
 import ForumView from "./comps/ForumView"
@@ -78,7 +78,7 @@ async function setupDiscordSdk() {
 	// Note: We need to prefix our backend `/api/token` route with `/.proxy` to stay compliant with the CSP.
 	// Read more about constructing a full URL and using external resources at
 	// https://discord.com/developers/docs/activities/development-guides#construct-a-full-url
-	const response = await fetch("/.proxy/api/token", {
+	const response = await fetch(`/.proxy/api/v0/token`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json"
