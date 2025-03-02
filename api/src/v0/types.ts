@@ -3,7 +3,7 @@
  * @module
  */
 
-import { z, ZodType } from "zod"
+import { z } from "zod"
 
 /** Shitty helper type (needed because jsr wants to make my life harder than it already is) */
 type ObjSchema<T extends object> = z.ZodObject<any, "strip", z.ZodTypeAny, T, T>

@@ -1,12 +1,13 @@
 {
 	"name": "@j0code/threadlet-api",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"license": "GPL-3.0-or-later",
 	"exports": {
-		".": "./src/api.ts",
-		"./cdn": "./src/cdn.ts",
-		"./types": "./src/types.ts",
-		"./error": "./src/ThreadletAPIError.ts"
+		".":          "./src/v0/api.ts",
+		"./error":    "./src/ThreadletAPIError.ts",
+		"./v0":       "./src/v0/api.ts",
+		"./v0/cdn":   "./src/v0/cdn.ts",
+		"./v0/types": "./src/v0/types.ts"
 	},
 	"publish": {
 		"include": [

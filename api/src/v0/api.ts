@@ -1,5 +1,7 @@
-import ThreadletAPIError from "./ThreadletAPIError.js"
+import ThreadletAPIError from "../ThreadletAPIError.js"
 import { User, Forum, Post, type ForumOptions, type PostOptions, type MessageOptions, Message } from "./types.js"
+
+const API_VERSION = "v0"
 
 /**
  * Threadlet API
@@ -169,5 +171,5 @@ export type APIOptions = {
 }
 
 const defaultOptions: APIOptions = {
-	API_ROOT: "/.proxy/api"
+	API_ROOT: `/.proxy/api/${API_VERSION}`
 }
