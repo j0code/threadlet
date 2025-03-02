@@ -6,7 +6,7 @@
 		".": "./src/api.ts",
 		"./cdn": "./src/cdn.ts",
 		"./types": "./src/types.ts",
-		"./error": "./src/error.ts"
+		"./error": "./src/ThreadletAPIError.ts"
 	},
 	"publish": {
 		"include": [
