@@ -15,11 +15,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Change dir and generate node_modules
+      - name: Generate node_modules
+        working-directory: ./api
         run: |
-          cd ./api
           npm i
-          git checkout -- .
+          git checkout -- api/package-lock.json
 
       - name: Publish package
+        working-directory: ./api
         run: npx jsr publish
