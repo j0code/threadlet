@@ -18,4 +18,5 @@ jobs:
       - name: Publish package
         run: |
           cd ./api
+          npm i
           npx jsr publish
