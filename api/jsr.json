@@ -1,5 +1,5 @@
 {
-	"name": "threadlet-api",
+	"name": "@j0code/threadlet-api",
 	"version": "0.0.0",
 	"exports": {
 		".": "./api.ts",
