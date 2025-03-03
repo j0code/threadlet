@@ -1,6 +1,7 @@
 import { Post } from "@j0code/threadlet-api/v0/types"
 import { app, views } from "../main"
 import Component from "./Component"
+import { twemojiParse } from "../md"
 
 export default class PostPreview extends Component {
 
@@ -13,7 +14,7 @@ export default class PostPreview extends Component {
 
 		const titleElement = document.createElement("span")
 		titleElement.className = "post-preview-title"
-		titleElement.textContent = this.post.name
+		titleElement.innerHTML = twemojiParse(this.post.name)
 
 		const descriptionElement = document.createElement("span")
 		descriptionElement.className = "post-preview-description"

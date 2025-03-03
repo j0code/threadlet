@@ -1,3 +1,4 @@
+import { twemojiParse } from "../md";
 import Component from "./Component";
 
 export default abstract class Form extends Component {
@@ -12,7 +13,7 @@ export default abstract class Form extends Component {
 
 		this.titleElement = document.createElement("span")
 		this.titleElement.className = "form-title"
-		this.titleElement.textContent = title
+		this.titleElement.innerHTML = twemojiParse(title)
 		const formHead  = document.createElement("div")
 		formHead.className = "form-head"
 		formHead.appendChild(this.titleElement)

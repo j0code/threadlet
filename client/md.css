@@ -52,3 +52,63 @@
 .md > :last-child {
     margin-bottom: 0px;
 }
+
+img.emoji {
+	height: 1em;
+	width: 1em;
+	margin: 0 .05em 0 .1em;
+	vertical-align: -0.1em;
+}
+
+.md .markdown-alert {
+	border-left: 3px solid white;
+	padding-left: var(--gap)
+}
+
+.markdown-alert-title {
+	fill: currentColor;
+	display: flex;
+	flex-direction: row;
+	gap: var(--gap-half);
+	align-items: center;
+}
+
+.md .markdown-alert-note {
+	border-left-color: #4493f8;
+
+	.markdown-alert-title {
+		color: #4493f8;
+	}
+}
+
+.md .markdown-alert-tip {
+	border-left-color: #3fb950;
+	
+	.markdown-alert-title {
+		color: #3fb950;
+	}
+}
+
+.md .markdown-alert-important {
+	border-left-color: #ab7df8;
+
+	.markdown-alert-title {
+		color: #ab7df8;
+	}
+}
+
+.md .markdown-alert-warning {
+	border-left-color: #d29922;
+
+	.markdown-alert-title {
+		color: #d29922;
+	}
+}
+
+.md .markdown-alert-caution {
+	border-left-color: #f85149;
+
+	.markdown-alert-title {
+		color: #f85149;
+	}
+}

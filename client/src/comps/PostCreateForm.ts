@@ -4,6 +4,7 @@ import Form from "./Form"
 import FormButton from "./FormButton"
 import FormTextarea from "./FormTextarea"
 import FormTextInput from "./FormTextInput"
+import { twemojiParse } from "../md"
 
 export default class PostCreateForm extends Form {
 
@@ -29,7 +30,7 @@ export default class PostCreateForm extends Form {
 	}
 
 	reset(forum: Forum) {
-		this.titleElement.textContent = `(${forum.name}) Create Post`
+		this.titleElement.innerHTML = `(${twemojiParse(forum.name)}) Create Post`
 		this.nameInput.clear()
 		this.descriptionInput.clear()
 

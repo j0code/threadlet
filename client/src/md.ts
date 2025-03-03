@@ -2,6 +2,8 @@ import { Marked, RendererObject, TokenizerAndRendererExtension } from "marked"
 import { markedHighlight } from "marked-highlight"
 import hljs from "highlight.js"
 import DOMPurify from "dompurify"
+import twemoji from "@discordapp/twemoji"
+import markedAlert from "marked-alert"
 
 const marked = new Marked()
 
@@ -39,7 +41,7 @@ const underlineExtension: TokenizerAndRendererExtension = {
 }
 
 // Override the link renderer so that links open in a new tab
-const linkRenderer: RendererObject = {
+const renderer: RendererObject = {
 	link(token) {
 		const { href, title, text } = token
 		let out = `<a href="${href}"`
@@ -49,10 +51,18 @@ const linkRenderer: RendererObject = {
 		out += ' target="_blank" rel="noopener noreferrer">'
 		out += `${text}</a>`
 		return out
+	},
+
+	text(token) {
+		const { text } = token
+
+		return twemoji.parse(text, icon => {
+			return `/twemoji/svg/${icon}.svg`
+		})
 	}
 }
 
-marked.use({ extensions: [underlineExtension], renderer: linkRenderer}, markedHighlight({
+marked.use({ extensions: [underlineExtension], renderer}, markedHighlight({
 	emptyLangClass: "hljs",
 	langPrefix: "hljs language-",
 	highlight(code, lang, info) {
@@ -61,7 +71,7 @@ marked.use({ extensions: [underlineExtension], renderer: linkRenderer}, markedHi
 		if (!supported) code = `${lang}\n${code}` // BUG: this for some reason includes text before ``` on the same line :/
 		return hljs.highlight(code, { language }).value
 	}
-}))
+}), markedAlert())
 
 // Sanitize configuration (customize as needed)
 DOMPurify.addHook("afterSanitizeAttributes", (node) => {
@@ -82,4 +92,12 @@ export function markdownToHtml(markdown: string): string {
 		FORBID_TAGS: ["style", "script", "applet", "iframe", "object"],
 		FORBID_ATTR: ["style", "onerror", "onload"]
 	}*/)
+}
+
+export function twemojiParse(text: string) {
+	text = text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+
+	return twemoji.parse(text, icon => {
+		return `/twemoji/svg/${icon}.svg`
+	})
 }
