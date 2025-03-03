@@ -13,11 +13,12 @@
   },
   "dependencies": {
     "@discordjs/rest": "^2.4.3",
-    "@j0code/threadlet-api": "npm:@jsr/j0code__threadlet-api@^0.0.6",
+    "@j0code/threadlet-api": "npm:@jsr/j0code__threadlet-api@^0.0.8",
     "@j0code/yson": "npm:@jsr/j0code__yson@^1.2.4",
     "better-sqlite3": "^11.8.1",
     "discord-api-types": "^0.37.119",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "zod-validation-error": "^3.4.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.12",

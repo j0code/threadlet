@@ -1,9 +1,10 @@
 import { Application } from "express"
 import { Config } from "../main.js"
-import { fetchDiscordUser, generateId, secureApiCall } from "../util.js"
+import { fetchDiscordUser, generateId, parse, respond, respondError, secureApiCall } from "../util.js"
 import { dbStmt } from "../db.js"
 import { Session } from "../types.js"
 import express from "express"
+import { ForumOptions, MessageOptions, PostOptions } from "@j0code/threadlet-api/v0/types"
 
 export function getApp(config: Config): Application {
 	const app = express()
@@ -29,20 +30,20 @@ export function getApp(config: Config): Application {
 			data = await response.json()
 		} catch (e) {
 			console.error("[ERR]: received invalid json from Discord", e)
-			res.status(500).send({ status: 500, detail: "received invalid json from Discord" })
+			respondError(res, { status: 500, message: "received invalid json from Discord" })
 			return
 		}
 		const { access_token } = data
 		if (!access_token || typeof access_token != "string") {
 			console.error("[ERR]: received no access token from Discord", data)
-			res.status(400).send({ status: 500, detail: "no access token provided" })
+			respondError(res, { status: 500, message: "no access token provided" })
 			return
 		}
 	
 		// Fetch user
 		const user = await fetchDiscordUser(access_token)
 		if (!user) {
-			res.status(500).send({ status: 500, detail: "Discord user not found" })
+			respondError(res, { status: 500, message: "Discord user not found" })
 			return
 		}
 	
@@ -52,36 +53,38 @@ export function getApp(config: Config): Application {
 			dbStmt.createSession.run(generateId(), user.id, access_token)
 		} catch (e) {
 			console.error("[ERR] could not create session:", e)
-			res.status(500).send({ status: 500, detail: "session creation failed" })
+			respondError(res, { status: 500, message: "session creation failed" })
 			return
 		}
 	
 		// Return the access_token to our client as { access_token: "..."}
-		res.send({access_token})
+		respond(res, 200, { access_token })
 	})
 	
 	app.get("/forums", secureApiCall((_, res) => {
 		try {
 			const forums = dbStmt.getForums.all()
-			res.status(200).send(forums)
+			respond(res, 200, forums)
 		} catch (e) {
 			console.error("[ERR] could not get forums:", e)
-			res.status(500).send({ status: 500, detail: "forums query failed" })
+			respondError(res, { status: 500, message: "forums query failed" })
 		}
 	}))
 	
 	app.post("/forums", secureApiCall(async (req, res, user) => {
-		const data = req.body
+		const { data, error } = parse(ForumOptions, req.body)
+		if (error) return respondError(res, error)
+
 		console.log("New forum:", user.username, data)
 	
 		try {
 			const id = generateId()
 			dbStmt.createForum.run(id, user.id, data.name)
 			const forum = dbStmt.getForum.get(id)
-			res.status(201).send(forum)
+			respond(res, 201, forum)
 		} catch (e) {
 			console.error("[ERR] could not create forum:", e)
-			res.status(500).send({ status: 500, detail: "forum creation failed" })
+			respondError(res, { status: 500, message: "forum creation failed" })
 		}
 	}))
 	
@@ -90,10 +93,10 @@ export function getApp(config: Config): Application {
 	
 		try {
 			const forum = dbStmt.getForum.get(forumId)
-			res.status(200).send(forum)
+			respond(res, 200, forum)
 		} catch (e) {
 			console.error("[ERR] could not get forum:", e)
-			res.status(500).send({ status: 500, detail: "forum query failed" })
+			respondError(res, { status: 500, message: "forum query failed" })
 		}
 	}))
 	
@@ -102,23 +105,25 @@ export function getApp(config: Config): Application {
 	
 		try {
 			const posts = dbStmt.getPosts.all(forumId)
-			res.status(200).send(posts)
+			respond(res, 200, posts)
 		} catch (e) {
 			console.error("[ERR] could not get posts:", e)
-			res.status(500).send({ status: 500, detail: "posts query failed" })
+			respondError(res, { status: 500, message: "posts query failed" })
 		}
 	}))
 	
 	app.post("/forums/:id/posts", secureApiCall(async (req, res, user) => {
-		const data = req.body
 		const forumId = req.params.id
+		const { data, error } = parse(PostOptions, req.body)
+		if (error) return respondError(res, error)
+
 		console.log("New post:", forumId, data)
 	
 		try {
 			dbStmt.getForum.get(forumId)
 		} catch (e) {
 			console.error("[ERR] could not get forum:", e)
-			res.status(404).send({ status: 404, detail: "forum not found" })
+			respondError(res, { status: 404, message: "forum not found" })
 			return
 		}
 	
@@ -126,11 +131,11 @@ export function getApp(config: Config): Application {
 		try {
 			dbStmt.createPost.run(id, forumId, user.id, data.name, data.description)
 			const post = dbStmt.getPost.get(id)
-			res.status(201).send(post)
+			respond(res, 201, post)
 		} catch (e) {
 			console.error("[ERR] could not create post:", e)
 			console.log(id, forumId, user.id, data.name, data.description)
-			res.status(500).send({ status: 500, detail: "post creation failed" })
+			respondError(res, { status: 500, message: "post creation failed" })
 		}
 	}))
 	
@@ -141,40 +146,38 @@ export function getApp(config: Config): Application {
 			const session = dbStmt.getSessionFromId.get(userId) as Session | undefined
 			if (!session) {
 				console.error("[ERR] no session", userId)
-				res.status(500).send({ status: 500, detail: "no available session" })
+				respondError(res, { status: 500, message: "no available session" })
 				return
 			}
 	
 			const user = await fetchDiscordUser(session.token)
+			if (!user) return respondError(res, { status: 500, message: "Discord refused (e.g. expired token)" })
 	
-			if (!user) {
-				res.status(500).send({ status: 500, detail: "Discord refused (e.g. expired token)" })
-				return
-			}
-	
-			res.status(200).send({ id: user.id, name: user.global_name, avatar: user.avatar, bot: user.bot ?? false })
+			respond(res, 200, { id: user.id, name: user.global_name, avatar: user.avatar, bot: user.bot ?? false })
 		} catch (e) {
 			console.error("[ERR] could not get user:", e)
-			res.status(500).send({ status: 500, detail: "user query failed" })
+			respondError(res, { status: 500, message: "user query failed" })
 		}
 	}))
 	
 	app.post("/forums/:forum_id/posts/:post_id/messages", secureApiCall(async (req, res, user) => {
-		const data = req.body
 		const forumId = req.params.forum_id
 		const postId  = req.params.post_id
+		const { data, error } = parse(MessageOptions, req.body)
+		if (error) return respondError(res, error)
+
 		console.log("New message:", forumId, postId, data)
 	
 		try {
 			const post = dbStmt.getPost.get(postId)
 			// @ts-expect-error TODO: use API types
 			if (post.forum_id != forumId) {
-				res.status(404).send({ status: 404, detail: "post not found" })
+				respondError(res, { status: 404, message: "post not found" })
 				return
 			}
 		} catch (e) {
 			console.error("[ERR] could not get post:", e)
-			res.status(404).send({ status: 404, detail: "post not found" })
+			respondError(res, { status: 404, message: "post not found" })
 			return
 		}
 	
@@ -182,10 +185,10 @@ export function getApp(config: Config): Application {
 			const id = generateId()
 			dbStmt.createMessage.run(id, postId, user.id, data.content)
 			const msg = dbStmt.getMessage.get(id)
-			res.status(201).send(msg)
+			respond(res, 201, msg)
 		} catch (e) {
-			console.error("[ERR] could not message post:", e)
-			res.status(500).send({ status: 500, detail: "message creation failed" })
+			console.error("[ERR] could not create message:", e)
+			respondError(res, { status: 500, message: "message creation failed" })
 		}
 	}))
 	
@@ -197,21 +200,21 @@ export function getApp(config: Config): Application {
 			const post = dbStmt.getPost.get(postId)
 			// @ts-expect-error TODO: use API types
 			if (post.forum_id != forumId) {
-				res.status(404).send({ status: 404, detail: "post not found" })
+				respondError(res, { status: 404, message: "post not found" })
 				return
 			}
 		} catch (e) {
 			console.error("[ERR] could not get post:", e)
-			res.status(404).send({ status: 404, detail: "post not found" })
+			respondError(res, { status: 404, message: "post not found" })
 			return
 		}
 	
 		try {
 			const messages = dbStmt.getMessages.all(postId)
-			res.status(200).send(messages)
+			respond(res, 200, messages)
 		} catch (e) {
 			console.error("[ERR] could not get messages:", e)
-			res.status(500).send({ status: 500, detail: "messages query failed" })
+			respondError(res, { status: 500, message: "messages query failed" })
 		}
 	}))
 

@@ -1,8 +1,10 @@
 import { REST } from "@discordjs/rest"
 import { dbStmt } from "./db.js"
-import { Session } from "./types.js"
+import { APIError, Session, ValidationError } from "./types.js"
 import { APIUser, Routes } from "discord-api-types/v10"
 import { Request, RequestHandler, Response } from "express"
+import { fromZodError } from "zod-validation-error"
+import { ZodType } from "zod"
 
 export function generateId(): string {
 	return randomHex(16)
@@ -67,4 +69,31 @@ export function secureApiCall(handler: (req: Request, res: Response, user: APIUs
 
 		handler(req, res, user, session)
 	}
+}
+
+type parseReturn<T> = { data: T, error: undefined } | { data: undefined, error: ValidationError }
+
+export function parse<T>(schema: ZodType<T>, rawData: unknown): parseReturn<T> {
+	const { data, error: zodError } = schema.safeParse(rawData)
+
+	if (zodError) {
+		const valErr = fromZodError(zodError, { prefix: null, issueSeparator: "\u0000", unionSeparator: "\u0001" })
+		const error: ValidationError = {
+			status: 400,
+			message: "validation error",
+			errors: zodError.format(),
+			messages: valErr.message.split("\u0000").flatMap(msg => msg.split("\u0001"))
+		}
+		return { data: undefined, error}
+	}
+
+	return { data, error: undefined }
+}
+
+export function respond(res: Response, status: number, data: unknown) {
+	res.status(status).send(data)
+}
+
+export function respondError(res: Response, info: APIError ) {
+	res.status(info.status).send(info)
 }
