@@ -1,12 +1,21 @@
-import { api } from "../main"
+import { api, app } from "../main"
 import Component from "./Component"
+import EmojiPicker from "./EmojiPicker"
 import PostView from "./PostView"
 
 // Credits to DeepSeek-R1, wow (edited though)
 export default class ChatInput extends Component {
 
+	readonly emojiPicker: EmojiPicker
+
 	constructor(postView: PostView) {
 		super("div", { id: "chat-input-container" })
+
+		// Emoji Picker
+		this.emojiPicker = new EmojiPicker("chat-input-emoji-picker", "chat-input-container", emoji => {
+			chatInput.textContent += emoji.native
+		})
+		this.element.append(this.emojiPicker.element)
 
 		// Create file upload button
 		const fileUploadLabel = document.createElement("label")
@@ -52,6 +61,8 @@ export default class ChatInput extends Component {
 		// Create emoji button
 		const emojiButton = document.createElement("button")
 		emojiButton.className = "emoji-button"
+		emojiButton.setAttribute("popovertarget", "chat-input-emoji-picker")
+		emojiButton.setAttribute("popovertargetaction", "show")
 
 		// Div-engers, Assemble!
 		this.element.appendChild(fileUploadLabel)

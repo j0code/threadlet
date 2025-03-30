@@ -273,7 +273,7 @@ body {
 .message-header {
 	min-height: 19px;
 	gap: var(--gap-half);
-    display: flex;
+	display: flex;
 }
 
 .message-timestamp {
@@ -302,6 +302,7 @@ body {
 	padding: 10px;
 	margin: var(--gap);
 	gap: var(--gap-half);
+	anchor-name: --emoji-picker-anchor;
 }
 
 .file-upload-button, .emoji-button {
@@ -349,49 +350,67 @@ body {
 }
 
 .file-upload-button::after {
-    content: '';
-    mask: url('/assets/plus-icon.svg') no-repeat center;
-    mask-size: contain;
-    background-color: currentColor;
-    width: 32px;
-    height: 32px;
-    display: block;
+	content: '';
+	mask: url('/assets/plus-icon.svg') no-repeat center;
+	mask-size: contain;
+	background-color: currentColor;
+	width: 32px;
+	height: 32px;
+	display: block;
 }
 
 .emoji-button::after {
-    content: '';
-    mask: url('/assets/emoji-icon.svg') no-repeat center;
-    mask-size: contain;
-    background-color: currentColor;
-    width: 32px;
-    height: 32px;
-    display: block;
+	content: '';
+	mask: url('/assets/emoji-icon.svg') no-repeat center;
+	mask-size: contain;
+	background-color: currentColor;
+	width: 32px;
+	height: 32px;
+	display: block;
 }
 
 ::-webkit-scrollbar {
-    width: var(--scrollbar-thickness);
-    height: var(--scrollbar-thickness);
+	width: var(--scrollbar-thickness);
+	height: var(--scrollbar-thickness);
 }
 
 ::-webkit-scrollbar-button {
-    display: none;
+	display: none;
 }
 
 ::-webkit-scrollbar-thumb {
-    min-height: 44px;
-    min-width: 44px;
+	min-height: 44px;
+	min-width: 44px;
 }
 
 ::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-track {
-    background-color: dimgray;
-    border: calc(var(--scrollbar-thickness) / 4) solid transparent;
-    background-clip: padding-box;
-    border-radius: calc(var(--scrollbar-thickness) / 2);
+	background-color: dimgray;
+	border: calc(var(--scrollbar-thickness) / 4) solid transparent;
+	background-clip: padding-box;
+	border-radius: calc(var(--scrollbar-thickness) / 2);
 }
 
 ::-webkit-scrollbar-track,
 ::-webkit-scrollbar-track-piece,
 ::-webkit-scrollbar-corner {
-    background-color: transparent;
+	background-color: transparent;
+}
+
+.emoji-picker {
+	display: none;
+	border: none;
+	background-color: rgb(21, 22, 23);
+	padding: 0px;
+	margin: initial;
+	inset: unset;
+	position: fixed;
+	bottom: anchor(top);
+	right: anchor(right);
+    margin-bottom: var(--gap-half);
+	position-anchor: --emoji-picker-anchor;
+}
+
+.emoji-picker:popover-open {
+	display: flex;
 }

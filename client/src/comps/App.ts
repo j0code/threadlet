@@ -1,5 +1,6 @@
 import ChannelList from "./ChannelList"
 import Component from "./Component"
+import EmojiPicker from "./EmojiPicker"
 import Form from "./Form"
 import View from "./View"
 
