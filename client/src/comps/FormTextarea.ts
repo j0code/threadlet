@@ -1,24 +1,33 @@
 import Component from "./Component"
+import EmojiButton from "./EmojiButton"
 
 export default class FormTextarea extends Component {
 
-	constructor(id: string, placeholder: string, min: number = 0, max: number = 256) {
-		super("textarea", { id, classes: ["form-input", "form-textarea"] })
+	private readonly textarea: HTMLTextAreaElement
 
-		const elem = this.element as HTMLInputElement
-		elem.placeholder = placeholder
-		elem.minLength = min
-		elem.maxLength = max
+	constructor(id: string, placeholder: string, min: number = 0, max: number = 256, emojiInput: boolean = true) {
+		super("div", { id, classes: ["form-input", "form-textarea"] })
+
+		this.textarea = document.createElement("textarea")
+		this.textarea.placeholder = placeholder
+		this.textarea.minLength = min
+		this.textarea.maxLength = max
+		this.element.append(this.textarea)
+
+		if (emojiInput) {
+			const emojiButton = new EmojiButton(id, emoji => {
+				this.textarea.value += emoji.native
+			})
+			this.element.append(emojiButton.element)
+		}
 	}
 
 	get value() {
-		const elem = this.element as HTMLInputElement
-		return elem.value
+		return this.textarea.value
 	}
 
 	clear() {
-		const elem = this.element as HTMLInputElement
-		elem.value = ""
+		this.textarea.value = ""
 	}
 
 }

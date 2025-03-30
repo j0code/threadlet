@@ -2,7 +2,7 @@ import pickerData from "@emoji-mart/data"
 import { Picker } from "emoji-mart"
 import Component from "./Component"
 
-type EmojiMetaData = {
+export type EmojiMetaData = {
 	id: string
 	native: string
 }

@@ -11,12 +11,6 @@ export default class ChatInput extends Component {
 	constructor(postView: PostView) {
 		super("div", { id: "chat-input-container" })
 
-		// Emoji Picker
-		this.emojiPicker = new EmojiPicker("chat-input-emoji-picker", "chat-input-container", emoji => {
-			chatInput.textContent += emoji.native
-		})
-		this.element.append(this.emojiPicker.element)
-
 		// Create file upload button
 		const fileUploadLabel = document.createElement("label")
 		fileUploadLabel.className = "file-upload-button"
@@ -64,10 +58,16 @@ export default class ChatInput extends Component {
 		emojiButton.setAttribute("popovertarget", "chat-input-emoji-picker")
 		emojiButton.setAttribute("popovertargetaction", "show")
 
+		// Emoji Picker
+		this.emojiPicker = new EmojiPicker("chat-input-emoji-picker", "chat-input-container", emoji => {
+			chatInput.textContent += emoji.native
+		})
+
 		// Div-engers, Assemble!
 		this.element.appendChild(fileUploadLabel)
 		this.element.appendChild(chatInput)
 		this.element.appendChild(emojiButton)
+		this.element.appendChild(this.emojiPicker.element)
 	}
 
 }

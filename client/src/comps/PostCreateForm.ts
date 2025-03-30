@@ -16,8 +16,8 @@ export default class PostCreateForm extends Form {
 	constructor() {
 		super("Create Post", { id: "post-create-view", classes: ["view"] } )
 
-		this.nameInput = new FormTextInput("post-name", "Post Name", 0, 128)
-		this.descriptionInput = new FormTextarea("post-description", "Post Description", 0, 16384)
+		this.nameInput = new FormTextInput("post-name", "Post Name", 0, 128, true)
+		this.descriptionInput = new FormTextarea("post-description", "Post Description", 0, 16384, true)
 		const submitButton = new FormButton("post-submit", "Post", () => {
 			if (this.currentForumId) {
 				submit(this.currentForumId, this)

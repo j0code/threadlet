@@ -19,6 +19,8 @@
 	--scrollbar-thickness: 16px;
 	--message-hover-bg: rgba(0 0 0 / 0.08);
 	--text-muted: darkgray;
+	--button-color: #b9bbbe;
+	--hover-highlight: #dcddde;
 }
 
 a {
@@ -123,17 +125,30 @@ body {
 	gap: var(--gap-half);
 }
 
-.form-input {
-	padding: 8px;
+.form-input input,
+.form-input textarea {
+	width: 100%;
+	box-sizing: border-box;
+	padding: var(--gap-half);
 	outline: none;
 	font-size: 22px;
+	border: none;
+	border-radius: 5px;
+
+	:hover, :active {
+		border: none;
+		border-radius: 5px;
+	}
 }
 
+.form-textarea,
 .form-text-input {
-
+	padding: 0px;
+	position: relative;
+	anchor-name: --emoji-picker-anchor;
 }
 
-.form-textarea {
+.form-textarea textarea {
 	resize: none;
 	line-height: 1.2;
 	height: calc(5em * 1.2); /* line-height: 1.2 */
@@ -143,13 +158,7 @@ body {
 	width: fit-content;
 	cursor: pointer;
 	padding: .38em 1.4em;
-}
-
-.form-input,
-.form-input:hover,
-.form-input:active {
-	border: none;
-	border-radius: 5px;
+	font-size: 22px;
 }
 
 #forum-view {
@@ -308,7 +317,7 @@ body {
 .file-upload-button, .emoji-button {
 	background: none;
 	border: none;
-	color: #b9bbbe;
+	color: var(--button-color);
 	cursor: pointer;
 	padding: 8px;
 	border-radius: 4px;
@@ -318,7 +327,7 @@ body {
 }
 
 .file-upload-button:hover, .emoji-button:hover {
-	color: #dcddde;
+	color: var(--hover-highlight);
 }
 
 .chat-input {
@@ -360,12 +369,16 @@ body {
 }
 
 .emoji-button::after {
+	width: 32px;
+	height: 32px;
+}
+
+.emoji-button::after,
+.overlay-emoji-button::after {
 	content: '';
 	mask: url('/assets/emoji-icon.svg') no-repeat center;
 	mask-size: contain;
 	background-color: currentColor;
-	width: 32px;
-	height: 32px;
 	display: block;
 }
 
@@ -407,10 +420,50 @@ body {
 	position: fixed;
 	bottom: anchor(top);
 	right: anchor(right);
-    margin-bottom: var(--gap-half);
+	margin-bottom: var(--gap-half);
 	position-anchor: --emoji-picker-anchor;
+}
+
+.emoji-picker-container.down .emoji-picker {
+	top: anchor(bottom);
+	bottom: unset;
+	margin: initial;
+	margin-top: var(--gap-half);
 }
 
 .emoji-picker:popover-open {
 	display: flex;
+}
+
+.overlay-emoji-button {
+	position: absolute;
+	right: 5px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 4px;
+	color: var(--button-color);
+	border-radius: 4px;
+	transition: background-color 0.2s;
+}
+
+/* For regular inputs - keep vertically centered */
+.form-text-input .overlay-emoji-button {
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+/* For textareas - position at top */
+.form-textarea .overlay-emoji-button {
+	top: var(--gap-half);
+	transform: none;
+}
+
+.overlay-emoji-button:hover {
+	color: var(--hover-highlight);
+}
+
+.overlay-emoji-button::after {
+	width: 24px;
+	height: 24px;
 }
