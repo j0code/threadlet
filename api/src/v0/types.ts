@@ -21,7 +21,7 @@ export type TagOptions = Omit<Tag, "id" | "created_at" | "edited_at" | "forum_id
 export type Forum = {
 	id: string,
 	name: string,
-	tags: Tag[],
+	tags?: Tag[],
 	created_at: string
 }
 
@@ -69,7 +69,7 @@ const TagSchema = z.object({
 const ForumSchema = z.object({
 	id: z.string(),
 	name: z.string(),
-	tags: TagSchema.array(),
+	tags: TagSchema.array().optional(),
 	created_at: z.string()
 })
 

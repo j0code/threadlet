@@ -80,7 +80,18 @@ export function getApp(config: Config): Application {
 		try {
 			const id = generateId()
 			dbStmt.createForum.run(id, user.id, data.name)
-			const forum = dbStmt.getForum.get(id)
+
+			for (let i = 0; i < data.tags.length; i++) {
+				const tag = data.tags[i]
+				const tagId = generateId()
+				try {
+					dbStmt.createTag.run(tagId, id, tag.emoji, tag.name)
+				} catch (e) {
+					console.error("[ERR] could not create tag:", e)
+				}
+			}
+
+			const forum = getForum(id)
 			respond(res, 201, forum)
 		} catch (e) {
 			console.error("[ERR] could not create forum:", e)
@@ -92,7 +103,7 @@ export function getApp(config: Config): Application {
 		const forumId = req.params.id
 	
 		try {
-			const forum = dbStmt.getForum.get(forumId)
+			const forum = getForum(forumId)
 			respond(res, 200, forum)
 		} catch (e) {
 			console.error("[ERR] could not get forum:", e)
@@ -120,7 +131,7 @@ export function getApp(config: Config): Application {
 		console.log("New post:", forumId, data)
 	
 		try {
-			dbStmt.getForum.get(forumId)
+			getForum(forumId)
 		} catch (e) {
 			console.error("[ERR] could not get forum:", e)
 			respondError(res, { status: 404, message: "forum not found" })
@@ -219,4 +230,11 @@ export function getApp(config: Config): Application {
 	}))
 
 	return app
+}
+
+function getForum(forumId: string) {
+	const forum: any   = dbStmt.getForum.get(forumId)
+	const tags:  any[] = dbStmt.getTags.all(forumId)
+
+	return { ...forum, tags }
 }

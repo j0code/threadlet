@@ -25,6 +25,10 @@ const _dbStmt = {
 	getMessages:   db.prepare(`SELECT messages.*, forum_id FROM messages INNER JOIN posts ON post_id = posts.id WHERE posts.id = ?`),
 	getMessage:    db.prepare(`SELECT messages.*, forum_id FROM messages INNER JOIN posts ON post_id = posts.id WHERE messages.id = ?`),
 	createMessage: db.prepare(`INSERT INTO messages (id, post_id, author_id, content) VALUES (?, ?, ?, ?)`),
+
+	getTags:       db.prepare(`SELECT * FROM tags WHERE forum_id = ?`),
+	getTag:        db.prepare(`SELECT * FROM tags WHERE id = ?`),
+	createTag:     db.prepare(`INSERT INTO tags (id, forum_id, emoji, name) VALUES (?, ?, ?, ?)`),
 } as const satisfies Record<string, Statement>
 
 export const dbStmt: Record<string, Statement> = _dbStmt
