@@ -43,6 +43,15 @@ CREATE TABLE IF NOT EXISTS messages (
 	created_at DATE       NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS tags (
+	id         TEXT(16) NOT NULL PRIMARY KEY,
+	forum_id   TEXT(16) NOT NULL REFERENCES forums(id),
+	emoji      TEXT(16) NOT NULL, -- either emoji char or custom emoji id
+	name       TEXT(20) NOT NULL,
+	edited_at  DATE     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	created_at DATE     NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 --INSERT INTO users  (id) VALUES (''); -- TESTING
 --INSERT INTO forums (id, owner_id, name) VALUES ('lol',       '', 'cool forum'); -- TESTING
 --INSERT INTO forums (id, owner_id, name) VALUES ('forum2',    '', 'second forum'); -- TESTING

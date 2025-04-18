@@ -62,7 +62,7 @@ export default class ThreadletAPI {
 	}
 
 	/**
-	 * Create a noew post
+	 * Create a new post
 	 * @param forumId id of the forum
 	 * @param post post options
 	 * @returns the post
