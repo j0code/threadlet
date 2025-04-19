@@ -81,8 +81,9 @@ export function getApp(config: Config): Application {
 			const id = generateId()
 			dbStmt.createForum.run(id, user.id, data.name)
 
-			for (let i = 0; i < data.tags.length; i++) {
-				const tag = data.tags[i]
+			const tags = data.tags ?? []
+			for (let i = 0; i < tags.length; i++) {
+				const tag = tags[i]
 				const tagId = generateId()
 				try {
 					dbStmt.createTag.run(tagId, id, tag.emoji, tag.name)

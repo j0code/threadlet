@@ -125,8 +125,8 @@ body {
 	gap: var(--gap-half);
 }
 
-.form-input input,
-.form-input textarea {
+.form-text-input input,
+.form-textarea textarea {
 	width: 100%;
 	box-sizing: border-box;
 	padding: var(--gap-half);
@@ -159,6 +159,22 @@ body {
 	cursor: pointer;
 	padding: .38em 1.4em;
 	font-size: 22px;
+}
+
+.form-input-list {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: var(--gap-half);
+    padding-left: var(--gap);
+}
+
+.form-input-list :first-child {
+    /* display: contents; */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--gap-half);
 }
 
 #forum-view {

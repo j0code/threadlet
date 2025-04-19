@@ -4,7 +4,7 @@ import "../style.css"
 import "../md.css"
 import "highlight.js/styles/github-dark.min.css"
 import App from "./comps/App"
-import ForumCreateForm from "./comps/ForumCreateForm"
+import ForumSettingsForm from "./comps/ForumSettingsForm"
 import ThreadletAPI from "@j0code/threadlet-api/v0"
 import { APIUser, Routes } from "discord-api-types/v10"
 import PostCreateForm from "./comps/PostCreateForm"
@@ -21,7 +21,7 @@ export let app: App
 export let clientUser: APIUser
 
 export const views = {
-	forumCreateForm: new ForumCreateForm(),
+	forumCreateForm: new ForumSettingsForm(),
 	postCreateForm:  new PostCreateForm(),
 	forumView: new ForumView(),
 	postView: new PostView(),
