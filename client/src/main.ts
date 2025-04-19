@@ -112,7 +112,17 @@ export const views = {
 // 	app = new App(forums)
 // }
 
-setupOIDC()
+setupOIDC().then(async () => {
+	document.getElementById("loadingScreen")!.remove()
+	document.body.appendChild(app.element)
+
+	api.on("messageCreate", msg => {
+		const view = app.getCurrentView()
+		if (!(view instanceof PostView)) return
+		if (view.getCurrentPostId() != msg.post_id) return
+		view.msgList.pushMessage(msg)
+	})
+})
 
 async function setupOIDC() {
 	api  = new ThreadletAPI("", {
@@ -184,15 +194,6 @@ async function setupOIDC() {
 		return;
 	}
 	app = new App(forums)
-	document.getElementById("loadingScreen")!.remove()
-	document.body.appendChild(app.element)
-
-	api.on("messageCreate", msg => {
-		const view = app.getCurrentView()
-		if (!(view instanceof PostView)) return
-		if (view.getCurrentPostId() != msg.post_id) return
-		view.msgList.pushMessage(msg)
-	})
 }
 
 async function initiateOIDCLogin() {
