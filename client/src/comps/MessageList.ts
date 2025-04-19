@@ -19,11 +19,22 @@ export default class MessageList extends Component {
 		for (let msg of msgs) {
 			this.pushMessage(msg)
 		}
+
+		this.element.scrollTop = this.element.scrollHeight
 	}
 
 	pushMessage(msg: APIMessage) {
+		const autoscroll = this.element.scrollTop + this.element.clientHeight >= this.element.scrollHeight - 10
+
 		const comp = new Message(msg)
 		this.element.appendChild(comp.element)
+
+		if (autoscroll) {
+			this.element.scrollTo({
+				top: this.element.scrollHeight,
+				behavior: "smooth"
+			})
+		}
 	}
 
 }
