@@ -41,7 +41,7 @@ export type Post = {
 }
 
 export type PostOptions = Omit<Post, "id" | "tags" | "created_at" | "edited_at" | "forum_id" | "poster_id"> & {
-	tags?: TagOptions[]
+	tags?: string[] // tag ids
 }
 
 export type User = {
@@ -124,4 +124,4 @@ export const ForumOptions:    ObjSchema<ForumOptions>    = ForumSchema
 	
 export const PostOptions:     ObjSchema<PostOptions>     = PostSchema
 	.omit({ id: true, forum_id: true, poster_id: true, edited_at: true, created_at: true })
-	.extend({ tags: TagOptions.array().optional() })
+	.extend({ tags: z.string().array().optional() })
