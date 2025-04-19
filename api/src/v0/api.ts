@@ -62,6 +62,17 @@ export default class ThreadletAPI {
 	}
 
 	/**
+	 * Get a post from ID
+	 * @param forumId id of the forum
+	 * @param postId id of the post
+	 * @returns the post
+	 * @throws {ThreadletAPIError}
+	 */
+	async getPost(forumId: string, postId: string): Promise<Post> {
+		return this.get(`/forums/${forumId}/posts/${postId}`, Post)
+	}
+
+	/**
 	 * Create a new post
 	 * @param forumId id of the forum
 	 * @param post post options

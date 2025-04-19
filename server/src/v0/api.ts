@@ -123,6 +123,19 @@ export function getApp(config: Config): Application {
 			respondError(res, { status: 500, message: "posts query failed" })
 		}
 	}))
+
+	app.get("/forums/:forum_id/posts/:post_id", secureApiCall((req, res) => {
+		const forumId = req.params.forum_id
+		const postId  = req.params.post_id
+	
+		try {
+			const post = getPost(postId)
+			respond(res, 200, post)
+		} catch (e) {
+			console.error("[ERR] could not get post:", e)
+			respondError(res, { status: 500, message: "post query failed" })
+		}
+	}))
 	
 	app.post("/forums/:id/posts", secureApiCall(async (req, res, user) => {
 		const forumId = req.params.id
