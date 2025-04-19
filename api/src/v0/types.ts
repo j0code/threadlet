@@ -25,7 +25,9 @@ export type Forum = {
 	created_at: string
 }
 
-export type ForumOptions = Omit<Forum, "id" | "created_at">
+export type ForumOptions = Omit<Forum, "id" | "tags" | "created_at"> & {
+	tags?: TagOptions[]
+}
 
 export type Post = {
 	id: string,
@@ -106,7 +108,7 @@ export const User:    ObjSchema<User>    = UserSchema
 export const Message: ObjSchema<Message> = MessageSchema
 export const Tag:     ObjSchema<Tag>     = TagSchema
 
-export const ForumOptions:    ObjSchema<ForumOptions>    = ForumSchema.omit({ id: true, created_at: true })
 export const PostOptions:     ObjSchema<PostOptions>     = PostSchema.omit({ id: true, forum_id: true, poster_id: true, edited_at: true, created_at: true })
 export const MessageOptions:  ObjSchema<MessageOptions>  = MessageSchema.omit({ id: true, forum_id: true, post_id: true, author_id: true, edited_at: true, created_at: true })
 export const TagOptions:      ObjSchema<TagOptions>      = TagSchema.omit({ id: true, forum_id: true, edited_at: true, created_at: true })
+export const ForumOptions:    ObjSchema<ForumOptions>    = ForumSchema.omit({ id: true, created_at: true }).extend({ tags: TagOptions.array().optional() })
