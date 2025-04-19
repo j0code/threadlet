@@ -10,6 +10,12 @@ export type Config = {
 	oauth: {
 		client_id: string,
 		client_secret: string
+	},
+	oidc: {
+		client_id: string,
+		auth_url: string,
+		token_url: string,
+		userinfo_url: string,
 	}
 }
 
