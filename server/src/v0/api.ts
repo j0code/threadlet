@@ -142,7 +142,23 @@ export function getApp(config: Config): Application {
 		const id = generateId()
 		try {
 			dbStmt.createPost.run(id, forumId, user.id, data.name, data.description)
-			const post = dbStmt.getPost.get(id)
+
+			const tags = data.tags ?? []
+			// @ts-expect-error db results untyped
+			const availableTags = dbStmt.getTags.all(forumId).map(tag => tag.id)
+
+			for (let i = 0; i < tags.length; i++) {
+				if (!availableTags.includes(tags[i])) {
+					continue // unknown tag
+				}
+				try {
+					dbStmt.createPostTag.run(tags[i], id)
+				} catch (e) {
+					console.error("[ERR] could not add tag to post:", e)
+				}
+			}
+
+			const post = getPost(id)
 			respond(res, 201, post)
 		} catch (e) {
 			console.error("[ERR] could not create post:", e)
@@ -238,4 +254,11 @@ function getForum(forumId: string) {
 	const tags:  any[] = dbStmt.getTags.all(forumId)
 
 	return { ...forum, tags }
+}
+
+function getPost(postId: string) {
+	const post: any   = dbStmt.getPost.get(postId)
+	const tags: any[] = dbStmt.getPostTags.all(postId)
+
+	return { ...post, tags }
 }

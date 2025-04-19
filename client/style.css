@@ -23,6 +23,7 @@
 	--hover-highlight: #dcddde;
 	--input-bg: #121212;
 	--multi-select-pill-hover-bg: #1a1a1a;
+	--pill-bg: #121212;
 }
 
 a {
@@ -572,4 +573,18 @@ body {
 	padding: 10px;
 	color: var(--text-muted);
 	font-style: italic;
+}
+
+.tag-list {
+    display: flex;
+    gap: calc(var(--gap) / 3);
+    padding-inline: var(--gap);
+}
+
+.tag-pill {
+    background-color: var(--pill-bg);
+    padding: 6px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-family: monospace;
 }

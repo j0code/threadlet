@@ -29,6 +29,9 @@ const _dbStmt = {
 	getTags:       db.prepare(`SELECT * FROM tags WHERE forum_id = ?`),
 	getTag:        db.prepare(`SELECT * FROM tags WHERE id = ?`),
 	createTag:     db.prepare(`INSERT INTO tags (id, forum_id, emoji, name) VALUES (?, ?, ?, ?)`),
+
+	getPostTags:   db.prepare(`SELECT tags.* FROM post_tags INNER JOIN tags ON tag_id = tags.id WHERE post_id = ?`),
+	createPostTag: db.prepare(`INSERT INTO post_tags (tag_id, post_id) VALUES (?, ?)`),
 } as const satisfies Record<string, Statement>
 
 export const dbStmt: Record<string, Statement> = _dbStmt

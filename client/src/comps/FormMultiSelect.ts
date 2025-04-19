@@ -1,18 +1,18 @@
 import Component from "./Component"
 
-type Option = {
+export type FormMultiSelectOption = {
 	id: string,
 	label: string
 }
 
 type MultiSelectOptions = {
-	options: Option[],
+	options: FormMultiSelectOption[],
 	placeholder?: string
 }
 
 export default class FormMultiSelect extends Component {
 
-	private options: Option[]
+	private options: FormMultiSelectOption[]
     private placeholder: string
     private selectedOptions: Set<string>
     private inputContainer: HTMLDivElement
@@ -53,7 +53,7 @@ export default class FormMultiSelect extends Component {
 		this.setupEventListeners()
 	}
 	
-	setupEventListeners() {
+	private setupEventListeners() {
 		this.input.addEventListener("focus", () => {
 			this.dropdown.classList.add("show")
 			this.createOptions()
@@ -77,7 +77,7 @@ export default class FormMultiSelect extends Component {
 		})
 	}
 	
-	createOptions(filter = "") {
+	private createOptions(filter = "") {
 		this.dropdown.innerHTML = ""
 		
 		const filteredOptions = this.options.filter(option => 
@@ -127,7 +127,7 @@ export default class FormMultiSelect extends Component {
 		this.createOptions(this.input.value)
 	}
 	
-	updatePills() {
+	private updatePills() {
 		this.pillsContainer.innerHTML = ""
 		
 		this.selectedOptions.forEach(option => {
@@ -135,7 +135,7 @@ export default class FormMultiSelect extends Component {
 			pill.className = "multi-select-pill"
 			
 			const pillText = document.createElement("span")
-			pillText.textContent = option
+			pillText.textContent = this.options.find(opt => opt.id == option)?.label || option
 			
 			const pillRemove = document.createElement("span")
 			pillRemove.className = "multi-select-pill-remove"
@@ -150,12 +150,18 @@ export default class FormMultiSelect extends Component {
 			this.pillsContainer.appendChild(pill)
 		})
 	}
+
+	clear() {
+		this.selectedOptions.clear()
+		this.updatePills()
+	}
+
+	setOptions(options: FormMultiSelectOption[]) {
+		this.options = options
+	}
 	
 	get value() {
 		return Array.from(this.selectedOptions)
 	}
-	
-	getElement() {
-		return this.element
-	}
+
 }
