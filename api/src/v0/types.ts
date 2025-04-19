@@ -141,5 +141,5 @@ function gatewayEventSchema<Event extends GatewayEvents>(name: Event["event"], s
 	})
 }
 
-export const GatewayEvents =
+export const GatewayEvents: z.Schema<GatewayEvents> =
 	gatewayEventSchema("messageCreate", Message)
