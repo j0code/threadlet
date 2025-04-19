@@ -161,16 +161,12 @@ async function setupOIDC() {
 			location.href = "/";
 		} else {
 			localStorage.setItem("session", result.access_token);
-			location.href = "/";
+			history.replaceState({}, "", "/");
 		}
 	}
 	const session = localStorage.getItem("session");
 	if(session == null) {
-		const auth = await getAuthURL(api);
-		localStorage.setItem("codeVerifier", auth.codeVerifier);
-		localStorage.setItem("oidc_state", auth.state);
-		location.href = auth.url;
-		return;
+		return await initiateOIDCLogin()
 	}
 
 	api  = new ThreadletAPI(session, {
@@ -183,10 +179,19 @@ async function setupOIDC() {
 		forums = await api.getForums()
 	} catch(e) {
 		localStorage.removeItem("session");
-		location.href = "/";
+		await initiateOIDCLogin()
 		return;
 	}
 	app = new App(forums)
 	document.getElementById("loadingScreen")!.remove()
 	document.body.appendChild(app.element)
+}
+
+async function initiateOIDCLogin() {
+	document.querySelector<HTMLSpanElement>("#loadingText")!.innerText = "Authenticating...";
+	const auth = await getAuthURL(api)
+	localStorage.setItem("codeVerifier", auth.codeVerifier)
+	localStorage.setItem("oidc_state", auth.state)
+	location.href = auth.url
+	return
 }
