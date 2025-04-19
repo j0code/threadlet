@@ -1,6 +1,6 @@
 import { DiscordSDK } from "@discord/embedded-app-sdk"
 import { REST } from '@discordjs/rest'
-import "../style.css"
+// import "../style.css"
 import "../md.css"
 import "highlight.js/styles/github-dark.min.css"
 import App from "./comps/App"
