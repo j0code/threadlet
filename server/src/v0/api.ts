@@ -25,7 +25,6 @@ export function getApp(config: Config): Application {
 	})
 
 	app.post("/auth/oidc", async (req, res) => {
-		console.log(req.body);
 		if(!req.body.code || !req.body.codeVerifier) return void respondError(res, { status: 400, message: "missing code or codeVerifier" });
 		let token: OIDCToken;
 		try {
