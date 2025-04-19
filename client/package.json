@@ -16,7 +16,7 @@
     "@discordapp/twemoji": "^15.1.0",
     "@discordjs/rest": "^2.4.3",
     "@emoji-mart/data": "^1.2.1",
-    "@j0code/threadlet-api": "npm:@jsr/j0code__threadlet-api@^0.0.15",
+    "@j0code/threadlet-api": "npm:@jsr/j0code__threadlet-api@^0.0.16",
     "@types/dompurify": "^3.0.5",
     "@types/highlight.js": "^9.12.4",
     "@types/marked": "^5.0.2",

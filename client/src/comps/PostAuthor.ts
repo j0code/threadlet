@@ -21,7 +21,8 @@ export default class PostAuthor extends Component {
 	}
 
 	reset(user: User) {
-		this.avatar.src = CDN.avatar(user.id, user.avatar)
+		// this.avatar.src = CDN.avatar(user.id, user.avatar)
+		this.avatar.src = user.avatar || ""
 		this.name.innerHTML = twemojiParse(user.name)
 	}
 

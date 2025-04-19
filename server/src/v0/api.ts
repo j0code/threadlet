@@ -1,6 +1,6 @@
 import { Application } from "express"
 import { Config } from "../main.js"
-import { fetchDiscordUser, generateId, parse, respond, respondError, secureApiCall } from "../util.js"
+import { fetchDiscordUser, fetchOIDCToken, fetchOIDCUser, generateId, parse, respond, respondError, secureApiCall } from "../util.js"
 import { dbStmt } from "../db.js"
 import { Session } from "../types.js"
 import express from "express"
@@ -15,6 +15,32 @@ let wss: WebSocketServer
 
 export function getApp(config: Config): Application {
 	const app = express()
+
+	app.get("/auth", (req, res) => {
+		res.json({
+			type: "oidc",
+			client_id: config.oidc.client_id,
+			auth_url: config.oidc.auth_url
+		});
+	})
+
+	app.post("/auth/oidc", async (req, res) => {
+		console.log(req.body);
+		if(!req.body.code || !req.body.codeVerifier) return void respondError(res, { status: 400, message: "missing code or codeVerifier" });
+		const token = await fetchOIDCToken(config, req.body.code, req.body.codeVerifier, req.headers.origin || "");
+		const access_token = token.access_token;
+		try {
+			dbStmt.createUser.run(token.id.sub)
+			dbStmt.createSession.run(generateId(), token.id.sub, access_token)
+		} catch (e) {
+			console.error("[ERR] could not create session:", e)
+			respondError(res, { status: 500, message: "session creation failed" })
+			return
+		}
+	
+		// Return the access_token to our client as { access_token: "..."}
+		respond(res, 200, { access_token })
+	});
 
 	app.post(`/token`, async (req, res) => {
 		// Exchange the code for an access_token
@@ -68,7 +94,7 @@ export function getApp(config: Config): Application {
 		respond(res, 200, { access_token })
 	})
 	
-	app.get("/forums", secureApiCall((_, res) => {
+	app.get("/forums", secureApiCall(config, (_, res) => {
 		try {
 			const forums = dbStmt.getForums.all()
 			respond(res, 200, forums)
@@ -78,15 +104,15 @@ export function getApp(config: Config): Application {
 		}
 	}))
 	
-	app.post("/forums", secureApiCall(async (req, res, user) => {
+	app.post("/forums", secureApiCall(config, async (req, res, user) => {
 		const { data, error } = parse(ForumOptions, req.body)
 		if (error) return respondError(res, error)
 
-		console.log("New forum:", user.username, data)
+		console.log("New forum:", user.preferred_username, data)
 	
 		try {
 			const id = generateId()
-			dbStmt.createForum.run(id, user.id, data.name)
+			dbStmt.createForum.run(id, user.sub, data.name)
 
 			const tags = data.tags ?? []
 			for (let i = 0; i < tags.length; i++) {
@@ -107,7 +133,7 @@ export function getApp(config: Config): Application {
 		}
 	}))
 	
-	app.get("/forums/:id", secureApiCall((req, res) => {
+	app.get("/forums/:id", secureApiCall(config, (req, res) => {
 		const forumId = req.params.id
 	
 		try {
@@ -119,7 +145,7 @@ export function getApp(config: Config): Application {
 		}
 	}))
 	
-	app.get("/forums/:id/posts", secureApiCall((req, res) => {
+	app.get("/forums/:id/posts", secureApiCall(config, (req, res) => {
 		const forumId = req.params.id
 	
 		try {
@@ -131,7 +157,7 @@ export function getApp(config: Config): Application {
 		}
 	}))
 
-	app.get("/forums/:forum_id/posts/:post_id", secureApiCall((req, res) => {
+	app.get("/forums/:forum_id/posts/:post_id", secureApiCall(config, (req, res) => {
 		const forumId = req.params.forum_id
 		const postId	= req.params.post_id
 	
@@ -144,7 +170,7 @@ export function getApp(config: Config): Application {
 		}
 	}))
 	
-	app.post("/forums/:id/posts", secureApiCall(async (req, res, user) => {
+	app.post("/forums/:id/posts", secureApiCall(config, async (req, res, user) => {
 		const forumId = req.params.id
 		const { data, error } = parse(PostOptions, req.body)
 		if (error) return respondError(res, error)
@@ -161,7 +187,7 @@ export function getApp(config: Config): Application {
 	
 		const id = generateId()
 		try {
-			dbStmt.createPost.run(id, forumId, user.id, data.name, data.description)
+			dbStmt.createPost.run(id, forumId, user.sub, data.name, data.description)
 
 			const tags = data.tags ?? []
 			// @ts-expect-error db results untyped
@@ -182,12 +208,12 @@ export function getApp(config: Config): Application {
 			respond(res, 201, post)
 		} catch (e) {
 			console.error("[ERR] could not create post:", e)
-			console.log(id, forumId, user.id, data.name, data.description)
+			console.log(id, forumId, user.sub, data.name, data.description)
 			respondError(res, { status: 500, message: "post creation failed" })
 		}
 	}))
 	
-	app.get("/users/:id", secureApiCall(async (req, res) => {
+	app.get("/users/:id", secureApiCall(config, async (req, res) => {
 		const userId = req.params.id
 	
 		try {
@@ -198,17 +224,19 @@ export function getApp(config: Config): Application {
 				return
 			}
 	
-			const user = await fetchDiscordUser(session.token)
+			// const user = await fetchDiscordUser(session.token)
+			const user = await fetchOIDCUser(config, session.token)
 			if (!user) return respondError(res, { status: 500, message: "Discord refused (e.g. expired token)" })
 	
-			respond(res, 200, { id: user.id, name: user.global_name, avatar: user.avatar, bot: user.bot ?? false })
+			// respond(res, 200, { id: user.sub, name: user.preferred_username, avatar: user.picture, bot: user.bot ?? false })
+			respond(res, 200, { id: user.sub, name: user.preferred_username, avatar: user.picture, bot: false })
 		} catch (e) {
 			console.error("[ERR] could not get user:", e)
 			respondError(res, { status: 500, message: "user query failed" })
 		}
 	}))
 	
-	app.post("/forums/:forum_id/posts/:post_id/messages", secureApiCall(async (req, res, user) => {
+	app.post("/forums/:forum_id/posts/:post_id/messages", secureApiCall(config, async (req, res, user) => {
 		const forumId = req.params.forum_id
 		const postId	= req.params.post_id
 		const { data, error } = parse(MessageOptions, req.body)
@@ -231,7 +259,7 @@ export function getApp(config: Config): Application {
 	
 		try {
 			const id = generateId()
-			dbStmt.createMessage.run(id, postId, user.id, data.content)
+			dbStmt.createMessage.run(id, postId, user.sub, data.content)
 			const msg = dbStmt.getMessage.get(id)
 			respond(res, 201, msg)
 
@@ -242,7 +270,7 @@ export function getApp(config: Config): Application {
 		}
 	}))
 	
-	app.get("/forums/:forum_id/posts/:post_id/messages", secureApiCall(async (req, res) => {
+	app.get("/forums/:forum_id/posts/:post_id/messages", secureApiCall(config, async (req, res) => {
 		const forumId = req.params.forum_id
 		const postId	= req.params.post_id
 	

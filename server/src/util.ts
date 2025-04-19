@@ -5,6 +5,7 @@ import { APIUser, Routes } from "discord-api-types/v10"
 import { Request, RequestHandler, Response } from "express"
 import { fromZodError } from "zod-validation-error"
 import { ZodType } from "zod"
+import { Config } from "./main.js"
 
 export function generateId(): string {
 	return randomHex(16)
@@ -53,7 +54,64 @@ export async function fetchDiscordUser(access_token: string): Promise<APIUser | 
 	}
 }
 
-export function secureApiCall(handler: (req: Request, res: Response, user: APIUser, session: Session) => void): RequestHandler {
+export type OIDCUser = {
+	aud: string[],
+	exp: number,
+	family_name: string, // Last name of the user
+	given_name: string, // First name of the user
+	iat: number,
+	iss: string, // Auth server
+	name: string, // Full name of the user
+	picture: string, // URL to the user's avatar
+	preferred_username: string,
+	sub: string, // Subject - Identifier for the End-User at the Issuer.
+	type: string
+};
+
+export type OIDCToken = {
+	access_token: string,
+	token_type: "Bearer",
+	id_token: string,
+	id: OIDCUser, // Generated from id_token
+	refresh_token: string,
+	expires_in: number,
+};
+
+export async function fetchOIDCToken(config: Config, code: string, codeVerifier: string, origin: string): Promise<OIDCToken> {
+	const params = new URLSearchParams();
+	params.append("grant_type", "authorization_code");
+	params.append("code", code);
+	params.append("client_id", "3da7e35e-7e50-4a0d-93f2-c59efa245e05");
+	params.append("code_verifier", codeVerifier);
+	params.append("redirect_uri", `${origin}/auth_callback`);
+
+	const res = await fetch(config.oidc.token_url, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded"
+		},
+		body: params
+	}).then(res => res.json());
+
+	console.log(res);
+	const id_token = res.id_token; // This is a JWT which contains the user's identity
+	const user = JSON.parse(atob(id_token.split(".")[1]));
+	return {
+		...res,
+		id: user,
+	};
+}
+
+export async function fetchOIDCUser(config: Config, access_token: string): Promise<OIDCUser> {
+	return await fetch(config.oidc.userinfo_url, {
+		method: "GET",
+		headers: {
+			"Authorization": `Bearer ${access_token}`
+		}
+	}).then(res => res.json());
+}
+
+export function secureApiCall(config: Config, handler: (req: Request, res: Response, user: OIDCUser, session: Session) => void): RequestHandler {
 	return async (req, res) => {
 		const session = await checkAuth(req.headers.authorization)
 		if (!session) {
@@ -61,11 +119,12 @@ export function secureApiCall(handler: (req: Request, res: Response, user: APIUs
 			return
 		}
 
-		const user = await fetchDiscordUser(session.token)
-		if (!user) {
-			res.status(500).send({ status: 500, detail: "Discord user not found" })
-			return
-		}
+		// const user = await fetchDiscordUser(session.token)
+		// if (!user) {
+		// 	res.status(500).send({ status: 500, detail: "Discord user not found" })
+		// 	return
+		// }
+		const user = await fetchOIDCUser(config, session.token)
 
 		handler(req, res, user, session)
 	}

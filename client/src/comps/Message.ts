@@ -52,7 +52,8 @@ export default class Message extends Component {
 		this.contentElement.innerHTML = markdownToHtml(msg.content)
 
 		const user = await api.getUser(msg.author_id)
-		this.avatarElement.src = CDN.avatar(msg.author_id, user.avatar)
+		// this.avatarElement.src = CDN.avatar(msg.author_id, user.avatar)
+		this.avatarElement.src = user.avatar || ""
 		this.nameElement.innerHTML = twemojiParse(user.name)
 		this.timestampElement.dateTime = msg.created_at
 		this.timestampElement.textContent = new Date(msg.created_at).toLocaleString(clientUser.locale)
