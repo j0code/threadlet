@@ -27,7 +27,7 @@ export default class ThreadletAPI extends EventEmitter {
 		this.GATEWAY  = options.GATEWAY
 		this.access_token = access_token
 
-		this.wss = new WebSocket(`wss://${location.host}/.proxy/api/v0/gateway`)
+		this.wss = new WebSocket(this.GATEWAY)
 
 		this.wss.addEventListener("open", event => {
 			console.log("WebSocket connected!")
