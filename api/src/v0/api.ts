@@ -1,6 +1,7 @@
 import { ZodType } from "zod"
 import ThreadletAPIError, { ThreadletZodError } from "../ThreadletAPIError.js"
-import { User, Forum, Post, type ForumOptions, type PostOptions, type MessageOptions, Message } from "./types.js"
+import { User, Forum, Post, type ForumOptions, type PostOptions, type MessageOptions, Message, GatewayEvents } from "./types.js"
+import EventEmitter from "../EventEmitter.js"
 
 const API_VERSION = "v0"
 
@@ -8,18 +9,58 @@ const API_VERSION = "v0"
  * Threadlet API
  * @module
  */
-export default class ThreadletAPI {
+export default class ThreadletAPI extends EventEmitter {
 
 	public readonly API_ROOT: string
+	public readonly GATEWAY:  string
 
 	/**
 	 * OAuth2 access token
 	 */
 	private readonly access_token: string
 
+	private readonly wss: WebSocket
+
 	constructor(access_token: string, options: APIOptions = defaultOptions) {
+		super()
 		this.API_ROOT = options.API_ROOT
+		this.GATEWAY  = options.GATEWAY
 		this.access_token = access_token
+
+		this.wss = new WebSocket(`wss://${location.host}/.proxy/api/v0/gateway`)
+
+		this.wss.addEventListener("open", event => {
+			console.log("WebSocket connected!")
+		})
+
+		this.wss.addEventListener("message", (event) => {
+			let rawData
+			try {
+				rawData = JSON.parse(event.data)
+			} catch (e) {
+				console.error("Server sent invalid json:", e)
+				this.wss.close(1003, "invalid json data")
+				return
+			}
+
+			console.log("WSS Message:", rawData)
+
+			const { data, error } = GatewayEvents.safeParse(rawData)
+			if (error) {
+				// TODO: log error
+				return
+			}
+
+			this.emit(data.event, data.data)
+		})
+
+		this.wss.addEventListener("error", event => {
+			console.log("WSS error!", event)
+		})
+
+		this.wss.addEventListener("close", event => {
+			console.log("WSS closed", event.code, event.reason, event.wasClean)
+		})
 	}
 
 	/**
@@ -168,8 +209,10 @@ export default class ThreadletAPI {
  */
 export type APIOptions = {
 	API_ROOT: string
+	GATEWAY:  string
 }
 
 const defaultOptions: APIOptions = {
-	API_ROOT: `/.proxy/api/${API_VERSION}`
+	API_ROOT: `/.proxy/api/${API_VERSION}`,
+	GATEWAY:  `/.proxy/api/${API_VERSION}/gateway`
 }

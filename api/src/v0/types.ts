@@ -5,9 +5,6 @@ import { z } from "zod"
  * @module
  */
 
-/** Shitty helper type (needed because jsr wants to make my life harder than it already is) */
-type ObjSchema<T extends object> = z.ZodObject<any, "strip", z.ZodTypeAny, T, T>
-
 export type Tag = {
 	id: string,
 	forum_id: string,
@@ -106,22 +103,43 @@ const MessageSchema = z.object({
 	created_at: z.string()
 })
 
-export const Forum:   ObjSchema<Forum>   = ForumSchema
-export const Post:    ObjSchema<Post>    = PostSchema
-export const User:    ObjSchema<User>    = UserSchema
-export const Message: ObjSchema<Message> = MessageSchema
-export const Tag:     ObjSchema<Tag>     = TagSchema
+export const Forum:   z.Schema<Forum>   = ForumSchema
+export const Post:    z.Schema<Post>    = PostSchema
+export const User:    z.Schema<User>    = UserSchema
+export const Message: z.Schema<Message> = MessageSchema
+export const Tag:     z.Schema<Tag>     = TagSchema
 
-export const MessageOptions:  ObjSchema<MessageOptions>  = MessageSchema
+export const MessageOptions:  z.Schema<MessageOptions>  = MessageSchema
 	.omit({ id: true, forum_id: true, post_id: true, author_id: true, edited_at: true, created_at: true })
 
-export const TagOptions:      ObjSchema<TagOptions>      = TagSchema
+export const TagOptions:      z.Schema<TagOptions>      = TagSchema
 	.omit({ id: true, forum_id: true, edited_at: true, created_at: true })
 
-export const ForumOptions:    ObjSchema<ForumOptions>    = ForumSchema
+export const ForumOptions:    z.Schema<ForumOptions>    = ForumSchema
 	.omit({ id: true, created_at: true })
 	.extend({ tags: TagOptions.array().optional() })
 	
-export const PostOptions:     ObjSchema<PostOptions>     = PostSchema
+export const PostOptions:     z.Schema<PostOptions>     = PostSchema
 	.omit({ id: true, forum_id: true, poster_id: true, edited_at: true, created_at: true })
 	.extend({ tags: z.string().array().optional() })
+
+
+export type GatewayEvent<Event extends string, Data> = {
+	data: Data,
+	event: Event
+}
+
+export type MessageCreateEvent = GatewayEvent<"messageCreate", Message>
+
+export type GatewayEvents = MessageCreateEvent
+
+function gatewayEventSchema<Event extends GatewayEvents>(name: Event["event"], schema: z.Schema<Event["data"]>): z.Schema<Event> {
+	// @ts-ignore
+	return z.object({
+		data: schema,
+		event: z.literal(name)
+	})
+}
+
+export const GatewayEvents =
+	gatewayEventSchema("messageCreate", Message)
