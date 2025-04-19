@@ -186,6 +186,13 @@ async function setupOIDC() {
 	app = new App(forums)
 	document.getElementById("loadingScreen")!.remove()
 	document.body.appendChild(app.element)
+
+	api.on("messageCreate", msg => {
+		const view = app.getCurrentView()
+		if (!(view instanceof PostView)) return
+		if (view.getCurrentPostId() != msg.post_id) return
+		view.msgList.pushMessage(msg)
+	})
 }
 
 async function initiateOIDCLogin() {
