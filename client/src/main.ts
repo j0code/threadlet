@@ -122,6 +122,7 @@ async function setupOIDC() {
 
 	if(location.pathname == "/auth_callback") {
 		console.log("OIDC login callback")
+		document.querySelector<HTMLSpanElement>("#loadingText")!.innerText = "Authenticating...";
 		const state = localStorage.getItem("oidc_state");
 		const codeVerifier = localStorage.getItem("codeVerifier");
 		localStorage.removeItem("oidc_state");
