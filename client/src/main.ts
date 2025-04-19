@@ -178,7 +178,14 @@ async function setupOIDC() {
 		GATEWAY:  "/api/v0/gateway",
 	})
 
-	const forums = await api.getForums()
+	let forums;
+	try {
+		forums = await api.getForums()
+	} catch(e) {
+		localStorage.removeItem("session");
+		location.href = "/";
+		return;
+	}
 	app = new App(forums)
 	document.getElementById("loadingScreen")!.remove()
 	document.body.appendChild(app.element)
