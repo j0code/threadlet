@@ -157,8 +157,8 @@ async function setupOIDC() {
 			})
 		}).then(res => res.json());
 		console.log(result);
-		if(result.error) { // TODO
-			alert(result.error);
+		if(result.message) {
+			alert(result.message);
 			location.href = "/";
 		} else {
 			localStorage.setItem("session", result.access_token);

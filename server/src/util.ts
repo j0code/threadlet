@@ -93,7 +93,11 @@ export async function fetchOIDCToken(config: Config, code: string, codeVerifier:
 		body: params
 	}).then(res => res.json());
 
-	console.log(res);
+	// console.log(res);
+	if(res.error) {
+		console.error("[ERR] OIDC token error:", res.error);
+		throw new Error(res.error);
+	}
 	const id_token = res.id_token; // This is a JWT which contains the user's identity
 	const user = JSON.parse(atob(id_token.split(".")[1]));
 	return {
@@ -102,13 +106,17 @@ export async function fetchOIDCToken(config: Config, code: string, codeVerifier:
 	};
 }
 
-export async function fetchOIDCUser(config: Config, access_token: string): Promise<OIDCUser> {
-	return await fetch(config.oidc.userinfo_url, {
-		method: "GET",
-		headers: {
-			"Authorization": `Bearer ${access_token}`
-		}
-	}).then(res => res.json());
+export async function fetchOIDCUser(config: Config, access_token: string): Promise<OIDCUser | null> {
+	try {
+		return await fetch(config.oidc.userinfo_url, {
+			method: "GET",
+			headers: {
+				"Authorization": `Bearer ${access_token}`
+			}
+		}).then(res => res.json());
+	} catch (e) {
+		return null
+	}
 }
 
 export function secureApiCall(config: Config, handler: (req: Request, res: Response, user: OIDCUser, session: Session) => void): RequestHandler {
@@ -125,6 +133,10 @@ export function secureApiCall(config: Config, handler: (req: Request, res: Respo
 		// 	return
 		// }
 		const user = await fetchOIDCUser(config, session.token)
+		if (!user) {
+			res.status(500).send({ status: 500, detail: "OIDC user not found" })
+			return
+		}
 
 		handler(req, res, user, session)
 	}

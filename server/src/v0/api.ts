@@ -1,6 +1,6 @@
 import { Application } from "express"
 import { Config } from "../main.js"
-import { fetchDiscordUser, fetchOIDCToken, fetchOIDCUser, generateId, parse, respond, respondError, secureApiCall } from "../util.js"
+import { fetchDiscordUser, fetchOIDCToken, fetchOIDCUser, generateId, OIDCToken, parse, respond, respondError, secureApiCall } from "../util.js"
 import { dbStmt } from "../db.js"
 import { Session } from "../types.js"
 import express from "express"
@@ -27,7 +27,13 @@ export function getApp(config: Config): Application {
 	app.post("/auth/oidc", async (req, res) => {
 		console.log(req.body);
 		if(!req.body.code || !req.body.codeVerifier) return void respondError(res, { status: 400, message: "missing code or codeVerifier" });
-		const token = await fetchOIDCToken(config, req.body.code, req.body.codeVerifier, req.headers.origin || "");
+		let token: OIDCToken;
+		try {
+			token = await fetchOIDCToken(config, req.body.code, req.body.codeVerifier, req.headers.origin || "");
+		} catch(e: any) {
+			console.error("[ERR]: could not fetch token:", e)
+			return void respondError(res, { status: 500, message: e.message })
+		}
 		const access_token = token.access_token;
 		try {
 			dbStmt.createUser.run(token.id.sub)
