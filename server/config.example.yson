@@ -4,7 +4,10 @@
 		client_id: "YOUR_CLIENT_ID",
 		client_secret: "YOUR_CLIENT_SECRET"
 	},
-	db: {
-		
+	oidc: {
+		client_id: "YOUR_CLIENT_ID",
+		auth_url: "IDP_AUTHORIZATION_URL",
+		token_url: "IDP_TOKEN_URL",
+		userinfo_url: "IDP_USERINFO_URL"
 	}
 }
