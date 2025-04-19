@@ -23,7 +23,7 @@ export default class PostPreview extends Component {
 		this.element.appendChild(titleElement)
 		this.element.appendChild(descriptionElement)
 		this.element.addEventListener("click", () => {
-			app.renderView(views.postView, this.post)
+			app.renderView(views.postView, this.post.id)
 		})
 	}
 

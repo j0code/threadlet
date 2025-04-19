@@ -5,6 +5,7 @@ import View from "./View"
 import { api } from "../main"
 import ChatInput from "./ChatInput"
 import MessageList from "./MessageList"
+import TagList from "./TagList"
 
 export default class PostView extends View {
 
@@ -12,6 +13,7 @@ export default class PostView extends View {
 	private currentPostId?: string
 
 	public readonly author: PostAuthor
+	private tagList: TagList
 	public readonly content: PostContent
 	public readonly msgList: MessageList
 	public readonly chatInput: ChatInput
@@ -20,6 +22,7 @@ export default class PostView extends View {
 		super("div", { id: "post-view" })
 
 		this.author    = new PostAuthor()
+		this.tagList   = new TagList()
 		this.content   = new PostContent()
 		this.msgList   = new MessageList()
 		this.chatInput = new ChatInput(this)
@@ -30,12 +33,16 @@ export default class PostView extends View {
 		container.appendChild(this.msgList.element)
 
 		this.body.appendChild(this.author.element)
+		this.body.appendChild(this.tagList.element)
 		this.body.appendChild(container)
 		this.element.appendChild(this.chatInput.element)
 	}
 
-	async reset(post: Post) {
+	async reset(postId: string) {
+		const post = await api.getPost("44", postId)
+
 		this.head.reset(post.name)
+		this.tagList.reset(post.tags ?? [])
 		this.content.reset(post)
 		this.msgList.reset(post)
 
