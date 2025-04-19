@@ -35,11 +35,14 @@ export type Post = {
 	poster_id: string
 	name: string,
 	description: string,
+	tags?: Tag[]
 	edited_at: string,
 	created_at: string,
 }
 
-export type PostOptions = Omit<Post, "id" | "created_at" | "edited_at" | "forum_id" | "poster_id">
+export type PostOptions = Omit<Post, "id" | "tags" | "created_at" | "edited_at" | "forum_id" | "poster_id"> & {
+	tags?: TagOptions[]
+}
 
 export type User = {
 	id: string,
@@ -81,6 +84,7 @@ const PostSchema = z.object({
 	poster_id: z.string(),
 	name: z.string(),
 	description: z.string(),
+	tags: TagSchema.array().optional(),
 	edited_at: z.string(),
 	created_at: z.string()
 })
@@ -108,7 +112,16 @@ export const User:    ObjSchema<User>    = UserSchema
 export const Message: ObjSchema<Message> = MessageSchema
 export const Tag:     ObjSchema<Tag>     = TagSchema
 
-export const PostOptions:     ObjSchema<PostOptions>     = PostSchema.omit({ id: true, forum_id: true, poster_id: true, edited_at: true, created_at: true })
-export const MessageOptions:  ObjSchema<MessageOptions>  = MessageSchema.omit({ id: true, forum_id: true, post_id: true, author_id: true, edited_at: true, created_at: true })
-export const TagOptions:      ObjSchema<TagOptions>      = TagSchema.omit({ id: true, forum_id: true, edited_at: true, created_at: true })
-export const ForumOptions:    ObjSchema<ForumOptions>    = ForumSchema.omit({ id: true, created_at: true }).extend({ tags: TagOptions.array().optional() })
+export const MessageOptions:  ObjSchema<MessageOptions>  = MessageSchema
+	.omit({ id: true, forum_id: true, post_id: true, author_id: true, edited_at: true, created_at: true })
+
+export const TagOptions:      ObjSchema<TagOptions>      = TagSchema
+	.omit({ id: true, forum_id: true, edited_at: true, created_at: true })
+
+export const ForumOptions:    ObjSchema<ForumOptions>    = ForumSchema
+	.omit({ id: true, created_at: true })
+	.extend({ tags: TagOptions.array().optional() })
+	
+export const PostOptions:     ObjSchema<PostOptions>     = PostSchema
+	.omit({ id: true, forum_id: true, poster_id: true, edited_at: true, created_at: true })
+	.extend({ tags: TagOptions.array().optional() })

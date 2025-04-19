@@ -52,6 +52,15 @@ CREATE TABLE IF NOT EXISTS tags (
 	created_at DATE     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS post_tags (
+	tag_id     TEXT(16) NOT NULL REFERENCES tags(id),
+	post_id    TEXT(16) NOT NULL REFERENCES forums(id),
+	edited_at  DATE     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	created_at DATE     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+	CONSTRAINT PK_post_tags PRIMARY KEY (tag_id, post_id)
+);
+
 --INSERT INTO users  (id) VALUES (''); -- TESTING
 --INSERT INTO forums (id, owner_id, name) VALUES ('lol',       '', 'cool forum'); -- TESTING
 --INSERT INTO forums (id, owner_id, name) VALUES ('forum2',    '', 'second forum'); -- TESTING
