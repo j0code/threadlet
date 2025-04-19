@@ -4,7 +4,14 @@ import { fetchDiscordUser, generateId, parse, respond, respondError, secureApiCa
 import { dbStmt } from "../db.js"
 import { Session } from "../types.js"
 import express from "express"
-import { ForumOptions, MessageOptions, PostOptions } from "@j0code/threadlet-api/v0/types"
+import { ForumOptions, GatewayEvents, Message, MessageOptions, PostOptions } from "@j0code/threadlet-api/v0/types"
+import WebSocket, { WebSocketServer } from "ws"
+import { Server } from "node:http"
+
+const HEARTBEAT_INTERVAL = 15000
+const CONNECTION_TIMEOUT = 30000
+
+let wss: WebSocketServer
 
 export function getApp(config: Config): Application {
 	const app = express()
@@ -126,7 +133,7 @@ export function getApp(config: Config): Application {
 
 	app.get("/forums/:forum_id/posts/:post_id", secureApiCall((req, res) => {
 		const forumId = req.params.forum_id
-		const postId  = req.params.post_id
+		const postId	= req.params.post_id
 	
 		try {
 			const post = getPost(postId)
@@ -203,7 +210,7 @@ export function getApp(config: Config): Application {
 	
 	app.post("/forums/:forum_id/posts/:post_id/messages", secureApiCall(async (req, res, user) => {
 		const forumId = req.params.forum_id
-		const postId  = req.params.post_id
+		const postId	= req.params.post_id
 		const { data, error } = parse(MessageOptions, req.body)
 		if (error) return respondError(res, error)
 
@@ -227,6 +234,8 @@ export function getApp(config: Config): Application {
 			dbStmt.createMessage.run(id, postId, user.id, data.content)
 			const msg = dbStmt.getMessage.get(id)
 			respond(res, 201, msg)
+
+			broadcast("messageCreate", msg as Message)
 		} catch (e) {
 			console.error("[ERR] could not create message:", e)
 			respondError(res, { status: 500, message: "message creation failed" })
@@ -235,7 +244,7 @@ export function getApp(config: Config): Application {
 	
 	app.get("/forums/:forum_id/posts/:post_id/messages", secureApiCall(async (req, res) => {
 		const forumId = req.params.forum_id
-		const postId  = req.params.post_id
+		const postId	= req.params.post_id
 	
 		try {
 			const post = dbStmt.getPost.get(postId)
@@ -262,15 +271,89 @@ export function getApp(config: Config): Application {
 	return app
 }
 
+export function openWSS(server: Server) {
+	wss = new WebSocketServer({
+		server, 
+		path: "/api/v0/gateway"
+	})
+	const clients: Map<WebSocket, {
+		address: any,
+		lastActivity: number
+	}> = new Map()
+
+	wss.on("connection", (ws, req) => {
+		const metadata = {
+			address: req.headersDistinct["x-forwarded-for"]?.[0] || req.socket.remoteAddress,
+			lastActivity: Date.now()
+		}
+		
+		clients.set(ws, metadata)
+		console.log(`Client connected:`, metadata.address)
+		
+		ws.on("pong", () => metadata.lastActivity = Date.now())
+		
+		// Message handler
+		ws.on("message", (buffer: Buffer) => {
+			metadata.lastActivity = Date.now()
+			const rawData = buffer.toString("utf-8")
+
+			console.log("Received:", rawData)
+			ws.close(1008) // currently no client messages supported
+		})
+		
+		// Close handler
+		ws.on("close", (code, reason) => {
+			clients.delete(ws)
+			console.log(`Client disconnected: ${metadata.address}, ${code} '${reason}'`)
+		})
+		
+		// Error handler
+		ws.on("error", (error) => {
+			console.error(`Client error (${metadata.address}):`, error)
+			clients.delete(ws)
+		})
+	})
+
+	// Heartbeat check
+	setInterval(() => {
+		const now = Date.now()
+		wss.clients.forEach((ws) => {
+			const metadata = clients.get(ws)
+
+			if (!metadata) { // this shouldn't happen...
+				console.log("Terminating connection without metadata")
+				return ws.terminate()
+			}
+
+			if (now - metadata.lastActivity > CONNECTION_TIMEOUT) {
+				console.log("Terminating inactive connection")
+				return ws.terminate()
+			}
+			
+			ws.ping()
+		})
+	}, HEARTBEAT_INTERVAL)
+}
+
+function broadcast<Event extends GatewayEvents>(event: Event["event"], data: Event["data"]) {
+	const raw = JSON.stringify({ event, data })
+
+	wss.clients.forEach(client => {
+		if (client.readyState === WebSocket.OPEN) {
+			client.send(raw)
+		}
+	})
+}
+
 function getForum(forumId: string) {
-	const forum: any   = dbStmt.getForum.get(forumId)
-	const tags:  any[] = dbStmt.getTags.all(forumId)
+	const forum: any	 = dbStmt.getForum.get(forumId)
+	const tags:	any[] = dbStmt.getTags.all(forumId)
 
 	return { ...forum, tags }
 }
 
 function getPost(postId: string) {
-	const post: any   = dbStmt.getPost.get(postId)
+	const post: any	 = dbStmt.getPost.get(postId)
 	const tags: any[] = dbStmt.getPostTags.all(postId)
 
 	return { ...post, tags }

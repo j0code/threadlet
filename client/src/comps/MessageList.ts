@@ -1,4 +1,4 @@
-import { type Post } from "@j0code/threadlet-api/v0/types"
+import { type Post, type Message as APIMessage } from "@j0code/threadlet-api/v0/types"
 import { api } from "../main"
 import Component from "./Component"
 import Message from "./Message"
@@ -17,9 +17,13 @@ export default class MessageList extends Component {
 		const msgs = await api.getMessages(post.forum_id, post.id)
 		
 		for (let msg of msgs) {
-			const comp = new Message(msg)
-			this.element.appendChild(comp.element)
+			this.pushMessage(msg)
 		}
+	}
+
+	pushMessage(msg: APIMessage) {
+		const comp = new Message(msg)
+		this.element.appendChild(comp.element)
 	}
 
 }

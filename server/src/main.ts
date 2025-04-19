@@ -31,6 +31,8 @@ app.use(express.json())
 
 app.use("/api/v0", v0.getApp(config))
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
 	console.log(`Server listening at http://localhost:${port}`)
 })
+
+v0.openWSS(server)

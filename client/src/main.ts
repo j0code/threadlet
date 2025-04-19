@@ -53,6 +53,14 @@ setupDiscordSdk().then(async () => {
 	}
 
 	clientUser = await rest.get(Routes.user()) as APIUser
+
+
+	api.on("messageCreate", msg => {
+		const view = app.getCurrentView()
+		if (!(view instanceof PostView)) return
+		if (view.getCurrentPostId() != msg.post_id) return
+		view.msgList.pushMessage(msg)
+	})
 })
 	
 async function setupDiscordSdk() {

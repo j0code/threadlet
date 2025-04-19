@@ -65,5 +65,5 @@ async function submit(forumId: string, form: PostSettingsForm) {
 	const post = await api.createPost(forumId, { name, description, tags })
 	console.log("Done. Post:", post)
 
-	app.renderView(views.postView, post)
+	app.renderView(views.postView, post.id)
 }
