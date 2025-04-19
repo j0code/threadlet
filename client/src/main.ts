@@ -7,7 +7,7 @@ import App from "./comps/App"
 import ForumSettingsForm from "./comps/ForumSettingsForm"
 import ThreadletAPI from "@j0code/threadlet-api/v0"
 import { APIUser, Routes } from "discord-api-types/v10"
-import PostCreateForm from "./comps/PostCreateForm"
+import PostSettingsForm from "./comps/PostSettingsForm"
 import ForumView from "./comps/ForumView"
 import PostView from "./comps/PostView"
 
@@ -22,7 +22,7 @@ export let clientUser: APIUser
 
 export const views = {
 	forumCreateForm: new ForumSettingsForm(),
-	postCreateForm:  new PostCreateForm(),
+	postCreateForm:  new PostSettingsForm(),
 	forumView: new ForumView(),
 	postView: new PostView(),
 } as const

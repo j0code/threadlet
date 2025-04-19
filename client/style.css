@@ -21,6 +21,8 @@
 	--text-muted: darkgray;
 	--button-color: #b9bbbe;
 	--hover-highlight: #dcddde;
+	--input-bg: #121212;
+	--multi-select-pill-hover-bg: #1a1a1a;
 }
 
 a {
@@ -123,10 +125,11 @@ body {
 
 .form-body {
 	gap: var(--gap-half);
+	flex: 1 1 auto;
 }
 
-.form-text-input input,
-.form-textarea textarea {
+.form-input input:not([type=button]),
+.form-input textarea {
 	width: 100%;
 	box-sizing: border-box;
 	padding: var(--gap-half);
@@ -134,6 +137,7 @@ body {
 	font-size: 22px;
 	border: none;
 	border-radius: 5px;
+	background-color: var(--input-bg);
 
 	:hover, :active {
 		border: none;
@@ -482,4 +486,90 @@ body {
 .overlay-emoji-button::after {
 	width: 24px;
 	height: 24px;
+}
+
+.form-multi-select {
+
+}
+
+.multi-select-input {
+	position: relative;
+}
+
+.multi-select-input input {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+/* TODO: anchor! */
+.multi-select-dropdown {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	max-height: 200px;
+	overflow-y: auto;
+	border-radius: 4px;
+	background: var(--input-bg);
+	z-index: 1000;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.multi-select-dropdown.show {
+	display: block;
+}
+
+.multi-select-option {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 8px 12px;
+	cursor: pointer;
+}
+
+.multi-select-option:hover {
+	background-color: var(--multi-select-pill-hover-bg);
+}
+
+.multi-select-option input[type="checkbox"] {
+	margin-left: 10px;
+	width: initial;
+	pointer-events: none;
+}
+
+.multi-select-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+	margin-top: 10px;
+}
+
+.multi-select-pill {
+	display: flex;
+	align-items: center;
+	border-radius: 16px;
+	padding: 5px 10px;
+	font-size: 14px;
+	cursor: pointer;
+	background-color: var(--input-bg);
+}
+
+.multi-select-pill:hover {
+	background-color: var(--multi-select-pill-hover-bg);
+}
+
+.multi-select-pill-remove {
+	margin-left: 5px;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.no-results {
+	padding: 10px;
+	color: var(--text-muted);
+	font-style: italic;
 }

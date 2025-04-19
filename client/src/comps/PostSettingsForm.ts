@@ -1,24 +1,27 @@
-import { Forum } from "@j0code/threadlet-api/v0/types"
+import { Forum, Post } from "@j0code/threadlet-api/v0/types"
 import { api, app, views } from "../main"
 import Form from "./Form"
 import FormButton from "./FormButton"
 import FormTextarea from "./FormTextarea"
 import FormTextInput from "./FormTextInput"
 import { twemojiParse } from "../md"
+import FormMultiSelect from "./FormMultiSelect"
 
-export default class PostCreateForm extends Form {
+export default class PostSettingsForm extends Form {
 
 	private currentForumId?: string
 
 	readonly nameInput: FormTextInput
 	readonly descriptionInput: FormTextarea
+	readonly tagSelect: FormMultiSelect
 
-	constructor() {
-		super("Create Post", { id: "post-create-view", classes: ["view"] } )
+	constructor(post?: Post) {
+		super(`${post ? "Edit" : "Create"} Post`, { id: "post-settings-view", classes: ["view"] } )
 
 		this.nameInput = new FormTextInput("post-name", "Post Name", 0, 128, true)
 		this.descriptionInput = new FormTextarea("post-description", "Post Description", 0, 16384, true)
-		const submitButton = new FormButton("post-submit", "Post", () => {
+		this.tagSelect = new FormMultiSelect({ options: [{ id: "r", label: "hi" }, { id: "r2", label: "welt" }], placeholder: "Wow!" })
+		const submitButton = new FormButton("post-submit", post ? "Save" : "Post", () => {
 			if (this.currentForumId) {
 				submit(this.currentForumId, this)
 			}
@@ -26,6 +29,7 @@ export default class PostCreateForm extends Form {
 
 		this.body.appendChild(this.nameInput.element)
 		this.body.appendChild(this.descriptionInput.element)
+		this.body.appendChild(this.tagSelect.element)
 		this.body.appendChild(submitButton.element)
 	}
 
@@ -39,12 +43,13 @@ export default class PostCreateForm extends Form {
 
 }
 
-async function submit(forumId: string, form: PostCreateForm) {
+async function submit(forumId: string, form: PostSettingsForm) {
 	const name        = form.nameInput.value
 	const description = form.descriptionInput.value
+	const tags        = form.tagSelect.value
 	if (!name || !description) return
 
-	console.log("Create Post:", name)
+	console.log("Create Post:", name, tags)
 	const post = await api.createPost(forumId, { name, description })
 	console.log("Done. Post:", post)
 
