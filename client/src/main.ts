@@ -125,10 +125,8 @@ setupOIDC().then(async () => {
 })
 
 async function setupOIDC() {
-	api  = new ThreadletAPI("", {
-		API_ROOT: "/api/v0",
-		GATEWAY:  "/api/v0/gateway",
-	})
+	const API_ROOT = "/api/v0";
+	const GATEWAY  = "/api/v0/gateway";
 
 	if(location.pathname == "/auth_callback") {
 		console.log("OIDC login callback")
@@ -157,7 +155,7 @@ async function setupOIDC() {
 			return;
 		}
 
-		const result = await fetch(`${api.API_ROOT}/auth/oidc`, {
+		const result = await fetch(`${API_ROOT}/auth/oidc`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"
@@ -181,8 +179,8 @@ async function setupOIDC() {
 	}
 
 	api  = new ThreadletAPI(session, {
-		API_ROOT: "/api/v0",
-		GATEWAY:  "/api/v0/gateway",
+		API_ROOT,
+		GATEWAY
 	})
 
 	let forums;
