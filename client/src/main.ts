@@ -112,7 +112,7 @@ export const views = {
 // 	app = new App(forums)
 // }
 
-setupOIDC().then(async () => {
+await setupOIDC().then(async () => {
 	document.getElementById("loadingScreen")!.remove()
 	document.body.appendChild(app.element)
 
@@ -175,7 +175,7 @@ async function setupOIDC() {
 	}
 	const session = localStorage.getItem("session");
 	if(session == null) {
-		return await initiateOIDCLogin()
+		return await initiateOIDCLogin(API_ROOT)
 	}
 
 	api  = new ThreadletAPI(session, {
@@ -188,15 +188,15 @@ async function setupOIDC() {
 		forums = await api.getForums()
 	} catch(e) {
 		localStorage.removeItem("session");
-		await initiateOIDCLogin()
+		await initiateOIDCLogin(API_ROOT)
 		return;
 	}
 	app = new App(forums)
 }
 
-async function initiateOIDCLogin() {
+async function initiateOIDCLogin(API_ROOT: string) {
 	document.querySelector<HTMLSpanElement>("#loadingText")!.innerText = "Authenticating...";
-	const auth = await getAuthURL(api)
+	const auth = await getAuthURL(API_ROOT)
 	localStorage.setItem("codeVerifier", auth.codeVerifier)
 	localStorage.setItem("oidc_state", auth.state)
 	location.href = auth.url

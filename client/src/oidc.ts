@@ -2,8 +2,8 @@
 
 import ThreadletAPI from "@j0code/threadlet-api";
 
-export async function getAuthURL(api: ThreadletAPI) {
-	const server_config = await fetch(`${api.API_ROOT}/auth`).then(res => res.json());
+export async function getAuthURL(apiRoot: string) {
+	const server_config = await fetch(`${apiRoot}/auth`).then(res => res.json());
 	if(server_config.type != "oidc") {
 		throw new Error("Server is not configured for OIDC");
 	}
