@@ -30,13 +30,14 @@ If you have access to the app, it should show up when you search for "Threadlet"
 1. cd into the `server` directory
 2. copy the content of `server/config.example.yson` into `server/config.yson`
 3. update the config with the OAuth secret and id from the OAuth2 tab
-4. run `npm install` in the terminal
-5. run `node .` to start the server
+4. run `npm install`
+5. run `tsc`
+6. run `node .` to start the server
 
 ### Cloudflare Tunnel
 > [!NOTE]
 > These steps are for creating a temporary Cloudflare tunnel for development. For production, you should create a permanent one instead.
-1. run `cloudflared tunnel --url http://localhost:5173` in the terminal
+1. run `cloudflared tunnel --url http://localhost:5173`
 2. wait for Cloudflare to establish the tunnel
 3. It should print the url in the terminal, something like `https://abcd.def.ghijk.lmnop.trycloudflare.com`. Copy that url, you will need it later.
 
@@ -45,8 +46,9 @@ If you have access to the app, it should show up when you search for "Threadlet"
 2. update the env with the client id of your app
 3. cd into the `client` directory
 4. update `client/vite.config.js` with your Cloudflare tunnel url without the `https://` (`server.allowedHosts`)
-5. run `npm install` in the terminal
-6. run `npm run dev` to start vite (you can also build first)
+5. run `npm install`
+6. run `tsc`
+7. run `npm run dev` to start vite (you can also build first)
 
 ### Development
 When you want to help development, remember to run the typescript compiler in the `client` and/or `server` directory.
