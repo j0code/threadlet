@@ -5,6 +5,7 @@ import { z } from "zod"
  * @module
  */
 
+/** */
 export type Tag = {
 	id: string,
 	forum_id: string,
@@ -130,10 +131,29 @@ export type GatewayEvent<Event extends string, Data> = {
 }
 
 export type MessageCreateEvent = GatewayEvent<"messageCreate", Message>
+export type MessageDeleteEvent = GatewayEvent<"messageDelete", Message>
+export type ForumCreateEvent   = GatewayEvent<"forumCreate",   Forum>
+export type ForumDeleteEvent   = GatewayEvent<"forumDelete",   Forum>
+export type PostCreateEvent    = GatewayEvent<"postCreate",    Post>
+export type PostDeleteEvent    = GatewayEvent<"postDelete",    Post>
+export type PostTagAddEvent    = GatewayEvent<"postTagAdd",    Tag>
+export type PostTagRemoveEvent = GatewayEvent<"postTagRemove", Tag>
 
-export type GatewayEvents = MessageCreateEvent
+export type GatewayEvents =
+	| MessageCreateEvent
+	| MessageDeleteEvent
+	| ForumCreateEvent
+	| ForumDeleteEvent
+	| PostCreateEvent
+	| PostDeleteEvent
+	| PostTagAddEvent
+	| PostTagRemoveEvent
 
-function gatewayEventSchema<Event extends GatewayEvents>(name: Event["event"], schema: z.Schema<Event["data"]>): z.Schema<Event> {
+// helper types
+type RawShapeOf<T> = T extends z.ZodObject<infer RawShape> ? RawShape : never
+type GatewayEventSchemaType = z.ZodObject<RawShapeOf<GatewayEvents>>
+
+function gatewayEventSchema<Event extends GatewayEvents>(name: Event["event"], schema: z.Schema<Event["data"]>): GatewayEventSchemaType {
 	// @ts-ignore
 	return z.object({
 		data: schema,
@@ -141,5 +161,13 @@ function gatewayEventSchema<Event extends GatewayEvents>(name: Event["event"], s
 	})
 }
 
-export const GatewayEvents: z.Schema<GatewayEvents> =
-	gatewayEventSchema("messageCreate", Message)
+export const GatewayEvents: z.ZodType<GatewayEvents, z.ZodDiscriminatedUnionDef<"event", GatewayEventSchemaType[]>> = z.discriminatedUnion("event", [
+	gatewayEventSchema("messageCreate", Message),
+	gatewayEventSchema("messageDelete", Message),
+	gatewayEventSchema("forumCreate",   Forum),
+	gatewayEventSchema("forumDelete",   Forum),
+	gatewayEventSchema("postCreate",    Post),
+	gatewayEventSchema("postDelete",    Post),
+	gatewayEventSchema("postTagAdd",    Tag),
+	gatewayEventSchema("postTagRemove", Tag),
+])
