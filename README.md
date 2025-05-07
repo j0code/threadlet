@@ -47,14 +47,15 @@ If you have access to the app, it should show up when you search for "Threadlet"
 3. cd into the `client` directory
 4. update `client/vite.config.js` with your Cloudflare tunnel url without the `https://` (`server.allowedHosts`)
 5. run `npm install`
-6. run `tsc`
-7. run `npm run dev` to start vite (you can also build first)
+6. run `npm run dev` to start vite (you can also build first)
 
 ### Development
-When you want to help development, remember to run the typescript compiler in the `client` and/or `server` directory.
+When you want to help development, remember to run the typescript compiler in the `server` directory.
 Tip: run tsc in watch mode: `tsc --watch`
 
 The `api` directory does not need compilation as the JSR does that automatically upon publishing a new version.
+
+The `client` directory does not need it either since vite does that automatically.
 
 ## API
 
