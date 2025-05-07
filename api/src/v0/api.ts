@@ -71,6 +71,30 @@ export default class ThreadletAPI extends EventEmitter {
 		this.wss.addEventListener("close", event => {
 			console.log("WSS closed", event.code, event.reason, event.wasClean)
 		})
+
+		this.on("forumCreate", forum => {
+			this.forumCache.set(forum.id, forum)
+		})
+
+		this.on("forumDelete", forum => {
+			this.forumCache.delete(forum.id)
+		})
+
+		this.on("postCreate", post => {
+			this.postCache.set(post.id, post)
+		})
+
+		this.on("postDelete", post => {
+			this.postCache.delete(post.id)
+		})
+
+		this.on("messageCreate", msg => {
+			this.messageCache.set(msg.id, msg)
+		})
+
+		this.on("messageDelete", msg => {
+			this.messageCache.delete(msg.id)
+		})
 	}
 
 	/**
