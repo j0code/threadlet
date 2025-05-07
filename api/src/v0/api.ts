@@ -19,6 +19,11 @@ export default class ThreadletAPI extends EventEmitter {
 	 */
 	private readonly access_token: string
 
+	public readonly userCache:    Map<string, User>
+	public readonly forumCache:   Map<string, Forum>
+	public readonly postCache:    Map<string, Post>
+	public readonly messageCache: Map<string, Message>
+
 	private readonly wss: WebSocket
 
 	constructor(access_token: string, options: APIOptions = defaultOptions) {
@@ -26,6 +31,11 @@ export default class ThreadletAPI extends EventEmitter {
 		this.API_ROOT = options.API_ROOT
 		this.GATEWAY  = options.GATEWAY
 		this.access_token = access_token
+
+		this.userCache    = new Map()
+		this.forumCache   = new Map()
+		this.postCache    = new Map()
+		this.messageCache = new Map()
 
 		this.wss = new WebSocket(this.GATEWAY)
 
@@ -88,8 +98,15 @@ export default class ThreadletAPI extends EventEmitter {
 	 * @returns the forum
 	 * @throws {ThreadletAPIError}
 	 */
-	async getForum(forumId: string): Promise<Forum> {
-		return this.get(`/forums/${forumId}`, Forum)
+	async getForum(forumId: string, _options?: Partial<FetchOptions>): Promise<Forum> {
+		const options = validateOptions(_options)
+		if (this.forumCache.has(forumId) && !options.force) {
+			return this.forumCache.get(forumId)!
+		}
+
+		const forum = await this.get(`/forums/${forumId}`, Forum)
+		this.forumCache.set(forumId, forum)
+		return forum
 	}
 
 	/**
@@ -109,8 +126,15 @@ export default class ThreadletAPI extends EventEmitter {
 	 * @returns the post
 	 * @throws {ThreadletAPIError}
 	 */
-	async getPost(forumId: string, postId: string): Promise<Post> {
-		return this.get(`/forums/${forumId}/posts/${postId}`, Post)
+	async getPost(forumId: string, postId: string, _options?: Partial<FetchOptions>): Promise<Post> {
+		const options = validateOptions(_options)
+		if (this.postCache.has(postId) && !options.force) {
+			return this.postCache.get(postId)!
+		}
+
+		const post = await this.get(`/forums/${forumId}/posts/${postId}`, Post)
+		this.postCache.set(postId, post)
+		return post
 	}
 
 	/**
@@ -130,8 +154,15 @@ export default class ThreadletAPI extends EventEmitter {
 	 * @returns the user
 	 * @throws {ThreadletAPIError}
 	 */
-	async getUser(userId: string): Promise<User> {
-		return this.get(`/users/${userId}`, User)
+	async getUser(userId: string, _options?: Partial<FetchOptions>): Promise<User> {
+		const options = validateOptions(_options)
+		if (this.userCache.has(userId) && !options.force) {
+			return this.userCache.get(userId)!
+		}
+
+		const user = await this.get(`/users/${userId}`, User)
+		this.userCache.set(user.id, user)
+		return user
 	}
 
 	/**
@@ -215,4 +246,21 @@ export type APIOptions = {
 const defaultOptions: APIOptions = {
 	API_ROOT: `/.proxy/api/${API_VERSION}`,
 	GATEWAY:  `/.proxy/api/${API_VERSION}/gateway`
+}
+
+/**
+ * Fetch options
+ */
+export type FetchOptions = {
+	/** force fetching (skip cache) */
+	force: boolean
+}
+
+const defaultFetchOptions: FetchOptions = {
+	force: false
+}
+
+function validateOptions(options?: Partial<FetchOptions>) {
+	if (!options) return defaultFetchOptions
+	return { ...defaultFetchOptions, ...options}
 }
