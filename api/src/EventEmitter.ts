@@ -1,6 +1,6 @@
 import { GatewayEvents } from "./v0/types.js"
 
-type EventListener<Event extends GatewayEvents> = (data: Event["data"]) => void
+type EventListener<Event extends GatewayEvents["event"]> = (data: Extract<GatewayEvents, { event: Event }>["data"]) => void
 
 export default class EventEmitter {
 
@@ -15,7 +15,7 @@ export default class EventEmitter {
 	 * @param event event name
 	 * @param cb callback
 	 */
-	on<Event extends GatewayEvents>(event: Event["event"], cb: EventListener<Event>) {
+	on<Event extends GatewayEvents["event"]>(event: Event, cb: EventListener<Event>) {
 		const listeners = this.listeners.get(event) ?? []
 		listeners.push(cb)
 		this.listeners.set(event, listeners)
@@ -26,7 +26,7 @@ export default class EventEmitter {
 	 * @param event event name
 	 * @param cb callback
 	 */
-	off<Event extends GatewayEvents>(event: Event["event"], cb: EventListener<Event>) {
+	off<Event extends GatewayEvents["event"]>(event: Event, cb: EventListener<Event>) {
 		const listeners = this.listeners.get(event) ?? []
 		const index = listeners.indexOf(cb)
 		if (index < 0) return
