@@ -1,12 +1,13 @@
 import { Application } from "express"
 import { Config } from "../main.js"
-import { fetchDiscordUser, generateId, parse, respond, respondError, secureApiCall } from "../util.js"
+import { fetchDiscordUser, parse, respond, respondError, secureApiCall } from "../util.js"
 import { dbStmt } from "../db.js"
-import { Session } from "../types.js"
 import express from "express"
-import { Forum, ForumOptions, GatewayEvents, Message, MessageOptions, PostOptions } from "@j0code/threadlet-api/v0/types"
+import { ForumOptions, GatewayEvents, MessageOptions, PostOptions } from "@j0code/threadlet-api/v0/types"
 import WebSocket, { WebSocketServer } from "ws"
 import { Server } from "node:http"
+import apiEvents from "../apiEvents.js"
+import { getForum, getForums, getMessage, getMessages, getPost, getPosts, getSession } from "./getters.js"
 
 const HEARTBEAT_INTERVAL = 15000
 const CONNECTION_TIMEOUT = 30000
@@ -56,8 +57,8 @@ export function getApp(config: Config): Application {
 	
 		// Create or update user in db + create session
 		try {
-			dbStmt.createUser.run(user.id)
-			dbStmt.createSession.run(generateId(), user.id, access_token)
+			apiEvents.userCreate(user)
+			apiEvents.sessionCreate(user, access_token)
 		} catch (e) {
 			console.error("[ERR] could not create session:", e)
 			respondError(res, { status: 500, message: "session creation failed" })
@@ -70,7 +71,7 @@ export function getApp(config: Config): Application {
 	
 	app.get("/forums", secureApiCall((_, res) => {
 		try {
-			const forums = dbStmt.getForums.all()
+			const forums = getForums()
 			respond(res, 200, forums)
 		} catch (e) {
 			console.error("[ERR] could not get forums:", e)
@@ -85,24 +86,9 @@ export function getApp(config: Config): Application {
 		console.log("New forum:", user.username, data)
 	
 		try {
-			const id = generateId()
-			dbStmt.createForum.run(id, user.id, data.name)
-
-			const tags = data.tags ?? []
-			for (let i = 0; i < tags.length; i++) {
-				const tag = tags[i]
-				const tagId = generateId()
-				try {
-					dbStmt.createTag.run(tagId, id, tag.emoji, tag.name)
-				} catch (e) {
-					console.error("[ERR] could not create tag:", e)
-				}
-			}
-
-			const forum = getForum(id)
+			const forumId = apiEvents.forumCreate(user, data)
+			const forum = getForum(forumId)
 			respond(res, 201, forum)
-
-			broadcast("forumCreate", forum as Forum)
 		} catch (e) {
 			console.error("[ERR] could not create forum:", e)
 			respondError(res, { status: 500, message: "forum creation failed" })
@@ -125,7 +111,7 @@ export function getApp(config: Config): Application {
 		const forumId = req.params.id
 	
 		try {
-			const posts = dbStmt.getPosts.all(forumId)
+			const posts = getPosts(forumId)
 			respond(res, 200, posts)
 		} catch (e) {
 			console.error("[ERR] could not get posts:", e)
@@ -135,7 +121,7 @@ export function getApp(config: Config): Application {
 
 	app.get("/forums/:forum_id/posts/:post_id", secureApiCall((req, res) => {
 		const forumId = req.params.forum_id
-		const postId	= req.params.post_id
+		const postId  = req.params.post_id
 	
 		try {
 			const post = getPost(postId)
@@ -161,30 +147,13 @@ export function getApp(config: Config): Application {
 			return
 		}
 	
-		const id = generateId()
 		try {
-			dbStmt.createPost.run(id, forumId, user.id, data.name, data.description)
-
-			const tags = data.tags ?? []
-			// @ts-expect-error db results untyped
-			const availableTags = dbStmt.getTags.all(forumId).map(tag => tag.id)
-
-			for (let i = 0; i < tags.length; i++) {
-				if (!availableTags.includes(tags[i])) {
-					continue // unknown tag
-				}
-				try {
-					dbStmt.createPostTag.run(tags[i], id)
-				} catch (e) {
-					console.error("[ERR] could not add tag to post:", e)
-				}
-			}
-
+			const id = apiEvents.postCreate(user, forumId, data)
 			const post = getPost(id)
 			respond(res, 201, post)
 		} catch (e) {
 			console.error("[ERR] could not create post:", e)
-			console.log(id, forumId, user.id, data.name, data.description)
+			console.log(forumId, user.id, data.name, data.description)
 			respondError(res, { status: 500, message: "post creation failed" })
 		}
 	}))
@@ -193,7 +162,7 @@ export function getApp(config: Config): Application {
 		const userId = req.params.id
 	
 		try {
-			const session = dbStmt.getSessionFromId.get(userId) as Session | undefined
+			const session = getSession(userId)
 			if (!session) {
 				console.error("[ERR] no session", userId)
 				respondError(res, { status: 500, message: "no available session" })
@@ -232,12 +201,9 @@ export function getApp(config: Config): Application {
 		}
 	
 		try {
-			const id = generateId()
-			dbStmt.createMessage.run(id, postId, user.id, data.content)
+			const id = apiEvents.messageCreate(user, postId, data)
 			const msg = dbStmt.getMessage.get(id)
 			respond(res, 201, msg)
-
-			broadcast("messageCreate", msg as Message)
 		} catch (e) {
 			console.error("[ERR] could not create message:", e)
 			respondError(res, { status: 500, message: "message creation failed" })
@@ -246,7 +212,7 @@ export function getApp(config: Config): Application {
 	
 	app.get("/forums/:forum_id/posts/:post_id/messages", secureApiCall(async (req, res) => {
 		const forumId = req.params.forum_id
-		const postId	= req.params.post_id
+		const postId  = req.params.post_id
 	
 		try {
 			const post = dbStmt.getPost.get(postId)
@@ -262,7 +228,7 @@ export function getApp(config: Config): Application {
 		}
 	
 		try {
-			const messages = dbStmt.getMessages.all(postId)
+			const messages = getMessages(postId)
 			respond(res, 200, messages)
 		} catch (e) {
 			console.error("[ERR] could not get messages:", e)
@@ -337,7 +303,7 @@ export function openWSS(server: Server) {
 	}, HEARTBEAT_INTERVAL)
 }
 
-function broadcast<Event extends GatewayEvents>(event: Event["event"], data: Event["data"]) {
+function broadcast<Event extends GatewayEvents["event"]>(event: Event, data: Extract<GatewayEvents, { event: Event }>["data"]) {
 	const raw = JSON.stringify({ event, data })
 
 	wss.clients.forEach(client => {
@@ -347,16 +313,14 @@ function broadcast<Event extends GatewayEvents>(event: Event["event"], data: Eve
 	})
 }
 
-function getForum(forumId: string) {
-	const forum: any	 = dbStmt.getForum.get(forumId)
-	const tags:	any[] = dbStmt.getTags.all(forumId)
+apiEvents.on("messageCreate", id => {
+	const message = getMessage(id)
 
-	return { ...forum, tags }
-}
+	broadcast("messageCreate", message)
+})
 
-function getPost(postId: string) {
-	const post: any	 = dbStmt.getPost.get(postId)
-	const tags: any[] = dbStmt.getPostTags.all(postId)
+apiEvents.on("forumCreate", id => {
+	const forum = getForum(id)
 
-	return { ...post, tags }
-}
+	broadcast("forumCreate", forum)
+})
