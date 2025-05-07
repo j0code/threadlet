@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS sessions (
 	id          TEXT(16)   NOT NULL PRIMARY KEY,
 	user_id     TEXT(20)   NOT NULL REFERENCES users(id), -- snowflake 
 	token       TEXT(30)   NOT NULL UNIQUE, -- Bearer token
-	expires_at  DATE       NOT NULL DEFAULT (datetime('now', '+2 hours')),
+	expires_at  DATE       NOT NULL DEFAULT (datetime('now', '+2 hours')), -- TODO: put actual expires_at
 	created_at  DATE       NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

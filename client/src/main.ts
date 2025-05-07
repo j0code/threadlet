@@ -54,12 +54,17 @@ setupDiscordSdk().then(async () => {
 
 	clientUser = await rest.get(Routes.user()) as APIUser
 
-
 	api.on("messageCreate", msg => {
 		const view = app.getCurrentView()
 		if (!(view instanceof PostView)) return
 		if (view.getCurrentPostId() != msg.post_id) return
 		view.msgList.pushMessage(msg)
+	})
+
+	api.on("forumCreate", async forum => {
+		// TODO: update and read cache instead of fetching
+		const forums = await api.getForums()
+		app.channelList.reset(forums)
 	})
 })
 	

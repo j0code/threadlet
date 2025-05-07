@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@discordjs/rest": "^2.4.3",
-    "@j0code/threadlet-api": "npm:@jsr/j0code__threadlet-api@^0.0.15",
+    "@j0code/threadlet-api": "npm:@jsr/j0code__threadlet-api@^0.0.18",
     "@j0code/yson": "npm:@jsr/j0code__yson@^1.2.4",
     "@types/ws": "^8.18.1",
     "better-sqlite3": "^11.8.1",

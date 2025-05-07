@@ -68,6 +68,7 @@ body {
 }
 
 .list-tab {
+	cursor: pointer;
 	padding: 5px;
 }
 

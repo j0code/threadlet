@@ -4,7 +4,7 @@ import { fetchDiscordUser, generateId, parse, respond, respondError, secureApiCa
 import { dbStmt } from "../db.js"
 import { Session } from "../types.js"
 import express from "express"
-import { ForumOptions, GatewayEvents, Message, MessageOptions, PostOptions } from "@j0code/threadlet-api/v0/types"
+import { Forum, ForumOptions, GatewayEvents, Message, MessageOptions, PostOptions } from "@j0code/threadlet-api/v0/types"
 import WebSocket, { WebSocketServer } from "ws"
 import { Server } from "node:http"
 
@@ -101,6 +101,8 @@ export function getApp(config: Config): Application {
 
 			const forum = getForum(id)
 			respond(res, 201, forum)
+
+			broadcast("forumCreate", forum as Forum)
 		} catch (e) {
 			console.error("[ERR] could not create forum:", e)
 			respondError(res, { status: 500, message: "forum creation failed" })
