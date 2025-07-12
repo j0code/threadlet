@@ -84,13 +84,15 @@ body {
 	width: calc(100vw - var(--sidebar-width));
 	height: 100vh;
 	background-color: var(--background-primary);
+	padding-block: var(--gap);
+	gap: var(--gap)
 }
 
 .view-head, .form-head {
 	display: flex;
 	justify-content: center;
-	padding: var(--gap);
-	padding-block: calc(var(--gap) * 1.5);
+	padding-inline: var(--gap);
+	padding-block: var(--gap-half)
 }
 
 .view-body, .form-body {
@@ -151,13 +153,20 @@ body {
 .form-text-input {
 	padding: 0px;
 	position: relative;
+	display: flex;
 	anchor-name: --emoji-picker-anchor;
 }
 
-.form-textarea textarea {
-	resize: none;
-	line-height: 1.2;
-	height: calc(5em * 1.2); /* line-height: 1.2 */
+.form-textarea {
+	> textarea {
+		resize: none;
+		line-height: 1.2;
+		min-height: calc(5em * 1.2 + var(--gap));
+	}
+
+	&.flex-grow {
+		flex: 1 0 auto;
+	}
 }
 
 .form-button {
@@ -510,7 +519,7 @@ body {
 .multi-select-dropdown {
 	display: none;
 	position: absolute;
-	top: 100%;
+	top: calc(100% + var(--gap) * 0.25);
 	left: 0;
 	width: 100%;
 	max-height: 200px;
@@ -519,6 +528,7 @@ body {
 	background: var(--input-bg);
 	z-index: 1000;
 	box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+	margin: 0px;
 }
 
 .multi-select-dropdown.show {
@@ -548,6 +558,10 @@ body {
 	flex-wrap: wrap;
 	gap: 5px;
 	margin-top: 10px;
+
+	&:empty {
+		display: none;
+	}
 }
 
 .multi-select-pill {

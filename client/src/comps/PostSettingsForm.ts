@@ -24,8 +24,8 @@ export default class PostSettingsForm extends Form {
 		}
 
 		this.nameInput = new FormTextInput("post-name", "Post Name", 0, 128, true)
-		this.descriptionInput = new FormTextarea("post-description", "Post Description", 0, 16384, true)
-		this.tagSelect = new FormMultiSelect({ options, placeholder: "Wow!" })
+		this.descriptionInput = new FormTextarea("post-description", "Post Description", 0, 16384, true, true)
+		this.tagSelect = new FormMultiSelect({ options, placeholder: "Select tags..." })
 		const submitButton = new FormButton("post-submit", post ? "Save" : "Post", () => {
 			if (this.currentForumId) {
 				submit(this.currentForumId, this)

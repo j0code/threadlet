@@ -54,15 +54,14 @@ export default class FormMultiSelect extends Component {
 	}
 	
 	private setupEventListeners() {
-		this.input.addEventListener("focus", () => {
-			this.dropdown.classList.add("show")
-			this.createOptions()
-		})
-		
-		this.input.addEventListener("blur", () => {
-			setTimeout(() => {
+		window.addEventListener("click", (e) => {
+			if (this.inputContainer.contains(e.target as HTMLElement)) {
+				if (this.dropdown.classList.contains("show")) return
+				this.dropdown.classList.add("show")
+				this.createOptions()
+			} else {
 				this.dropdown.classList.remove("show")
-			}, 200)
+			}
 		})
 		
 		this.input.addEventListener("input", (e: Event) => {
@@ -102,6 +101,8 @@ export default class FormMultiSelect extends Component {
 			const checkbox = document.createElement("input")
 			checkbox.type = "checkbox"
 			checkbox.checked = this.selectedOptions.has(option.id)
+
+			optionElement.dataset.tagId = option.id
 			
 			optionElement.appendChild(optionText)
 			optionElement.appendChild(checkbox)
@@ -124,7 +125,9 @@ export default class FormMultiSelect extends Component {
 			this.selectedOptions.add(optionId)
 		}
 		this.updatePills()
-		this.createOptions(this.input.value)
+
+		const checkbox = this.dropdown.querySelector(`[data-tag-id="${optionId}"] > input`)! as HTMLInputElement
+		checkbox.checked = !checkbox.checked
 	}
 	
 	private updatePills() {

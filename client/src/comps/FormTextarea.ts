@@ -5,7 +5,7 @@ export default class FormTextarea extends Component {
 
 	private readonly textarea: HTMLTextAreaElement
 
-	constructor(id: string, placeholder: string, min: number = 0, max: number = 256, emojiInput: boolean = true) {
+	constructor(id: string, placeholder: string, min: number = 0, max: number = 256, emojiInput: boolean = true, flexGrow: boolean = false) {
 		super("div", { id, classes: ["form-input", "form-textarea"] })
 
 		this.textarea = document.createElement("textarea")
@@ -19,6 +19,10 @@ export default class FormTextarea extends Component {
 				this.textarea.value += emoji.native
 			})
 			this.element.append(emojiButton.element)
+		}
+
+		if (flexGrow) {
+			this.element.classList.add("flex-grow")
 		}
 	}
 
