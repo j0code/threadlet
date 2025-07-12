@@ -1,5 +1,5 @@
 import { Application } from "express"
-import { Config } from "../main.js"
+import { Config } from "../config.js"
 import { fetchDiscordUser, parse, respond, respondError, secureApiCall } from "../util.js"
 import { dbStmt } from "../db.js"
 import express from "express"

@@ -1,4 +1,3 @@
-import YSON from "@j0code/yson"
 import express from "express"
 import Database from "better-sqlite3"
 import fs from "fs/promises"
@@ -6,19 +5,8 @@ import path from "path"
 import { dbStmt } from "./db.js"
 import * as v0 from "./v0/api.js"
 import { safeJoin } from "./safeJoin.js"
+import config from "./config.js"
 
-export type Config = {
-	port: number,
-	oauth: {
-		client_id: string,
-		client_secret: string
-	},
-	client: {
-		public: string
-	}
-}
-
-const config = await YSON.load("./config.yson") as Config
 const port = config.port
 
 const dbSetup = await fs.readFile("./setup_db.sql", { encoding: "utf-8" })
