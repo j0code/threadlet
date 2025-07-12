@@ -3,8 +3,8 @@ import { dbStmt } from "./db.js"
 import { APIError, Session, ValidationError } from "./types.js"
 import { APIUser, Routes } from "discord-api-types/v10"
 import { Request, RequestHandler, Response } from "express"
-import { fromZodError } from "zod-validation-error"
-import { ZodType } from "zod"
+import { fromZodError } from "zod-validation-error/v4"
+import z, { ZodType } from "zod"
 
 export function generateId(): string {
 	return randomHex(16)
@@ -77,12 +77,12 @@ export function parse<T>(schema: ZodType<T>, rawData: unknown): parseReturn<T> {
 	const { data, error: zodError } = schema.safeParse(rawData)
 
 	if (zodError) {
-		const valErr = fromZodError(zodError, { prefix: null, issueSeparator: "\u0000", unionSeparator: "\u0001" })
+		const valErr = fromZodError(zodError, { prefix: null, issueSeparator: "\u0000" })
 		const error: ValidationError = {
 			status: 400,
 			message: "validation error",
-			errors: zodError.format(),
-			messages: valErr.message.split("\u0000").flatMap(msg => msg.split("\u0001"))
+			errors: z.treeifyError(zodError),
+			messages: valErr.message.split("\u0000")
 		}
 		return { data: undefined, error}
 	}

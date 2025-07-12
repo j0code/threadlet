@@ -60,8 +60,6 @@ app.use(async (req, res, next) => {
 		return
 	}
 
-	console.log("Serving", filePath, "...")
-
 	try {
 		const stat = await fs.stat(filePath)
 		if (!stat.isFile()) throw new Error("Not a file")
