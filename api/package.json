@@ -1,6 +1,6 @@
 {
   "name": "@j0code/threadlet-api",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "scripts": {
@@ -21,7 +21,7 @@
   "description": "Threadlet API",
   "dependencies": {
     "@discordjs/rest": "^2.4.3",
-    "zod": "^3.24.2"
+    "zod": "^4.0.5"
   },
   "type": "module",
   "devDependencies": {

@@ -110,17 +110,17 @@ export const User:    z.Schema<User>    = UserSchema
 export const Message: z.Schema<Message> = MessageSchema
 export const Tag:     z.Schema<Tag>     = TagSchema
 
-export const MessageOptions:  z.Schema<MessageOptions>  = MessageSchema
+export const MessageOptions:  z.ZodType<MessageOptions> = MessageSchema
 	.omit({ id: true, forum_id: true, post_id: true, author_id: true, edited_at: true, created_at: true })
 
-export const TagOptions:      z.Schema<TagOptions>      = TagSchema
+export const TagOptions:      z.ZodType<TagOptions>     = TagSchema
 	.omit({ id: true, forum_id: true, edited_at: true, created_at: true })
 
-export const ForumOptions:    z.Schema<ForumOptions>    = ForumSchema
+export const ForumOptions:    z.ZodType<ForumOptions>   = ForumSchema
 	.omit({ id: true, created_at: true })
 	.extend({ tags: TagOptions.array().optional() })
 	
-export const PostOptions:     z.Schema<PostOptions>     = PostSchema
+export const PostOptions:     z.ZodType<PostOptions>    = PostSchema
 	.omit({ id: true, forum_id: true, poster_id: true, edited_at: true, created_at: true })
 	.extend({ tags: z.string().array().optional() })
 
@@ -149,19 +149,20 @@ export type GatewayEvents =
 	| PostTagAddEvent
 	| PostTagRemoveEvent
 
-// helper types
-type RawShapeOf<T> = T extends z.ZodObject<infer RawShape> ? RawShape : never
-type GatewayEventSchemaType = z.ZodObject<RawShapeOf<GatewayEvents>>
+type GatewayEventSchema<Data, Name extends z.core.util.Literal> = z.ZodObject<{
+    data: z.ZodType<Data, unknown, z.core.$ZodTypeInternals<Data, unknown>>,
+    event: z.ZodLiteral<Name>
+}, z.core.$strip>
 
-function gatewayEventSchema<Event extends GatewayEvents>(name: Event["event"], schema: z.Schema<Event["data"]>): GatewayEventSchemaType {
-	// @ts-ignore
+
+function gatewayEventSchema<Event extends GatewayEvents>(name: Event["event"], schema: z.ZodType<Event["data"]>): GatewayEventSchema<Event["data"], Event["event"]> {
 	return z.object({
 		data: schema,
 		event: z.literal(name)
 	})
 }
 
-export const GatewayEvents: z.ZodType<GatewayEvents, z.ZodDiscriminatedUnionDef<"event", GatewayEventSchemaType[]>> = z.discriminatedUnion("event", [
+export const GatewayEvents: z.ZodDiscriminatedUnion<GatewayEventSchema<GatewayEvents["data"], GatewayEvents["event"]>[]> = z.discriminatedUnion("event", [
 	gatewayEventSchema("messageCreate", Message),
 	gatewayEventSchema("messageDelete", Message),
 	gatewayEventSchema("forumCreate",   Forum),
