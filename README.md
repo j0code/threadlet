@@ -19,12 +19,10 @@ If you have access to the app, it should show up when you search for "Threadlet"
 
 ### Discord Application
 1. create a Discord Application through the [Developer Portal](https://discord.dev/)
-2. setup a cloudflare tunnel
-3. set the root mapping in Activites > URL Mappings to the Cloudflare tunnel url without the `https://`
+2. add a redirect URI (OAuth2 tab); https://localhost/ is fine.
+3. set the root mapping in Activites > URL Mappings to a development domain (without https://).
 4. enable Activities in Acitvities > Settings
 5. optionally invite others to test the app in App Testers
-> [!NOTE]
-> You have to repeat step 3 every time you create a fresh cloudflare tunnel.
 
 ### Server
 1. cd into the `server` directory
@@ -34,20 +32,16 @@ If you have access to the app, it should show up when you search for "Threadlet"
 5. run `tsc`
 6. run `node .` to start the server
 
-### Cloudflare Tunnel
-> [!NOTE]
-> These steps are for creating a temporary Cloudflare tunnel for development. For production, you should create a permanent one instead.
-1. run `cloudflared tunnel --url http://localhost:5173`
-2. wait for Cloudflare to establish the tunnel
-3. It should print the url in the terminal, something like `https://abcd.def.ghijk.lmnop.trycloudflare.com`. Copy that url, you will need it later.
-
 ### Client
 1. copy the content of `example.env` into `.env`
 2. update the env with the client id of your app
 3. cd into the `client` directory
-4. update `client/vite.config.js` with your Cloudflare tunnel url without the `https://` (`server.allowedHosts`)
+4. create `client/dev_config.yson` (see `client/vite.config.js` for reference)
 5. run `npm install`
-6. run `npm run dev` to start vite (you can also build first)
+6. run `npm run dev` to start vite
+> [!NOTE]
+> In prod, skip (6.), run `npm run build`, and make sure your reverse proxy connects to the server directly.
+> The server will serve from `/client/dist` (configurable in `server/config.yson`).
 
 ### Development
 When you want to help development, remember to run the typescript compiler in the `server` directory.
