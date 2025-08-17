@@ -1,6 +1,6 @@
 import { ZodType } from "zod"
 import ThreadletAPIError, { ThreadletZodError } from "../ThreadletAPIError.js"
-import { User, Forum, Post, type ForumOptions, type PostOptions, type MessageOptions, Message, GatewayEvents } from "./types.js"
+import { User, Forum, Post, type ForumOptions, type PostOptions, type MessageOptions, Message, GatewayEvents, HTTP_METHODS, HTTP_METHODS_WITH_BODY, HTTP_METHODS_WITHOUT_BODY } from "./types.js"
 import EventEmitter from "../EventEmitter.js"
 
 const API_VERSION = "v0"
@@ -76,6 +76,10 @@ export default class ThreadletAPI extends EventEmitter {
 			this.forumCache.set(forum.id, forum)
 		})
 
+		this.on("forumUpdate", forum => {
+			this.forumCache.set(forum.id, forum)
+		})
+
 		this.on("forumDelete", forum => {
 			this.forumCache.delete(forum.id)
 		})
@@ -84,11 +88,19 @@ export default class ThreadletAPI extends EventEmitter {
 			this.postCache.set(post.id, post)
 		})
 
+		this.on("postUpdate", post => {
+			this.postCache.set(post.id, post)
+		})
+
 		this.on("postDelete", post => {
 			this.postCache.delete(post.id)
 		})
 
 		this.on("messageCreate", msg => {
+			this.messageCache.set(msg.id, msg)
+		})
+
+		this.on("messageUpdate", msg => {
 			this.messageCache.set(msg.id, msg)
 		})
 
@@ -114,6 +126,17 @@ export default class ThreadletAPI extends EventEmitter {
 	 */
 	async createForum(forum: ForumOptions): Promise<Forum> {
 		return this.post("/forums", forum, Forum)
+	}
+
+	/**
+	 * Update a forum
+	 * @param forumId id of the forum
+	 * @param forum forum options
+	 * @returns the forum
+	 * @throws {ThreadletAPIError}
+	 */
+	async updateForum(forumId: string, forum: ForumOptions): Promise<Forum> {
+		return this.patch(`/forums/${forumId}`, forum, Forum)
 	}
 
 	/**
@@ -211,50 +234,57 @@ export default class ThreadletAPI extends EventEmitter {
 		return this.get(`/forums/${forumId}/posts/${postId}/messages`, Message.array())
 	}
 
-	private get<T>(route: string, schema: ZodType<T>): Promise<T> {
+	private get<T>(   route: string, schema: ZodType<T>): Promise<T> {
+		return this.baseFetch("GET",    route, schema)
+	}
+
+	private delete<T>(route: string, schema: ZodType<T>): Promise<T> {
+		return this.baseFetch("DELETE", route, schema)
+	}
+
+	private post<T>( route: string,requestBody: any, schema: ZodType<T>): Promise<T> {
+		return this.baseFetchWithBody<T>("POST",  route, requestBody, schema)
+	}
+
+	private put<T>(  route: string, requestBody: any, schema: ZodType<T>): Promise<T> {
+		return this.baseFetchWithBody<T>("PUT",   route, requestBody, schema)
+	}
+
+	private patch<T>(route: string, requestBody: any, schema: ZodType<T>): Promise<T> {
+		return this.baseFetchWithBody<T>("PATCH", route, requestBody, schema)
+	}
+
+	private baseFetch<T>(
+		method: HTTP_METHODS_WITHOUT_BODY,
+		route: string,
+		schema: ZodType<T>
+	) {
 		return fetch(`${this.API_ROOT}${route}`, {
-			method: "GET",
+			method,
 			headers: {
 				"Authorization": `Bearer ${this.access_token}`
 			}
 		})
 		.then(async res => ({ res, data: await res.json()}))
-		.then(({res, data}) => {
-			if (!res.ok) {
-				throw new ThreadletAPIError(route, res.status, res.statusText, "GET", null, data)
-			}
-
-			const { data: parsedData, error } = schema.safeParse(data)
-			if (error) {
-				throw new ThreadletZodError(route, res.status, res.statusText, "GET", null, error, data)
-			}
-
-			return parsedData
-		})
+		.then(handleAPIResponse(method, route, null, schema))
 	}
 
-	private post<T>(route: string, requestBody: any, schema: ZodType<T>): Promise<T> {
+	private baseFetchWithBody<T>(
+		method: HTTP_METHODS_WITH_BODY,
+		route: string,
+		requestBody: any,
+		schema: ZodType<T>
+	) {
 		return fetch(`${this.API_ROOT}${route}`, {
-			method: "POST",
+			method,
 			headers: {
 				"Content-Type": "application/json",
 				"Authorization": `Bearer ${this.access_token}`
 			},
 			body: JSON.stringify(requestBody)
-		}).then(async res => ({ res, data: await res.json()}))
-		.then(({res, data}) => {
-			if (!res.ok) {
-				console.log(res, data)
-				throw new ThreadletAPIError(route, res.status, res.statusText, "POST", requestBody, data)
-			}
-
-			const { data: parsedData, error } = schema.safeParse(data)
-			if (error) {
-				throw new ThreadletZodError(route, res.status, res.statusText, "POST", requestBody, error, data)
-			}
-
-			return data
 		})
+		.then(async res => ({ res, data: await res.json()}))
+		.then(handleAPIResponse(method, route, requestBody, schema))
 	}
 
 }
@@ -287,4 +317,19 @@ const defaultFetchOptions: FetchOptions = {
 function validateOptions(options?: Partial<FetchOptions>) {
 	if (!options) return defaultFetchOptions
 	return { ...defaultFetchOptions, ...options}
+}
+
+function handleAPIResponse<T>(method: HTTP_METHODS, route: string, requestBody: unknown, schema: ZodType<T>) {
+	return ({res, data}: { res: Response, data: unknown }) => {
+		if (!res.ok) {
+			throw new ThreadletAPIError(route, res.status, res.statusText, method, requestBody, data)
+		}
+
+		const { data: parsedData, error } = schema.safeParse(data)
+		if (error) {
+			throw new ThreadletZodError(route, res.status, res.statusText, method, requestBody, error, data)
+		}
+
+		return parsedData
+	}
 }

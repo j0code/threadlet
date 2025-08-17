@@ -117,7 +117,7 @@ export const TagOptions:      z.ZodType<TagOptions>     = TagSchema
 	.omit({ id: true, forum_id: true, edited_at: true, created_at: true })
 
 export const ForumOptions:    z.ZodType<ForumOptions>   = ForumSchema
-	.omit({ id: true, created_at: true })
+	.omit({ id: true, edited_at: true, created_at: true })
 	.extend({ tags: TagOptions.array().optional() })
 	
 export const PostOptions:     z.ZodType<PostOptions>    = PostSchema
@@ -131,20 +131,26 @@ export type GatewayEvent<Event extends string, Data> = {
 }
 
 export type MessageCreateEvent = GatewayEvent<"messageCreate", Message>
+export type MessageUpdateEvent = GatewayEvent<"messageUpdate", Message>
 export type MessageDeleteEvent = GatewayEvent<"messageDelete", Message>
 export type ForumCreateEvent   = GatewayEvent<"forumCreate",   Forum>
+export type ForumUpdateEvent   = GatewayEvent<"forumUpdate",   Forum>
 export type ForumDeleteEvent   = GatewayEvent<"forumDelete",   Forum>
 export type PostCreateEvent    = GatewayEvent<"postCreate",    Post>
+export type PostUpdateEvent    = GatewayEvent<"postUpdate",    Post>
 export type PostDeleteEvent    = GatewayEvent<"postDelete",    Post>
 export type PostTagAddEvent    = GatewayEvent<"postTagAdd",    Tag>
 export type PostTagRemoveEvent = GatewayEvent<"postTagRemove", Tag>
 
 export type GatewayEvents =
 	| MessageCreateEvent
+	| MessageUpdateEvent
 	| MessageDeleteEvent
 	| ForumCreateEvent
+	| ForumUpdateEvent
 	| ForumDeleteEvent
 	| PostCreateEvent
+	| PostUpdateEvent
 	| PostDeleteEvent
 	| PostTagAddEvent
 	| PostTagRemoveEvent
@@ -164,11 +170,19 @@ function gatewayEventSchema<Event extends GatewayEvents>(name: Event["event"], s
 
 export const GatewayEvents: z.ZodDiscriminatedUnion<GatewayEventSchema<GatewayEvents["data"], GatewayEvents["event"]>[]> = z.discriminatedUnion("event", [
 	gatewayEventSchema("messageCreate", Message),
+	gatewayEventSchema("messageUpdate", Message),
 	gatewayEventSchema("messageDelete", Message),
 	gatewayEventSchema("forumCreate",   Forum),
+	gatewayEventSchema("forumUpdate",   Forum),
 	gatewayEventSchema("forumDelete",   Forum),
 	gatewayEventSchema("postCreate",    Post),
+	gatewayEventSchema("postUpdate",    Post),
 	gatewayEventSchema("postDelete",    Post),
 	gatewayEventSchema("postTagAdd",    Tag),
 	gatewayEventSchema("postTagRemove", Tag),
 ])
+
+/* HTTP REST methods */
+export type HTTP_METHODS_WITHOUT_BODY = "GET"  | "DELETE"
+export type HTTP_METHODS_WITH_BODY    = "POST" | "PUT" | "PATCH" | "QUERY"
+export type HTTP_METHODS              = HTTP_METHODS_WITHOUT_BODY | HTTP_METHODS_WITH_BODY
