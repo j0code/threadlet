@@ -4,7 +4,7 @@ import PostContent from "./PostContent"
 import View from "./View"
 import { api } from "../main"
 import ChatInput from "./ChatInput"
-import MessageList from "./MessageList"
+import EventList from "./EventList"
 import TagList from "./TagList"
 import { MatrixEvent, Room, RoomEvent } from "matrix-js-sdk"
 import { matrix } from "../matrix"
@@ -13,13 +13,13 @@ export default class RoomView extends View {
 
 	private currentRoom?: Room
 
-	public readonly msgList: MessageList
+	public readonly msgList: EventList
 	public readonly chatInput: ChatInput
 
 	constructor() {
 		super("div", { id: "room-view" })
 
-		this.msgList   = new MessageList()
+		this.msgList   = new EventList()
 		this.chatInput = new ChatInput(this)
 
 		const container = document.createElement("div")

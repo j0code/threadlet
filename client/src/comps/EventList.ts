@@ -6,10 +6,12 @@ import { api } from "../main"
 import Component from "./Component"
 import Message from "./Message"
 import { MatrixEvent } from "matrix-js-sdk"
+import { renderEvent } from "./events/Event"
 
-export default class MessageList extends Component {
+export default class EventList extends Component {
+
 	constructor() {
-		super("div", { id: `messages` })
+		super("div", { id: `events` })
 	}
 
 	async reset(events: MatrixEvent[]) {
@@ -27,7 +29,7 @@ export default class MessageList extends Component {
 	pushMessage(event: MatrixEvent) {
 		const autoscroll = this.element.scrollTop + this.element.clientHeight >= this.element.scrollHeight - 10
 
-		const comp = new Message(event)
+		const comp = renderEvent(event)
 		this.element.appendChild(comp.element)
 
 		if (autoscroll) {
