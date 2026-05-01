@@ -1,13 +1,16 @@
-import { api } from "../main"
+import { MsgType } from "matrix-js-sdk"
+import { api, app } from "../main"
+import { matrix } from "../matrix"
 import Component from "./Component"
 import EmojiPicker from "./EmojiPicker"
 import PostView from "./PostView"
+import RoomView from "./RoomView"
 
 // Credits to DeepSeek-R1, wow (edited though)
 export default class ChatInput extends Component {
 	readonly emojiPicker: EmojiPicker
 
-	constructor(postView: PostView) {
+	constructor(view: PostView | RoomView) {
 		super("div", { id: "chat-input-container" })
 
 		// Create file upload button
@@ -33,14 +36,22 @@ export default class ChatInput extends Component {
 				chatInput.innerHTML = ""
 
 				async function createMessage() {
-					const forum_id = postView.getCurrentForumId()
-					const post_id = postView.getCurrentPostId()
-					if (!forum_id || !post_id) {
-						throw new Error("TODO")
-					}
+					// const forum_id = view.getCurrentForumId()
+					// const post_id  = view.getCurrentPostId()
+					// if (!forum_id || !post_id) {
+					// 	throw new Error("TODO")
+					// }
 
-					const msg = await api.createMessage(forum_id, post_id, { content })
-					console.log(msg)
+					// const msg = await api.createMessage(forum_id, post_id, { content })
+					// console.log(msg)
+					if(view instanceof PostView) {
+						// TODO
+						return;
+					}
+					await matrix.sendMessage(view.getCurrentRoom()!.roomId, {
+						body: content,
+						msgtype: MsgType.Text
+					})
 				}
 
 				console.log("Send MSG:", chatInput.innerText)

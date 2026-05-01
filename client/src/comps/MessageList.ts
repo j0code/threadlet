@@ -5,32 +5,29 @@ import {
 import { api } from "../main"
 import Component from "./Component"
 import Message from "./Message"
+import { MatrixEvent } from "matrix-js-sdk"
 
 export default class MessageList extends Component {
 	constructor() {
 		super("div", { id: `messages` })
 	}
 
-	async reset(post: Post) {
-		for (const child of Array.from(this.element.children)) {
+	async reset(events: MatrixEvent[]) {
+		for (let child of Array.from(this.element.children)) {
 			child.remove()
 		}
 
-		const msgs = await api.getMessages(post.forum_id, post.id)
-
-		for (const msg of msgs) {
-			this.pushMessage(msg)
+		for (let event of events) {
+			this.pushMessage(event)
 		}
 
 		this.element.scrollTop = this.element.scrollHeight
 	}
 
-	pushMessage(msg: APIMessage) {
-		const autoscroll =
-			this.element.scrollTop + this.element.clientHeight >=
-			this.element.scrollHeight - 10
+	pushMessage(event: MatrixEvent) {
+		const autoscroll = this.element.scrollTop + this.element.clientHeight >= this.element.scrollHeight - 10
 
-		const comp = new Message(msg)
+		const comp = new Message(event)
 		this.element.appendChild(comp.element)
 
 		if (autoscroll) {
