@@ -3,17 +3,21 @@ import { markdownToHtml, twemojiParse } from "../md"
 import Component from "./Component"
 import CDN from "@j0code/threadlet-api/v0/cdn"
 import { api, clientUser } from "../main"
+import twemoji from "@discordapp/twemoji"
+import { MatrixEvent } from "matrix-js-sdk"
+import { matrix } from "../matrix"
 
 export default class Message extends Component {
-	readonly message: APIMessage
+
+	readonly message: MatrixEvent
 
 	readonly contentElement: HTMLDivElement
 	readonly avatarElement: HTMLImageElement
 	readonly nameElement: HTMLSpanElement
 	readonly timestampElement: HTMLTimeElement
 
-	constructor(msg: APIMessage) {
-		super("div", { id: `message-${msg.id}`, classes: ["message"] })
+	constructor(msg: MatrixEvent) {
+		super("div", { id: `message-${msg.getId()}`, classes: ["message"] })
 		this.message = msg
 
 		this.contentElement = document.createElement("div")
@@ -47,14 +51,28 @@ export default class Message extends Component {
 
 	async reset() {
 		const msg = this.message
-		this.contentElement.innerHTML = markdownToHtml(msg.content)
+		this.contentElement.innerHTML = markdownToHtml(msg.getContent().body || "```json\n" + JSON.stringify(msg.getContent()) + "\n```")
 
-		const user = await api.getUser(msg.author_id)
-		this.avatarElement.src = CDN.avatar(msg.author_id, user.avatar)
-		this.nameElement.innerHTML = twemojiParse(user.name)
-		this.timestampElement.dateTime = msg.created_at
-		this.timestampElement.textContent = new Date(msg.created_at).toLocaleString(
-			clientUser.locale
-		)
+		let { avatar_url, displayname } = await matrix.getProfileInfo(msg.getSender()!) // TODO: cache
+		this.avatarElement.src = await this.getAvatarUrl(avatar_url || "") || ""
+		this.nameElement.innerHTML = twemojiParse(displayname || msg.getSender() || "Unknown")
+		this.timestampElement.dateTime = msg.getDate()?.toISOString() || ""
+		this.timestampElement.textContent = msg.getDate()?.toISOString() || ""
+	}
+
+	async getAvatarUrl(mxc: string) {
+		console.log("Getting avatar url for", mxc)
+		// TODO: caching
+		const url = matrix.mxcUrlToHttp(mxc, undefined, undefined, undefined, false, true, true)
+		if(!url) {
+			return null
+		}
+		const img = await fetch(url, {
+			headers: {
+				Authorization: `Bearer ${matrix.getAccessToken()}`
+			}
+		})
+		const blob = await img.blob()
+		return URL.createObjectURL(blob)
 	}
 }
