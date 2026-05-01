@@ -1,0 +1,51 @@
+import { matrix } from "../matrix";
+import Component from "./Component";
+import MXCImage from "./MXCImage";
+
+export default class Avatar extends Component {
+	public readonly mxid: string
+
+	constructor(mxid: string, className?: string) {
+		super("div", { classes: ["avatar", className].filter((v): v is string => !!v) })
+		this.mxid = mxid
+		this.element.setAttribute("data-mxid", mxid)
+		this.reset()
+	}
+
+	async reset() {
+		const mxid = this.element.getAttribute("data-mxid")
+		if(!mxid) return
+
+		const { avatar_url, displayname } = await matrix.getProfileInfo(mxid) // TODO: cache
+		if(avatar_url) {
+			let img = new MXCImage(avatar_url)
+			await img.reset()
+			this.element.appendChild(img.element)
+		} else {
+			this.element.style.backgroundColor = this.stringToColor(mxid)
+			this.element.style.color = this.contrastingColor(this.stringToColor(mxid))
+			this.element.style.fontSize = "24px"
+			this.element.style.display = "flex"
+			this.element.style.alignItems = "center"
+			this.element.style.justifyContent = "center"
+			this.element.innerHTML = displayname?.[0].toUpperCase() || "?"
+		}
+	}
+
+	private stringToColor(str: string) {
+		let hash = 0
+		for(let i = 0; i < str.length; i++) {
+			hash = str.charCodeAt(i) + ((hash << 5) - hash)
+		}
+		const color = (hash & 0x00FFFFFF).toString(16).toUpperCase()
+		return "#" + "00000".substring(0, 6 - color.length) + color
+	}
+
+	private contrastingColor(hex: string): "#000000" | "#FFFFFF" {
+		const r = parseInt(hex.substr(1, 2), 16)
+		const g = parseInt(hex.substr(3, 2), 16)
+		const b = parseInt(hex.substr(5, 2), 16)
+		const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+		return luminance > 0.5 ? "#000000" : "#FFFFFF"
+	}
+}

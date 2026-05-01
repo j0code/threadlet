@@ -269,7 +269,7 @@ body {
 }
 
 #post-content,
-#messages {
+#events {
 	overflow: hidden auto;
 	scrollbar-gutter: stable;
 }
@@ -279,7 +279,7 @@ body {
 	max-height: 50%;
 }
 
-#messages {
+#events {
 	display: flex;
 	flex-direction: column;
 	flex: 1 1 auto;
@@ -614,4 +614,23 @@ body {
 	border-radius: 20px;
 	font-size: 10px;
 	font-family: monospace;
+}
+
+dialog {
+	border: 2px solid #202020;
+	border-radius: 8px;
+}
+
+.loginButton {
+	width: 150px;
+	height: 150px;
+	font-size: 24px;
+	background: none;
+	border: none;
+	border-radius: 100%;
+	cursor: pointer;
+}
+
+.loginButton:hover {
+	background: radial-gradient(#ffffff50, transparent);
 }
