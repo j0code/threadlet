@@ -4,23 +4,13 @@ import { markdownToHtml } from "../../md";
 import { matrix } from "../../matrix";
 import MXCImage from "../MXCImage";
 
-export default class RoomMessage extends ChatMessageBase {
+export default class RoomTextMessage extends ChatMessageBase {
 	constructor(msg: MatrixEvent) {
 		super(msg)
 	}
 
 	async reset(): Promise<void> {
-		switch(this.message.getContent().msgtype) {
-			case "m.text":
-				this.contentElement.innerHTML = markdownToHtml(this.message.getContent().body || "```json\n" + JSON.stringify(this.message.getContent()) + "\n```")
-				break
-			case "m.image":
-				this.contentElement.innerHTML = ""
-				let img = new MXCImage(this.message.getContent().url || "")
-				await img.reset()
-				this.contentElement.appendChild(img.element)
-				break
-		}
+		this.contentElement.innerHTML = markdownToHtml(this.message.getContent().body || "```json\n" + JSON.stringify(this.message.getContent()) + "\n```")
 		super.reset()
 	}
 

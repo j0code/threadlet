@@ -7,10 +7,9 @@ import twemoji from "@discordapp/twemoji"
 import { MatrixEvent } from "matrix-js-sdk"
 import { matrix } from "../../matrix"
 import Avatar from "../Avatar"
+import EventBase from "./EventBase"
 
-export default class Message extends Component {
-
-	readonly message: MatrixEvent
+export default class ChatMessageBase extends EventBase {
 
 	readonly contentElement:   HTMLDivElement
 	readonly avatarElement:    Avatar
@@ -18,8 +17,7 @@ export default class Message extends Component {
 	readonly timestampElement: HTMLTimeElement
 
 	constructor(msg: MatrixEvent) {
-		super("div", { id: `message-${msg.getId()}`, classes: ["message"] })
-		this.message = msg
+		super(msg, "div", { id: `message-${msg.getId()}`, classes: ["message"] })
 
 		this.contentElement = document.createElement("div")
 		this.contentElement.className = "message-content md"
