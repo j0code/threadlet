@@ -7,6 +7,9 @@ export const matrix = createClient({
 	deviceId: localStorage.getItem("deviceId") || undefined,
 });
 
-if(localStorage.getItem("accessToken") && localStorage.getItem("userId") && localStorage.getItem("deviceId")) {
+export async function initMatrixClient() {
+	if(!(localStorage.getItem("accessToken") && localStorage.getItem("userId") && localStorage.getItem("deviceId"))) {
+		return;
+	}
 	await matrix.startClient();
 }
