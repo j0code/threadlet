@@ -13,6 +13,7 @@ export default class RoomFileMessage extends ChatMessageBase {
 		let file = document.createElement("a")
 		file.href = await this.getMXCFile(this.message.getContent().url || "") || ""
 		file.target = "_blank"
+		file.rel = "noopener noreferrer"
 		file.textContent = this.message.getContent().body || "Download File"
 		this.contentElement.appendChild(file)
 		super.reset()
