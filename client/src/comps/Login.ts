@@ -6,7 +6,6 @@ export default class Login extends Component {
 	constructor() {
 		super("div", { id: "login" })
 
-		//this.element.style.background = "url('/2pills.png') center center / contain no-repeat fixed"
 		this.element.style.width = "100%"
 		this.element.style.height = "100%"
 
@@ -38,23 +37,7 @@ export default class Login extends Component {
 		registerButton.classList.add("loginButton");
 		this.element.appendChild(registerButton)
 
-		registerButton.addEventListener("click", () => alert("Morpheus declines your registration request."))
-
-// 		this.element.innerHTML = `
-// <h1 style="margin: 0;">Login</h1>
-// <input type="text" id="loginHomeserver" placeholder="Homeserver URL" value="https://matrix.org" />
-// <input type="text" id="loginUsername" placeholder="Username" />
-// <input type="password" id="loginPassword" placeholder="Password" />
-// <button id="loginSubmit">Login</button>
-// `;
-
-// 		this.element.querySelector("#loginSubmit")!.addEventListener("click", async () => {
-// 			const homeserver = (this.element.querySelector("#loginHomeserver") as HTMLInputElement).value
-// 			const username = (this.element.querySelector("#loginUsername") as HTMLInputElement).value
-// 			const password = (this.element.querySelector("#loginPassword") as HTMLInputElement).value
-
-// 			alert(`Logging in with:\nHomeserver: ${homeserver}\nUsername: ${username}\nPassword: ${password}`);
-// 		});
+		registerButton.addEventListener("click", () => this.registerDialog())
 	}
 
 	loginDialog() {
@@ -112,6 +95,55 @@ export default class Login extends Component {
 			} catch(e: any) {
 				console.error(e.httpStatus);
 				alert("Login failed, " + (e.httpStatus === 403 ? "invalid username or password" : "an unknown error occurred"));
+			}
+		});
+	}
+
+	registerDialog() {
+		const el = document.createElement("dialog")
+		el.innerHTML = `
+			<h1 style="margin-top: 0;">Register</h1>
+			<input type="text" id="registerHomeserver" placeholder="Homeserver URL" value="https://matrix.org" />
+			<button id="registerHSSubmit">Register</button>
+			<input type="text" id="registerUsername" placeholder="Username" style="display: none;" />
+			<input type="password" id="registerPassword" placeholder="Password" style="display: none;" />
+			<button id="registerSubmit" style="display: none;">Register</button>
+		`
+		document.body.appendChild(el)
+		el.showModal()
+
+		el.querySelector<HTMLInputElement>("#registerHomeserver")!.value = localStorage.getItem("homeserver") || "https://matrix.org"
+
+		el.querySelector("#registerHSSubmit")!.addEventListener("click", async () => {
+			const homeserver = (el.querySelector("#registerHomeserver") as HTMLInputElement).value
+			if(homeserver != localStorage.getItem("homeserver")) {
+				localStorage.setItem("homeserver", homeserver);
+				location.reload();
+				return;
+			}
+			el.querySelector<HTMLInputElement>("#registerHomeserver")!.style.display = "none"
+			el.querySelector<HTMLButtonElement>("#registerHSSubmit")!.style.display = "none"
+			el.querySelector<HTMLInputElement>("#registerUsername")!.style.display = "block"
+			el.querySelector<HTMLInputElement>("#registerPassword")!.style.display = "block"
+			el.querySelector<HTMLButtonElement>("#registerSubmit")!.style.display = "block"
+		});
+
+		el.querySelector<HTMLButtonElement>("#registerSubmit")!.addEventListener("click", async () => {
+			const username = el.querySelector<HTMLInputElement>("#registerUsername")!.value;
+			const password = el.querySelector<HTMLInputElement>("#registerPassword")!.value;
+			try {
+				const res = await matrix.registerRequest({
+					username,
+					password
+				}, "user");
+				console.log(res);
+				localStorage.setItem("accessToken", res.access_token!);
+				localStorage.setItem("userId", res.user_id);
+				localStorage.setItem("deviceId", res.device_id!);
+				location.reload();
+			} catch(e: any) {
+				console.error(e.httpStatus);
+				alert("Registration failed, " + e.httpStatus);
 			}
 		});
 	}
