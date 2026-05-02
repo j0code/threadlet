@@ -11,7 +11,7 @@
         "@types/dompurify": "^3.0.5",
         "@types/highlight.js": "^9.12.4",
         "@types/marked": "^5.0.2",
-        "dompurify": "^3.2.4",
+        "dompurify": "^3.4.2",
         "emoji-mart": "^5.6.0",
         "esbuild": "^0.25.0",
         "highlight.js": "^11.11.1",
@@ -195,7 +195,7 @@
 
     "discord-api-types": ["discord-api-types@0.38.15", "", {}, "sha512-RX3skyRH7p6BlHOW62ztdnIc87+wv4TEJEURMir5k5BbRJ10wK1MCqFEO6USHTol3gkiHLE6wWoHhNQ2pqB4AA=="],
 
-    "dompurify": ["dompurify@3.2.5", "", { "optionalDependencies": { "@types/trusted-types": "^2.0.7" } }, "sha512-mLPd29uoRe9HpvwP2TxClGQBzGXeEC/we/q+bFlmPPmj2p2Ugl3r6ATu/UU1v77DXNcehiBg9zsr1dREyA/dJQ=="],
+    "dompurify": ["dompurify@3.4.2", "", { "optionalDependencies": { "@types/trusted-types": "^2.0.7" } }, "sha512-lHeS9SA/IKeIFFyYciHBr2n0v1VMPlSj843HdLOwjb2OxNwdq9Xykxqhk+FE42MzAdHvInbAolSE4mhahPpjXA=="],
 
     "eastasianwidth": ["eastasianwidth@0.2.0", "", {}, "sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA=="],
 
