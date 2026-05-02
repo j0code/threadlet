@@ -17,6 +17,8 @@ export default class RoomView extends View {
 	public readonly msgList: EventList
 	public readonly chatInput: ChatInput
 
+	private timelineEventHandler?: (event: MatrixEvent) => void
+
 	constructor() {
 		super("div", { id: "room-view" })
 
@@ -45,11 +47,12 @@ export default class RoomView extends View {
 		const events = room.getLiveTimeline().getEvents()
 		this.msgList.reset(events)
 
-		if(this.currentRoom) matrix.off(RoomEvent.Timeline, this.onTimelineEvent(this.currentRoom));
+		if(this.timelineEventHandler) matrix.off(RoomEvent.Timeline, this.timelineEventHandler);
 
 		this.currentRoom = room
 
-		matrix.on(RoomEvent.Timeline, this.onTimelineEvent(this.currentRoom));
+		this.timelineEventHandler = this.onTimelineEvent(this.currentRoom)
+		matrix.on(RoomEvent.Timeline, this.timelineEventHandler);
 	}
 
 	getCurrentRoom() {
