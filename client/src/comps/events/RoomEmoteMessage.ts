@@ -12,7 +12,7 @@ export default class RoomEmoteMessage extends EventMessageBase {
 
 	async reset(): Promise<void> {
 		const sender = matrix.getUser(this.message.getSender()!)
-		this.contentElement.innerHTML = markdownToHtml("\\* " + (sender?.displayName || this.message.getSender()) + " " + this.message.getContent().body || "```json\n" + JSON.stringify(this.message.getContent()) + "\n```")
+		this.contentElement.innerHTML = markdownToHtml("\\* " + (sender?.displayName || this.message.getSender()) + " " + (this.message.getContent().body || "```json\n" + JSON.stringify(this.message.getContent()) + "\n```"))
 		super.reset()
 	}
 }
