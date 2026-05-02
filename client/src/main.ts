@@ -24,7 +24,7 @@ export const views = {
 } as const
 
 document.getElementById("loadingScreen")!.remove();
-app = localStorage.getItem("accessTokena") ? new App() : new Login()
+app = localStorage.getItem("accessToken") ? new App() : new Login()
 document.body.appendChild(app.element)
 
 // setupDiscordSdk().then(async () => {
