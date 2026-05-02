@@ -6,25 +6,25 @@ export default class Login extends Component {
 	constructor() {
 		super("div", { id: "login" })
 
-		this.element.style.background = "url('/2pills.png') center center / contain no-repeat fixed"
+		//this.element.style.background = "url('/2pills.png') center center / contain no-repeat fixed"
 		this.element.style.width = "100%"
 		this.element.style.height = "100%"
 
 		let title = document.createElement("h1")
 		title.textContent = "Welcome to Threadlet!"
-		title.style.position = "absolute"
-		title.style.top = "30px"
-		title.style.left = "50%"
-		title.style.transform = "translateX(-50%)"
-		title.style.fontSize = "48px"
+		title.id = "loginTitle"
 		this.element.appendChild(title)
+
+		let morpheusImg = document.createElement("img")
+		morpheusImg.src = "/2pills.png"
+		morpheusImg.id = "morpehusImg"
+		this.element.appendChild(morpheusImg)
 
 		let loginButton = document.createElement("button")
 		loginButton.textContent = "Login"
-		loginButton.style.position = "absolute"
-		loginButton.style.bottom = "20%"
-		loginButton.style.left = "10%"
-		loginButton.style.transform = "translateY(-50%)"
+		loginButton.style.bottom = "calc(anchor(bottom) + 10.5vw)"
+		loginButton.style.left   = "calc(anchor(left)   + 12.5vw)"
+		loginButton.style.transform = "translateX(-50%) translateY(50%)"
 		loginButton.classList.add("loginButton");
 		this.element.appendChild(loginButton)
 
@@ -32,12 +32,9 @@ export default class Login extends Component {
 
 		let registerButton = document.createElement("button")
 		registerButton.textContent = "Register"
-		registerButton.style.position = "absolute"
-		registerButton.style.bottom = "20%"
-		registerButton.style.right = "10%"
-		registerButton.style.transform = "translateY(-50%)"
-		registerButton.style.padding = "10px 20px"
-		registerButton.style.fontSize = "24px"
+		registerButton.style.bottom = "calc(anchor(bottom) +  9vw)"
+		registerButton.style.right  = "calc(anchor(right)  + 17vw)"
+		registerButton.style.transform = "translateX(50%) translateY(50%)"
 		registerButton.classList.add("loginButton");
 		this.element.appendChild(registerButton)
 
