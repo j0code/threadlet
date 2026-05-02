@@ -20,7 +20,7 @@ export default class RoomTextMessage extends ChatMessageBase {
 				break
 			case undefined:
 			default:
-				this.contentElement.innerHTML = this.message.getContent().body || ""
+				this.contentElement.innerText = this.message.getContent().body || ""
 				break
 		}
 		super.reset()
