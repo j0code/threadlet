@@ -704,3 +704,9 @@ dialog {
 	max-width: 100%;
 	overflow-y: scroll;
 }
+
+[data-mx-spoiler] {
+	filter: blur(5px);
+	transition: filter 0.3s;
+	cursor: pointer;
+}
