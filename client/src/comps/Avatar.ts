@@ -16,6 +16,8 @@ export default class Avatar extends Component {
 		const mxid = this.element.getAttribute("data-mxid")
 		if(!mxid) return
 
+		this.element.innerHTML = ""
+
 		const { avatar_url, displayname } = await matrix.getProfileInfo(mxid) // TODO: cache
 		if(avatar_url) {
 			let img = new MXCImage(avatar_url)
