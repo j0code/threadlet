@@ -49,7 +49,12 @@ export default class ChatMessageBase extends EventBase {
 
 	async reset() {
 		const msg = this.message
-		let { displayname } = await matrix.getProfileInfo(msg.getSender()!) // TODO: cache
+		const user = matrix.getUser(msg.getSender()!)
+		let displayname = user?.displayName
+		if(!user) {
+			const profile = await matrix.getProfileInfo(msg.getSender()!)
+			displayname = profile?.displayname || msg.getSender()
+		}
 		this.nameElement.innerHTML = twemojiParse(displayname || msg.getSender() || "Unknown")
 		this.timestampElement.dateTime = msg.getDate()?.toISOString() || ""
 		// this.timestampElement.textContent = msg.getDate()?.toISOString() || ""

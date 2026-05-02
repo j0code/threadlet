@@ -18,7 +18,14 @@ export default class Avatar extends Component {
 
 		this.element.innerHTML = ""
 
-		const { avatar_url, displayname } = await matrix.getProfileInfo(mxid) // TODO: cache
+		const user = matrix.getUser(mxid)
+		let displayname = user?.displayName
+		let avatar_url = user?.avatarUrl
+		if(!user) {
+			const profile = await matrix.getProfileInfo(mxid)
+			displayname = profile?.displayname || mxid
+			avatar_url = profile?.avatar_url
+		}
 		if(avatar_url) {
 			let img = new MXCImage(avatar_url)
 			await img.reset()
