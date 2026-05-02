@@ -53,7 +53,14 @@ export default class Message extends Component {
 		const msg = this.message
 		this.contentElement.innerHTML = markdownToHtml(msg.getContent().body || "```json\n" + JSON.stringify(msg.getContent()) + "\n```")
 
-		let { avatar_url, displayname } = await matrix.getProfileInfo(msg.getSender()!) // TODO: cache
+		const user = matrix.getUser(msg.getSender()!)
+		let displayname = user?.displayName
+		let avatar_url = user?.avatarUrl
+		if(!user) {
+			const profile = await matrix.getProfileInfo(msg.getSender()!)
+			displayname = profile?.displayname || msg.getSender()
+			avatar_url = profile?.avatar_url
+		}
 		this.avatarElement.src = await this.getAvatarUrl(avatar_url || "") || ""
 		this.nameElement.innerHTML = twemojiParse(displayname || msg.getSender() || "Unknown")
 		this.timestampElement.dateTime = msg.getDate()?.toISOString() || ""
