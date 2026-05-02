@@ -1,5 +1,5 @@
 import { ClientEvent, Room, RoomEvent } from "matrix-js-sdk"
-import { matrix } from "../matrix"
+import { initMatrixClient, matrix } from "../matrix"
 import ChannelList from "./ChannelList"
 import Component from "./Component"
 import Form from "./Form"
@@ -26,6 +26,8 @@ export default class App extends Component {
 		matrix.on(RoomEvent.MyMembership, () => {
 			this.updateChannelList();
 		})
+
+		void initMatrixClient()
 	}
 
 	updateChannelList() {
