@@ -6,8 +6,9 @@ import { api } from "../main"
 import ChatInput from "./ChatInput"
 import EventList from "./EventList"
 import TagList from "./TagList"
-import { MatrixEvent, Room, RoomEvent } from "matrix-js-sdk"
+import { MatrixEvent, Room, RoomEvent, RoomMember } from "matrix-js-sdk"
 import { matrix } from "../matrix"
+import MemberList from "./MemberList"
 
 export default class RoomView extends View {
 
