@@ -33,18 +33,19 @@ export default class App extends Component {
 		this.channelList.reset(rooms)
 	}
 
-	renderView(view: View | Form, ...args: unknown[]) {
+	renderView(view: View | Form | undefined, ...args: unknown[]) {
 		if (this.currentView) {
 			this.currentView.element.remove()
 		}
+		if(!view) return
 
 		void view.reset(...args)
 		this.element.insertBefore(view.element, this.memberList.element)
 		this.currentView = view
 	}
 
-	async updateMemberList(room: Room) {
-		const members = matrix.getRoom(room.roomId)?.getMembers() || []
+	async updateMemberList(room: Room | null) {
+		const members = matrix.getRoom(room?.roomId)?.getMembers() || []
 		await this.memberList.reset(members)
 	}
 

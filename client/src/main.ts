@@ -10,6 +10,7 @@ import PostView from "./comps/PostView"
 import { User } from "matrix-js-sdk"
 import Login from "./comps/Login"
 import RoomView from "./comps/RoomView"
+import RoomInviteView from "./comps/RoomInviteView"
 
 export let api: ThreadletAPI
 export let app: App | Login
@@ -21,6 +22,7 @@ export const views = {
 	forumView: new ForumView(),
 	postView: new PostView(),
 	roomView: new RoomView(),
+	roomInviteView: new RoomInviteView()
 } as const
 
 document.getElementById("loadingScreen")!.remove();
