@@ -273,6 +273,7 @@ body {
 #events {
 	overflow: hidden auto;
 	scrollbar-gutter: stable;
+	width: 100%;
 }
 
 #post-content {
@@ -688,4 +689,18 @@ dialog {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
+}
+
+.form-checkbox-input input {
+	width: unset !important;
+}
+
+.form-checkbox-input {
+	display: flex;
+	gap: var(--gap-half);
+}
+
+.message-content {
+	max-width: 100%;
+	overflow-y: scroll;
 }
