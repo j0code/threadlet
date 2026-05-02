@@ -59,6 +59,10 @@ export default class ChatMessageBase extends EventBase {
 		this.timestampElement.dateTime = msg.getDate()?.toISOString() || ""
 		// this.timestampElement.textContent = msg.getDate()?.toISOString() || ""
 		this.timestampElement.textContent = await this.relativeTimeFormat(msg.getDate() || new Date())
+
+		this.contentElement.querySelectorAll<HTMLSpanElement>("[data-mx-spoiler]").forEach(el => {
+			el.addEventListener("click", () => el.style.filter = "none");
+		});
 	}
 
 	async relativeTimeFormat(date: Date) {
