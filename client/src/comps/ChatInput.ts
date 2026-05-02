@@ -44,11 +44,15 @@ export default class ChatInput extends Component {
 
 					// const msg = await api.createMessage(forum_id, post_id, { content })
 					// console.log(msg)
-					if(view instanceof PostView) {
+					if (view instanceof PostView) {
 						// TODO
-						return;
+						return
 					}
-					await matrix.sendMessage(view.getCurrentRoom()!.roomId, {
+
+					const room = view.getCurrentRoom()
+					if (!room) return
+
+					await matrix.sendMessage(room.roomId, {
 						body: content,
 						msgtype: MsgType.Text
 					})
