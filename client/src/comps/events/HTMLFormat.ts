@@ -23,18 +23,45 @@ div  | data-mx-maths (see mathematical messages)
 
 Additionally, web clients should ensure that all a tags get a rel="noopener" to prevent the target page from referencing the client’s tab/window.
 */
+
+DOMPurify.addHook("afterSanitizeAttributes", (node) => {
+	if(node.tagName === "A") {
+		node.setAttribute("rel", "noopener")
+	} else if(node.tagName === "SPAN") {
+		const bgColor = node.getAttribute("data-mx-bg-color")
+		const color = node.getAttribute("data-mx-color")
+		if(bgColor && node instanceof HTMLElement) {
+			node.style.backgroundColor = bgColor
+		}
+		if(color && node instanceof HTMLElement) {
+			node.style.color = color
+		}
+	}
+})
+
+DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
+	if(node.tagName === "CODE" && data.attrName === "class") {
+		if(!data.attrValue.startsWith("language-")) {
+			return null
+		}
+	}
+})
+
 export function purifyHTML(html: string): string {
 	return DOMPurify.sanitize(html, {
 		ALLOWED_TAGS: [
 			"del", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "p", "a", "ul", "ol", "sup", "sub", "li", "b", "i", "u", "strong", "em", "s", "code", "hr",
 			"br", "div", "table", "thead", "tbody", "tr", "th", "td", "caption", "pre", "span", "img", "details", "summary", "#text"
 		],
-		ADD_ATTR: [
-			"data-mx-bg-color", "data-mx-color", "data-mx-spoiler", "data-mx-maths",
-			"target", "href",
-			"width", "height", "alt", "title", "src",
-			"start",
-			"class"
-		],
+		ADD_ATTR: (attributeName, tagName) => {
+			if(tagName === "span" && ["data-mx-bg-color", "data-mx-color", "data-mx-spoiler", "data-mx-maths"].includes(attributeName)) return true
+			if(tagName === "a" && ["target", "href"].includes(attributeName)) return true
+			if(tagName === "img" && ["width", "height", "alt", "title", "src"].includes(attributeName)) return true
+			if(tagName === "ol" && attributeName === "start") return true
+			if(tagName === "code" && attributeName === "class") return true
+			if(tagName === "div" && attributeName === "data-mx-maths") return true
+			return false
+		},
+		ALLOWED_URI_REGEXP: /^(?:(?:https?|ftp|mailto|magnet):|mxc:\/\/)/i,
 	})
 }
