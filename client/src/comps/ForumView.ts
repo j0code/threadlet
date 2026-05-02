@@ -4,7 +4,7 @@ import FormButton from "./FormButton"
 import PostPreviewGrid from "./PostPreviewGrid"
 import View from "./View"
 
-export default class ForumView extends View {
+export default class ForumView extends View<[Forum]> {
 
 	private currentForumId?: string
 
@@ -29,7 +29,7 @@ export default class ForumView extends View {
 
 	async reset(forum: Forum) {
 		this.head.reset(forum.name)
-		this.previews.reset(forum)
+		await this.previews.reset(forum)
 
 		this.currentForumId = forum.id
 	}

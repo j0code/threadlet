@@ -1,4 +1,4 @@
-import { api, app } from "../main"
+import { api } from "../main"
 import Component from "./Component"
 import EmojiPicker from "./EmojiPicker"
 import PostView from "./PostView"
@@ -45,7 +45,7 @@ export default class ChatInput extends Component {
 				}
 
 				console.log("Send MSG:", chatInput.innerText)
-				createMessage()
+				void createMessage()
 			}
 		})
 		chatInput.addEventListener('input', () => { // this fixes weird browser behavior

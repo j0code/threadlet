@@ -18,7 +18,7 @@ export default class ForumSettingsForm extends Form {
 
 		this.nameInput = new FormTextInput("forum-name", "Forum Name", 0, 64, true)
 		this.tagsInput = new FormInputList("forum-tags")
-		const submitButton = new FormButton("form-submit", forum ? "Save" : "Create", () => submit(this))
+		const submitButton = new FormButton("form-submit", forum ? "Save" : "Create", () => void submit(this))
 
 		this.body.appendChild(this.nameInput.element)
 		this.body.appendChild(this.tagsInput.element)

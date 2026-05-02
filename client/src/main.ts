@@ -27,7 +27,7 @@ export const views = {
 	postView: new PostView(),
 } as const
 
-setupDiscordSdk().then(async () => {
+void setupDiscordSdk().then(async () => {
 	console.log("Discord SDK is authenticated")
 	
 	document.getElementById("loadingScreen")!.remove()
@@ -41,15 +41,18 @@ setupDiscordSdk().then(async () => {
 
 	if (discordSdk.guildId != null) {
 		try {
-			const guilds = await rest.get(Routes.userGuilds())
+			const guilds = await rest.get(Routes.userGuilds()) as Record<string, unknown>[]
 
 			if (guilds && guilds instanceof Array) {
 				const guild = guilds.find(g => g.id == discordSdk.guildId)
 				if (guild && typeof guild == "object" && "name" in guild) {
+					/* eslint @typescript-eslint/no-unused-vars: off */
 					guildName = guild.name as string
 				}
 			}
-		} catch (ignore) {}
+		} catch {
+			// ignore
+		}
 	}
 
 	clientUser = await rest.get(Routes.user()) as APIUser
@@ -98,7 +101,7 @@ async function setupDiscordSdk() {
 			code,
 		})
 	})
-	const { access_token } = await response.json()
+	const { access_token } = await response.json() as { access_token: string }
 	
 	// Authenticate with Discord client (using the access_token)
 	auth = await discordSdk.commands.authenticate({

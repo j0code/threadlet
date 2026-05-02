@@ -41,7 +41,7 @@ export default class FormInputList extends Component {
 	get value() {
 		const values = []
 
-		for (let input of this.inputs) {
+		for (const input of this.inputs) {
 			const value = input.value.trim()
 			if (value) values.push(value)
 		}

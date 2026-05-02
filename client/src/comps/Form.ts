@@ -1,7 +1,7 @@
 import { twemojiParse } from "../md";
 import Component from "./Component";
 
-export default abstract class Form extends Component {
+export default abstract class Form<ResetArgs extends Array<unknown> = Array<unknown>> extends Component {
 
 	public readonly body: HTMLDivElement
 	public readonly titleElement: HTMLSpanElement
@@ -27,6 +27,6 @@ export default abstract class Form extends Component {
 		this.body = formBody
 	}
 
-	abstract reset(...args: any[]): void
+	abstract reset(...args: ResetArgs): void
 
 }

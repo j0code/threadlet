@@ -28,7 +28,7 @@ export default class PostSettingsForm extends Form {
 		this.tagSelect = new FormMultiSelect({ options, placeholder: "Select tags..." })
 		const submitButton = new FormButton("post-submit", post ? "Save" : "Post", () => {
 			if (this.currentForumId) {
-				submit(this.currentForumId, this)
+				void submit(this.currentForumId, this)
 			}
 		})
 

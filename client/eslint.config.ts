@@ -36,6 +36,14 @@ export default defineConfig([
 				varsIgnorePattern: "^_",
 			},
 		],
+		"@typescript-eslint/no-misused-promises": [
+			"error",
+			{
+				"checksVoidReturn": {
+					"arguments": false
+				}
+			}
+		]
 	}
 	},
 	{ files: ["**/*.json"], plugins: { json }, language: "json/json", extends: ["json/recommended"] },

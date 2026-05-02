@@ -1,7 +1,7 @@
 import Component from "./Component"
 import ViewHead from "./ViewHead"
 
-export default abstract class View extends Component {
+export default abstract class View<ResetArgs extends Array<unknown> = Array<unknown>> extends Component {
 
 	public readonly head: ViewHead
 	protected readonly body: HTMLDivElement
@@ -18,6 +18,6 @@ export default abstract class View extends Component {
 		this.element.append(this.head.element, this.body)
 	}
 
-	abstract reset(...args: any[]): void
+	abstract reset(...args: ResetArgs): void | Promise<void>
 
 }
