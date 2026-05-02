@@ -69,7 +69,8 @@ body {
 	display: flex;
 }
 
-#channels {
+#channels,
+#members {
 	display: flex;
 	flex-direction: column;
 	height: 100vh;
@@ -655,4 +656,26 @@ dialog {
 
 .loginButton:hover {
 	background: radial-gradient(#ffffff50, transparent);
+}
+
+#members {
+	gap: var(--gap-half);
+}
+
+.member {
+	display: flex;
+	gap: var(--gap-half);
+	align-items: center;
+	margin-left: 10px;
+}
+
+.member:first-of-type {
+	margin-top: 10px;
+}
+
+.member-avatar {
+	width: 30px;
+	aspect-ratio: 1 / 1;
+	border-radius: 100%;
+	font-size: 14px !important;
 }

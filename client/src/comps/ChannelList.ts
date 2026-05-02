@@ -30,7 +30,10 @@ export default class ChannelList extends Component {
 
 		for (const forum of forums) {
 			const tab = new ForumTab(forum)
-			tab.element.addEventListener("click", () => _app.renderView(views.roomView, forum))
+			tab.element.addEventListener("click", () => {
+				_app.renderView(views.roomView, forum)
+				_app.updateMemberList(forum)
+			})
 			this.element.appendChild(tab.element)
 		}
 	}
