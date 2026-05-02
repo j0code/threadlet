@@ -29,7 +29,7 @@ export default class RoomEmoteMessage extends EventMessageBase {
 				break
 			case undefined:
 			default:
-				body.innerHTML = this.message.getContent().body || ""
+				body.innerText = this.message.getContent().body || ""
 				break
 		}
 		this.contentElement.appendChild(body)
