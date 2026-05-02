@@ -15,7 +15,7 @@ export default class ChannelList extends Component {
 	}
 
 	reset(forums: Array<Room>) {
-		for (let child of Array.from(this.element.children)) {
+		for (const child of Array.from(this.element.children)) {
 			child.remove()
 		}
 		if(!(app instanceof App)) {
@@ -23,16 +23,17 @@ export default class ChannelList extends Component {
 			return
 		}
 
-		let _app = app satisfies App
+		const _app = app satisfies App
 
 		const createButton = new FormButton("create-forum-button", "(+) New", () => _app.renderView(views.forumCreateForm))
 		this.element.appendChild(createButton.element)
-
-		for (const forum of forums) {
+		
+		for (const forum of forums.filter(r => r.getMyMembership() != "leave")) {
 			const tab = new ForumTab(forum)
-			tab.element.addEventListener("click", () => {
-				_app.renderView(views.roomView, forum)
-				_app.updateMemberList(forum)
+			tab.tab.addEventListener("click", () => {
+				const membership = forum.getMyMembership()
+				_app.renderView(membership == "join" ? views.roomView : views.roomInviteView, forum)
+				void _app.updateMemberList(forum)
 			})
 			this.element.appendChild(tab.element)
 		}

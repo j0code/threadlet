@@ -679,3 +679,13 @@ dialog {
 	border-radius: 100%;
 	font-size: 14px !important;
 }
+
+.context-menu-content {
+	background-color: var(--background-secondary);
+	border: 2px solid #40444b;
+	border-radius: 5px;
+	padding: 5px 0;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
