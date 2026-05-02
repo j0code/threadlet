@@ -25,7 +25,7 @@ export default class ChannelList extends Component {
 
 		const _app = app satisfies App
 
-		const createButton = new FormButton("create-forum-button", "(+) New", () => _app.renderView(views.forumCreateForm))
+		const createButton = new FormButton("create-forum-button", "(+) New", () => _app.renderView(views.roomCreateForm))
 		this.element.appendChild(createButton.element)
 		
 		for (const forum of forums.filter(r => r.getMyMembership() != "leave")) {
