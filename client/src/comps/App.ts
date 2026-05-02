@@ -46,7 +46,7 @@ export default class App extends Component {
 
 	async updateMemberList(room: Room | null) {
 		const members = matrix.getRoom(room?.roomId)?.getMembers() || []
-		await this.memberList.reset(members)
+		await this.memberList.reset(members, room?.roomId)
 	}
 
 	getCurrentView() {

@@ -2,14 +2,26 @@ import { RoomMember } from "matrix-js-sdk";
 import Component from "./Component";
 import MXCImage from "./MXCImage";
 import Avatar from "./Avatar";
+import FormButton from "./FormButton";
+import { matrix } from "../matrix";
 
 export default class MemberList extends Component {
 	constructor() {
 		super("div", { id: "members" })
 	}
 
-	async reset(members: RoomMember[]) {
+	async reset(members: RoomMember[], roomId?: string) {
 		this.element.innerHTML = ""
+
+		if(roomId) {
+			const inviteButton = new FormButton("invite-to-room-button", "Invite", async () => {
+				const user = prompt("Enter the MXID of the user you want to invite (e.g. @example:matrix.org)")
+				if(!user) return
+				await matrix.invite(roomId, user);
+			})
+			this.element.appendChild(inviteButton.element)
+		}
+		
 		members.forEach(member => {
 			const memberEl = document.createElement("div")
 			memberEl.className = "member"
