@@ -4,7 +4,7 @@ import { markdownToHtml } from "../../md";
 import { matrix } from "../../matrix";
 import MXCImage from "../MXCImage";
 
-export default class RoomVideoMessage extends ChatMessageBase {
+export default class RoomAudioMessage extends ChatMessageBase {
 	constructor(msg: MatrixEvent) {
 		super(msg)
 	}
