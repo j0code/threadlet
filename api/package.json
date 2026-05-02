@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "lint": "npx eslint",
+    "lint:fix": "npx eslint --fix"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,14 @@
   },
   "type": "module",
   "devDependencies": {
-    "typescript": "^5.8.2"
+    "@eslint/css": "^1.2.0",
+    "@eslint/js": "^10.0.1",
+    "@eslint/json": "^1.2.0",
+    "@eslint/markdown": "^8.0.1",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0",
+    "jiti": "^2.6.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.1"
   }
 }
