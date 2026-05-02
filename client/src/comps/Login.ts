@@ -1,3 +1,4 @@
+import { MatrixError } from "matrix-js-sdk";
 import { matrix } from "../matrix";
 import Component from "./Component";
 
@@ -92,9 +93,14 @@ export default class Login extends Component {
 				localStorage.setItem("deviceId", res.device_id);
 				// localStorage.setItem("refreshToken", res.refresh_token);
 				location.reload();
-			} catch(e: any) {
-				console.error(e.httpStatus);
-				alert("Login failed, " + (e.httpStatus === 403 ? "invalid username or password" : "an unknown error occurred"));
+			} catch(e) {
+				if (typeof e === "object" && e instanceof MatrixError) {
+					console.error(e.httpStatus);
+					alert("Login failed, " + (e.httpStatus === 403 ? "invalid username or password" : "an unknown error occurred"));
+				} else {
+					console.error(e);
+					alert("An unknown error occurred");
+				}
 			}
 		});
 	}
@@ -141,9 +147,14 @@ export default class Login extends Component {
 				localStorage.setItem("userId", res.user_id);
 				localStorage.setItem("deviceId", res.device_id!);
 				location.reload();
-			} catch(e: any) {
-				console.error(e.httpStatus);
-				alert("Registration failed, " + e.httpStatus);
+			} catch(e) {
+				if(typeof e === "object" && e instanceof MatrixError) {
+					console.error(e.httpStatus);
+					alert("Registration failed, " + e.httpStatus);
+				} else {
+					console.error(e);
+					alert("An unknown error occurred");
+				}
 			}
 		});
 	}
