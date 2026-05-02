@@ -10,6 +10,8 @@ export default class RoomVideoMessage extends ChatMessageBase {
 	}
 
 	async reset(): Promise<void> {
+		this.contentElement.innerHTML = ""
+		
 		let video = document.createElement("video")
 		video.controls = true
 		video.src = await this.getMXCVideo(this.message.getContent().url || "") || ""

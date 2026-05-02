@@ -10,6 +10,8 @@ export default class RoomAudioMessage extends ChatMessageBase {
 	}
 
 	async reset(): Promise<void> {
+		this.contentElement.innerHTML = ""
+		
 		let audio = document.createElement("audio")
 		audio.controls = true
 		audio.src = await this.getMXCAudio(this.message.getContent().url || "") || ""

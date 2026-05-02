@@ -10,6 +10,8 @@ export default class RoomFileMessage extends ChatMessageBase {
 	}
 
 	async reset(): Promise<void> {
+		this.contentElement.innerHTML = ""
+		
 		let file = document.createElement("a")
 		file.href = await this.getMXCFile(this.message.getContent().url || "") || ""
 		file.target = "_blank"
