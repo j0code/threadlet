@@ -311,7 +311,8 @@ body {
 	align-items: flex-start;
 }
 
-.message-author-avatar {
+.message-author-avatar,
+.message-author-avatar img {
 	width: 50px;
 	aspect-ratio: 1 / 1;
 	border-radius: 100%;
@@ -674,7 +675,8 @@ dialog {
 	margin-top: 10px;
 }
 
-.member-avatar {
+.member-avatar,
+.member-avatar img {
 	width: 30px;
 	aspect-ratio: 1 / 1;
 	border-radius: 100%;
