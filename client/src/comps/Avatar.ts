@@ -37,10 +37,6 @@ export default class Avatar extends Component {
 		} else {
 			this.element.style.backgroundColor = this.stringToColor(mxid)
 			this.element.style.color = this.contrastingColor(this.stringToColor(mxid))
-			this.element.style.fontSize = "24px"
-			this.element.style.display = "flex"
-			this.element.style.alignItems = "center"
-			this.element.style.justifyContent = "center"
 			this.element.textContent = displayname?.[0]?.toUpperCase() || "?"
 		}
 	}
