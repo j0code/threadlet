@@ -41,14 +41,6 @@ export default class Login extends Component {
 		registerButton.addEventListener("click", () => this.registerDialog())
 	}
 
-	private async getActualServerUrl(server: string) {
-		const res = await fetch(server + "/.well-known/matrix/client").then(res => res.json()).catch(() => null);
-		if(res && res["m.homeserver"] && res["m.homeserver"].base_url) {
-			return res["m.homeserver"].base_url;
-		}
-		return server;
-	}
-
 	loginDialog() {
 		const el = document.createElement("dialog")
 		el.innerHTML = `
@@ -65,7 +57,6 @@ export default class Login extends Component {
 		el.querySelector<HTMLInputElement>("#loginHomeserver")!.value = localStorage.getItem("homeserver") || "https://matrix.org"
 
 		el.querySelector("#loginHSSubmit")!.addEventListener("click", async () => {
-			el.querySelector<HTMLInputElement>("#loginHomeserver")!.value = await this.getActualServerUrl(el.querySelector<HTMLInputElement>("#loginHomeserver")!.value);
 			const homeserver = (el.querySelector("#loginHomeserver") as HTMLInputElement).value
 			if(homeserver != localStorage.getItem("homeserver")) {
 				localStorage.setItem("homeserver", homeserver);
@@ -130,7 +121,6 @@ export default class Login extends Component {
 		el.querySelector<HTMLInputElement>("#registerHomeserver")!.value = localStorage.getItem("homeserver") || "https://matrix.org"
 
 		el.querySelector("#registerHSSubmit")!.addEventListener("click", async () => {
-			el.querySelector<HTMLInputElement>("#registerHomeserver")!.value = await this.getActualServerUrl(el.querySelector<HTMLInputElement>("#registerHomeserver")!.value);
 			const homeserver = (el.querySelector("#registerHomeserver") as HTMLInputElement).value
 			if(homeserver != localStorage.getItem("homeserver")) {
 				localStorage.setItem("homeserver", homeserver);
