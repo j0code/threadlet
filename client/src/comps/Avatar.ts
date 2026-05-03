@@ -27,7 +27,11 @@ export default class Avatar extends Component {
 			avatar_url = profile?.avatar_url
 		}
 		if(avatar_url) {
-			let img = new MXCImage(avatar_url)
+			let img = new MXCImage(avatar_url, {
+				width: 64,
+				height: 64,
+				resizeMethod: "scale"
+			})
 			await img.reset()
 			this.element.appendChild(img.element)
 		} else {
