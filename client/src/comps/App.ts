@@ -1,21 +1,22 @@
 import { ClientEvent, Room, RoomEvent } from "matrix-js-sdk"
 import { initMatrixClient, matrix } from "../matrix"
-import ChannelList from "./ChannelList"
+import RoomList from "./RoomList"
 import Component from "./Component"
 import Form from "./Form"
 import View from "./View"
 import MemberList from "./MemberList"
 
 export default class App extends Component {
-	readonly channelList: ChannelList
+
+	readonly roomList: RoomList
 	private currentView?: View | Form
 	readonly memberList: MemberList
 
 	constructor() {
 		super("div", { id: "app" })
 
-		this.channelList = new ChannelList([])
-		this.element.appendChild(this.channelList.element)
+		this.roomList = new RoomList([])
+		this.element.appendChild(this.roomList.element)
 		this.memberList = new MemberList()
 		this.element.appendChild(this.memberList.element)
 
@@ -32,7 +33,7 @@ export default class App extends Component {
 
 	updateChannelList() {
 		const rooms = matrix.getRooms()
-		this.channelList.reset(rooms)
+		this.roomList.reset(rooms)
 	}
 
 	renderView(view: View | Form | undefined, ...args: unknown[]) {
