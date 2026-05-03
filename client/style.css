@@ -23,6 +23,7 @@
 	--button-color: #b9bbbe;
 	--hover-highlight: #dcddde;
 	--input-bg: #121212;
+	--button-bg: #6b6b6b;
 	--multi-select-pill-hover-bg: #1a1a1a;
 	--pill-bg: #121212;
 }
@@ -159,12 +160,43 @@ body {
 	border: none;
 	border-radius: 5px;
 	background-color: var(--input-bg);
+	margin: 0px;
 
 	:hover,
 	:active {
 		border: none;
 		border-radius: 5px;
 	}
+}
+
+.form-input.form-checkbox-input input {
+	appearance: none;
+	box-sizing: border-box;
+	width: 1em;
+	height: 1em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: none;
+
+	&:checked {
+		background-color: var(--button-bg);
+
+		&::after {
+			content: "✔";
+			color: white;
+			font-size: 1em;
+			display: block;
+			text-align: center;
+		}
+	}
+}
+
+.form-input.form-checkbox-input {
+	display: flex;
+	gap: var(--gap-half);
+	flex-direction: row;
+	align-items: center;
 }
 
 .form-textarea,
@@ -192,6 +224,9 @@ body {
 	cursor: pointer;
 	padding: 0.38em 1.4em;
 	font-size: 22px;
+	background-color: var(--button-bg);
+	border: none;
+	border-radius: 5px;
 }
 
 .form-input-list {
@@ -697,15 +732,6 @@ dialog {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
-}
-
-.form-checkbox-input input {
-	width: unset !important;
-}
-
-.form-checkbox-input {
-	display: flex;
-	gap: var(--gap-half);
 }
 
 .message-content {
