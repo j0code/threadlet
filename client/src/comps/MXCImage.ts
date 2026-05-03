@@ -1,10 +1,20 @@
 import { matrix } from "../matrix";
 import Component from "./Component";
 
+interface MXCImageOptions {
+	width?: number
+	height?: number
+	resizeMethod?: "crop" | "scale"
+}
+
 export default class MXCImage extends Component {
-	constructor(mxc: string) {
+
+	public readonly options: MXCImageOptions
+
+	constructor(mxc: string, opts?: MXCImageOptions) {
 		super("img", { classes: ["mxc-image"] })
 		this.element.setAttribute("data-mxc", mxc)		
+		this.options = opts || {}
 	}
 
 	async reset() {
@@ -20,7 +30,7 @@ export default class MXCImage extends Component {
 	async getMXCImage(mxc: string) {
 		console.log("Getting avatar url for", mxc)
 		// TODO: caching
-		const url = matrix.mxcUrlToHttp(mxc, undefined, undefined, undefined, false, true, true)
+		const url = matrix.mxcUrlToHttp(mxc, this.options.width, this.options.height, this.options.resizeMethod, false, true, true)
 		if(!url) {
 			return null
 		}
