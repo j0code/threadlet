@@ -12,7 +12,7 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@discordjs/rest": "^2.4.3",
+    "@discordjs/rest": "^2.6.1",
     "@j0code/threadlet-api": "npm:@jsr/j0code__threadlet-api@^0.0.21",
     "@j0code/yson": "npm:@jsr/j0code__yson@^1.2.4",
     "@types/ws": "^8.18.1",
