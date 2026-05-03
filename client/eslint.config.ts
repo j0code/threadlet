@@ -34,6 +34,7 @@ export default defineConfig([
 			{
 				argsIgnorePattern: "^_",
 				varsIgnorePattern: "^_",
+				caughtErrorsIgnorePattern: "^_",
 			},
 		],
 		"@typescript-eslint/no-misused-promises": [
