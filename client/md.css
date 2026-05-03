@@ -22,10 +22,10 @@
 	background-color: light-dark(#f6f8fa, rgba(175, 184, 193, 0.2));
 	padding: 16px;
 	border-radius: 6px;
-	overflow: auto;
+	overflow-x: auto;
 }
 
-.md pre code.hljs {
+.md pre code {
 	padding: 0px;
 	background-color: unset;
 }
