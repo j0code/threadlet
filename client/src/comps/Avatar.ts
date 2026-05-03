@@ -19,13 +19,18 @@ export default class Avatar extends Component {
 		this.element.innerHTML = ""
 
 		const user = matrix.getUser(mxid)
-		let displayname = user?.displayName
-		let avatar_url = user?.avatarUrl
-		if(!user) {
+		let displayname: string
+		let avatar_url: string | undefined = undefined
+		
+		if (user) {
+			displayname = user?.displayName || mxid
+			avatar_url  = user?.avatarUrl
+		} else {
 			const profile = await matrix.getProfileInfo(mxid)
 			displayname = profile?.displayname || mxid
 			avatar_url = profile?.avatar_url
 		}
+
 		if(avatar_url) {
 			let img = new MXCImage(avatar_url, {
 				width: 64,
@@ -37,7 +42,7 @@ export default class Avatar extends Component {
 		} else {
 			this.element.style.backgroundColor = this.stringToColor(mxid)
 			this.element.style.color = this.contrastingColor(this.stringToColor(mxid))
-			this.element.textContent = displayname?.[0]?.toUpperCase() || "?"
+			this.element.textContent = displayname[0]?.toUpperCase() || "?"
 		}
 	}
 
