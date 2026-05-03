@@ -37,7 +37,7 @@ export default class Avatar extends Component {
 			this.element.style.display = "flex"
 			this.element.style.alignItems = "center"
 			this.element.style.justifyContent = "center"
-			this.element.innerHTML = displayname?.[0].toUpperCase() || "?"
+			this.element.textContent = displayname?.[0]?.toUpperCase() || "?"
 		}
 	}
 
