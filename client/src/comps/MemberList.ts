@@ -27,7 +27,6 @@ export default class MemberList extends Component {
 			memberEl.className = "member"
 			const avatar = new Avatar(member.userId, "member-avatar")
 			memberEl.appendChild(avatar.element)
-			avatar.reset()
 			const nameEl = document.createElement("span")
 			nameEl.className = "member-name"
 			nameEl.textContent = member.name || member.userId
