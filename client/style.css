@@ -326,6 +326,7 @@ body {
 	flex-direction: column;
 	flex: 1 1 auto;
 	gap: var(--gap-half);
+	padding-block: var(--gap);
 }
 
 .post-description {
