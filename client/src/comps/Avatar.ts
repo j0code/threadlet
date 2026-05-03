@@ -6,7 +6,7 @@ export default class Avatar extends Component {
 	public readonly mxid: string
 
 	constructor(mxid: string, className?: string) {
-		super("div", { classes: ["avatar", className].filter((v): v is string => !!v) })
+		super("div", { classes: className ? ["avatar", className] : ["avatar"]})
 		this.mxid = mxid
 		this.element.setAttribute("data-mxid", mxid)
 		this.reset()
