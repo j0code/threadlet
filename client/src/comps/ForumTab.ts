@@ -23,7 +23,6 @@ export default class ForumTab extends Component {
 			const _app = app as App
 			_app.updateChannelList()
 			_app.renderView(undefined)
-			void _app.updateMemberList(null)
 		})
 		ctxMenu.content.appendChild(leaveButton)
 

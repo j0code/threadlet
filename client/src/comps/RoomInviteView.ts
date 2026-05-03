@@ -19,7 +19,6 @@ export default class RoomInviteView extends View {
 			await matrix.roomInitialSync(room.roomId, 20)
 			let _app = app as App
 			_app.renderView(views.roomView, room)
-			_app.updateMemberList(room)
 		})
 		this.body.appendChild(joinButton)
 		const declineButton = document.createElement("button")
@@ -28,7 +27,6 @@ export default class RoomInviteView extends View {
 			await matrix.leave(room.roomId)
 			let _app = app as App
 			_app.renderView(undefined)
-			_app.updateMemberList(null)
 			_app.updateChannelList()
 		})
 		this.body.appendChild(declineButton)

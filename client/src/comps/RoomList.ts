@@ -32,7 +32,6 @@ export default class RoomList extends Component {
 			tab.tab.addEventListener("click", () => {
 				const membership = forum.getMyMembership()
 				_app.renderView(membership == "join" ? views.roomView : views.roomInviteView, forum)
-				void _app.updateMemberList(forum)
 			})
 			this.element.appendChild(tab.element)
 		}

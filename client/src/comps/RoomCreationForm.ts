@@ -46,7 +46,6 @@ export default class RoomCreationForm extends Form {
 		let _app = app as App
 		_app.updateChannelList()
 		_app.renderView(views.roomView, matrix.getRoom(res.room_id))
-		_app.updateMemberList(matrix.getRoom(res.room_id))
 	}
 
 }
