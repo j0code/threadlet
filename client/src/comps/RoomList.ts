@@ -1,4 +1,3 @@
-import { Forum } from "@j0code/threadlet-api/v0/types";
 import { app, views } from "../main";
 import Component from "./Component";
 import FormButton from "./FormButton";
@@ -6,7 +5,7 @@ import ForumTab from "./ForumTab";
 import { Room } from "matrix-js-sdk";
 import App from "./App";
 
-export default class ChannelList extends Component {
+export default class RoomList extends Component {
 
 	constructor(rooms: Array<Room>) {
 		super("div", { id: "channels" })
@@ -14,7 +13,7 @@ export default class ChannelList extends Component {
 		this.reset(rooms)
 	}
 
-	reset(forums: Array<Room>) {
+	reset(rooms: Array<Room>) {
 		for (const child of Array.from(this.element.children)) {
 			child.remove()
 		}
@@ -28,7 +27,7 @@ export default class ChannelList extends Component {
 		const createButton = new FormButton("create-forum-button", "(+) New", () => _app.renderView(views.roomCreateForm))
 		this.element.appendChild(createButton.element)
 		
-		for (const forum of forums.filter(r => r.getMyMembership() != "leave")) {
+		for (const forum of rooms.filter(r => r.getMyMembership() != "leave")) {
 			const tab = new ForumTab(forum)
 			tab.tab.addEventListener("click", () => {
 				const membership = forum.getMyMembership()
