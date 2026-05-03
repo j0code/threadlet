@@ -16,6 +16,7 @@ export default class RoomView extends View {
 
 	public readonly msgList: EventList
 	public readonly chatInput: ChatInput
+	public readonly memberList: MemberList
 
 	private timelineEventHandler?: (event: MatrixEvent) => void
 
@@ -24,13 +25,20 @@ export default class RoomView extends View {
 
 		this.msgList   = new EventList()
 		this.chatInput = new ChatInput(this)
+		this.memberList = new MemberList()
 
 		const container = document.createElement("div")
 		container.className = "post-container"
-		container.appendChild(this.msgList.element)
+
+		const wrapper = document.createElement("div")
+		wrapper.className = "room-wrapper"
+		wrapper.appendChild(this.msgList.element)
+		wrapper.appendChild(this.chatInput.element)
+		container.appendChild(wrapper)
 
 		this.body.appendChild(container)
-		this.element.appendChild(this.chatInput.element)
+		container.appendChild(this.memberList.element)
+		container.style.flexDirection = "row"
 	}
 
 	onTimelineEvent(room: Room) {
@@ -53,6 +61,13 @@ export default class RoomView extends View {
 
 		this.timelineEventHandler = this.onTimelineEvent(this.currentRoom)
 		matrix.on(RoomEvent.Timeline, this.timelineEventHandler);
+
+		this.updateMemberList(room)
+	}
+
+	async updateMemberList(room: Room | null) {
+		const members = matrix.getRoom(room?.roomId)?.getMembers() || []
+		await this.memberList.reset(members, room?.roomId)
 	}
 
 	getCurrentRoom() {
