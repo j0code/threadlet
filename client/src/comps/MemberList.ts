@@ -6,6 +6,7 @@ import FormButton from "./FormButton";
 import { matrix } from "../matrix";
 import Modal from "./Modal";
 import RoomInviteForm from "./RoomInviteForm";
+import Member from "./Member";
 
 export default class MemberList extends Component {
 	constructor() {
@@ -26,15 +27,9 @@ export default class MemberList extends Component {
 		}
 		
 		members.forEach(member => {
-			const memberEl = document.createElement("div")
-			memberEl.className = "member"
-			const avatar = new Avatar(member.userId, "member-avatar")
-			memberEl.appendChild(avatar.element)
-			const nameEl = document.createElement("span")
-			nameEl.className = "member-name"
-			nameEl.textContent = member.name || member.userId
-			memberEl.appendChild(nameEl)
-			this.element.appendChild(memberEl)
+			const memberEl = new Member()
+			memberEl.reset(member)
+			this.element.appendChild(memberEl.element)
 		})
 	}
 }
