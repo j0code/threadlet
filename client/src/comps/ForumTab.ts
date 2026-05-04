@@ -4,7 +4,6 @@ import { twemojiParse } from "../md";
 import Component from "./Component";
 import ContextMenu from "./ContextMenu";
 import { app } from "../main";
-import App from "./App";
 
 export default class ForumTab extends Component {
 
@@ -20,9 +19,8 @@ export default class ForumTab extends Component {
 		leaveButton.addEventListener("click", async () => {
 			if(!confirm(`Are you sure you want to leave ${forum.name}?`)) return
 			await matrix.leave(forum.roomId)
-			const _app = app as App
-			_app.updateChannelList()
-			_app.renderView(undefined)
+			app.updateChannelList()
+			app.renderView(undefined)
 		})
 		ctxMenu.content.appendChild(leaveButton)
 
