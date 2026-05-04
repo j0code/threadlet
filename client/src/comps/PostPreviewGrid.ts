@@ -1,10 +1,9 @@
-import { Forum } from "@j0code/threadlet-api/v0/types";
-import { api } from "../main";
-import Component from "./Component";
-import PostPreview from "./PostPreview";
+import { Forum } from "@j0code/threadlet-api/v0/types"
+import { api } from "../main"
+import Component from "./Component"
+import PostPreview from "./PostPreview"
 
 export default class PostPreviewGrid extends Component {
-
 	constructor() {
 		super("div", { id: "post-previews" })
 	}
@@ -15,12 +14,11 @@ export default class PostPreviewGrid extends Component {
 		for (const child of Array.from(this.element.children)) {
 			child.remove()
 		}
-		
+
 		for (const post of posts) {
 			const preview = new PostPreview(post)
 			//preview.element.addEventListener("click", () => app.renderView(views.forumView, forum))
 			this.element.appendChild(preview.element)
 		}
 	}
-
 }

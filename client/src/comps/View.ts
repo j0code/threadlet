@@ -1,12 +1,16 @@
 import Component from "./Component"
 import ViewHead from "./ViewHead"
 
-export default abstract class View<ResetArgs extends Array<unknown> = Array<unknown>> extends Component {
-
+export default abstract class View<
+	ResetArgs extends Array<unknown> = Array<unknown>,
+> extends Component {
 	public readonly head: ViewHead
 	protected readonly body: HTMLDivElement
 
-	constructor(title: string, { id, classes }: { id?: string, classes?: string[] }) {
+	constructor(
+		title: string,
+		{ id, classes }: { id?: string; classes?: string[] }
+	) {
 		const cls = ["view"]
 		if (classes) cls.push(...classes)
 		super("div", { id, classes: cls })
@@ -19,5 +23,4 @@ export default abstract class View<ResetArgs extends Array<unknown> = Array<unkn
 	}
 
 	abstract reset(...args: ResetArgs): void | Promise<void>
-
 }

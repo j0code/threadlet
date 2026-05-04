@@ -4,7 +4,6 @@ import Component from "./Component"
 import { twemojiParse } from "../md"
 
 export default class PostPreview extends Component {
-
 	readonly post: Post
 
 	constructor(post: Post) {
@@ -26,5 +25,4 @@ export default class PostPreview extends Component {
 			app.renderView(views.postView, this.post.id)
 		})
 	}
-
 }

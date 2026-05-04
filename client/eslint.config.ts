@@ -13,10 +13,15 @@ export default defineConfig([
 			"node_modules/**",
 			"tsconfig.json",
 			"eslint.config.ts",
-			"package-lock.json"
-		]
+			"package-lock.json",
+		],
 	},
-	{ files: ["**/*.{ts,mts,cts}"], plugins: { js }, extends: ["js/recommended"], languageOptions: { globals: globals.browser } },
+	{
+		files: ["**/*.{ts,mts,cts}"],
+		plugins: { js },
+		extends: ["js/recommended"],
+		languageOptions: { globals: globals.browser },
+	},
 	{
 		files: ["**/*.{ts,mts,cts,tsx}"],
 		extends: [
@@ -29,25 +34,30 @@ export default defineConfig([
 			},
 		},
 		rules: {
-		"@typescript-eslint/no-unused-vars": [
-			"error",
-			{
-				argsIgnorePattern: "^_",
-				varsIgnorePattern: "^_",
-				caughtErrorsIgnorePattern: "^_",
-			},
-		],
-		"@typescript-eslint/no-misused-promises": [
-			"error",
-			{
-				"checksVoidReturn": {
-					"arguments": false
-				}
-			}
-		]
-	}
+			"@typescript-eslint/no-unused-vars": [
+				"error",
+				{
+					argsIgnorePattern: "^_",
+					varsIgnorePattern: "^_",
+					caughtErrorsIgnorePattern: "^_",
+				},
+			],
+			"@typescript-eslint/no-misused-promises": [
+				"error",
+				{
+					checksVoidReturn: {
+						arguments: false,
+					},
+				},
+			],
+		},
 	},
-	{ files: ["**/*.json"], plugins: { json }, language: "json/json", extends: ["json/recommended"] },
+	{
+		files: ["**/*.json"],
+		plugins: { json },
+		language: "json/json",
+		extends: ["json/recommended"],
+	},
 	{
 		files: ["**/*.md"],
 		plugins: { markdown },
@@ -55,7 +65,7 @@ export default defineConfig([
 		extends: ["markdown/recommended"],
 		rules: {
 			"markdown/no-missing-label-refs": "off",
-		}
+		},
 	},
 	{
 		files: ["**/*.css"],
@@ -67,10 +77,10 @@ export default defineConfig([
 			"css/no-invalid-properties": [
 				"error",
 				{
-					allowUnknownVariables: true
-				}
+					allowUnknownVariables: true,
+				},
 			],
-			"css/no-empty-blocks": "off"
-		}
+			"css/no-empty-blocks": "off",
+		},
 	},
 ])

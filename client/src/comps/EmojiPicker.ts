@@ -12,12 +12,15 @@ const pickerOptions = {
 	autoFocus: true,
 	icons: "solid",
 	set: "native",
-	previewPosition: "bottom"
+	previewPosition: "bottom",
 }
 
 export default class EmojiPicker extends Component {
-
-	constructor(id: string, anchor_id: string, onEmojiSelect: (meta: EmojiMetaData) => void) {
+	constructor(
+		id: string,
+		anchor_id: string,
+		onEmojiSelect: (meta: EmojiMetaData) => void
+	) {
 		super("div", { classes: ["emoji-picker-container"] })
 
 		const options = { ...pickerOptions, onEmojiSelect }
@@ -34,5 +37,4 @@ export default class EmojiPicker extends Component {
 	showPopover() {
 		this.element.showPopover()
 	}
-
 }

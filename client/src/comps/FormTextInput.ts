@@ -2,10 +2,15 @@ import Component from "./Component"
 import EmojiButton from "./EmojiButton"
 
 export default class FormTextInput extends Component {
-
 	private readonly input: HTMLInputElement
 
-	constructor(id: string, placeholder: string, min: number = 0, max: number = 16, emojiInput: boolean = false) {
+	constructor(
+		id: string,
+		placeholder: string,
+		min: number = 0,
+		max: number = 16,
+		emojiInput: boolean = false
+	) {
 		super("div", { id, classes: ["form-input", "form-text-input"] })
 
 		this.input = document.createElement("input")
@@ -14,7 +19,7 @@ export default class FormTextInput extends Component {
 		this.input.minLength = min
 		this.input.maxLength = max
 		this.element.append(this.input)
-		
+
 		if (emojiInput) {
 			const emojiButton = new EmojiButton(id, emoji => {
 				this.input.value += emoji.native
@@ -30,5 +35,4 @@ export default class FormTextInput extends Component {
 	clear() {
 		this.input.value = ""
 	}
-
 }

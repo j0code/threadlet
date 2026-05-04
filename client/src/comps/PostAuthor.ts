@@ -4,7 +4,6 @@ import CDN from "@j0code/threadlet-api/v0/cdn"
 import { twemojiParse } from "../md"
 
 export default class PostAuthor extends Component {
-
 	private readonly avatar: HTMLImageElement
 	private readonly name: HTMLSpanElement
 
@@ -24,5 +23,4 @@ export default class PostAuthor extends Component {
 		this.avatar.src = CDN.avatar(user.id, user.avatar)
 		this.name.innerHTML = twemojiParse(user.name)
 	}
-
 }

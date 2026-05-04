@@ -7,7 +7,6 @@ import MessageList from "./MessageList"
 import TagList from "./TagList"
 
 export default class PostView extends View<[string]> {
-
 	private currentForumId?: string
 	private currentPostId?: string
 
@@ -20,10 +19,10 @@ export default class PostView extends View<[string]> {
 	constructor() {
 		super("div", { id: "post-view" })
 
-		this.author    = new PostAuthor()
-		this.tagList   = new TagList()
-		this.content   = new PostContent()
-		this.msgList   = new MessageList()
+		this.author = new PostAuthor()
+		this.tagList = new TagList()
+		this.content = new PostContent()
+		this.msgList = new MessageList()
 		this.chatInput = new ChatInput(this)
 
 		const container = document.createElement("div")
@@ -49,7 +48,7 @@ export default class PostView extends View<[string]> {
 		this.author.reset(user)
 
 		this.currentForumId = post.forum_id
-		this.currentPostId  = post.id
+		this.currentPostId = post.id
 	}
 
 	getCurrentPostId() {
@@ -59,5 +58,4 @@ export default class PostView extends View<[string]> {
 	getCurrentForumId() {
 		return this.currentForumId
 	}
-
 }

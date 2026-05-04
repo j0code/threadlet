@@ -5,7 +5,6 @@ import PostPreviewGrid from "./PostPreviewGrid"
 import View from "./View"
 
 export default class ForumView extends View<[Forum]> {
-
 	private currentForumId?: string
 
 	public readonly previews: PostPreviewGrid
@@ -13,14 +12,18 @@ export default class ForumView extends View<[Forum]> {
 	constructor() {
 		super("FORUM", { id: "forum-view" })
 
-		const createPostBtn = new FormButton("create-post-button", "(+) New Post", async () => {
-			if (this.currentForumId) {
-				console.log("forumId:", this.currentForumId)
-				const forum = await api.getForum(this.currentForumId)
+		const createPostBtn = new FormButton(
+			"create-post-button",
+			"(+) New Post",
+			async () => {
+				if (this.currentForumId) {
+					console.log("forumId:", this.currentForumId)
+					const forum = await api.getForum(this.currentForumId)
 
-				app.renderView(views.postCreateForm, forum)
+					app.renderView(views.postCreateForm, forum)
+				}
 			}
-		})
+		)
 		this.body.appendChild(createPostBtn.element)
 
 		this.previews = new PostPreviewGrid()
@@ -33,5 +36,4 @@ export default class ForumView extends View<[Forum]> {
 
 		this.currentForumId = forum.id
 	}
-
 }
