@@ -3,7 +3,6 @@ import { markdownToHtml, twemojiParse } from "../md"
 import Component from "./Component"
 import CDN from "@j0code/threadlet-api/v0/cdn"
 import { api, clientUser } from "../main"
-import twemoji from "@discordapp/twemoji"
 
 export default class Message extends Component {
 
@@ -44,7 +43,7 @@ export default class Message extends Component {
 
 		this.element.append(aside, main)
 
-		this.reset()
+		void this.reset()
 	}
 
 	async reset() {

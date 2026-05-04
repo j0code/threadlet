@@ -39,14 +39,14 @@ export default class ThreadletAPI extends EventEmitter {
 
 		this.wss = new WebSocket(this.GATEWAY)
 
-		this.wss.addEventListener("open", event => {
+		this.wss.addEventListener("open", _event => {
 			console.log("WebSocket connected!")
 		})
 
 		this.wss.addEventListener("message", (event) => {
-			let rawData
+			let rawData: unknown
 			try {
-				rawData = JSON.parse(event.data)
+				rawData = JSON.parse(event.data as string)
 			} catch (e) {
 				console.error("Server sent invalid json:", e)
 				this.wss.close(1003, "invalid json data")
@@ -242,15 +242,15 @@ export default class ThreadletAPI extends EventEmitter {
 		return this.baseFetch("DELETE", route, schema)
 	}
 
-	private post<T>( route: string,requestBody: any, schema: ZodType<T>): Promise<T> {
+	private post<T>( route: string, requestBody: unknown, schema: ZodType<T>): Promise<T> {
 		return this.baseFetchWithBody<T>("POST",  route, requestBody, schema)
 	}
 
-	private put<T>(  route: string, requestBody: any, schema: ZodType<T>): Promise<T> {
+	private put<T>(  route: string, requestBody: unknown, schema: ZodType<T>): Promise<T> {
 		return this.baseFetchWithBody<T>("PUT",   route, requestBody, schema)
 	}
 
-	private patch<T>(route: string, requestBody: any, schema: ZodType<T>): Promise<T> {
+	private patch<T>(route: string, requestBody: unknown, schema: ZodType<T>): Promise<T> {
 		return this.baseFetchWithBody<T>("PATCH", route, requestBody, schema)
 	}
 
@@ -265,14 +265,14 @@ export default class ThreadletAPI extends EventEmitter {
 				"Authorization": `Bearer ${this.access_token}`
 			}
 		})
-		.then(async res => ({ res, data: await res.json()}))
+		.then(async res => ({ res, data: await res.json() as unknown}))
 		.then(handleAPIResponse(method, route, null, schema))
 	}
 
 	private baseFetchWithBody<T>(
 		method: HTTP_METHODS_WITH_BODY,
 		route: string,
-		requestBody: any,
+		requestBody: unknown,
 		schema: ZodType<T>
 	) {
 		return fetch(`${this.API_ROOT}${route}`, {
@@ -283,7 +283,7 @@ export default class ThreadletAPI extends EventEmitter {
 			},
 			body: JSON.stringify(requestBody)
 		})
-		.then(async res => ({ res, data: await res.json()}))
+		.then(async res => ({ res, data: await res.json() as unknown}))
 		.then(handleAPIResponse(method, route, requestBody, schema))
 	}
 

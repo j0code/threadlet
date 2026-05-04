@@ -1,10 +1,11 @@
 import { GatewayEvents } from "./v0/types.js"
 
-type EventListener<Event extends GatewayEvents["event"]> = (data: Extract<GatewayEvents, { event: Event }>["data"]) => void
+type EventNames = GatewayEvents["event"]
+type EventListener<Event extends EventNames = EventNames> = (data: Extract<GatewayEvents, { event: Event }>["data"]) => void
 
 export default class EventEmitter {
 
-	private listeners: Map<string, EventListener<any>[]>
+	private listeners: Map<string, EventListener[]>
 
 	constructor() {
 		this.listeners = new Map()
@@ -15,9 +16,9 @@ export default class EventEmitter {
 	 * @param event event name
 	 * @param cb callback
 	 */
-	on<Event extends GatewayEvents["event"]>(event: Event, cb: EventListener<Event>) {
+	on<Event extends EventNames>(event: Event, cb: EventListener<Event>) {
 		const listeners = this.listeners.get(event) ?? []
-		listeners.push(cb)
+		listeners.push(cb as unknown as EventListener)
 		this.listeners.set(event, listeners)
 	}
 
@@ -28,7 +29,7 @@ export default class EventEmitter {
 	 */
 	off<Event extends GatewayEvents["event"]>(event: Event, cb: EventListener<Event>) {
 		const listeners = this.listeners.get(event) ?? []
-		const index = listeners.indexOf(cb)
+		const index = listeners.indexOf(cb as unknown as EventListener)
 		if (index < 0) return
 		this.listeners.set(event, listeners.splice(index, 1))
 	}

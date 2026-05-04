@@ -10,7 +10,7 @@ export default class TagList extends Component {
 	reset(tags: Tag[]) {
 		this.element.innerHTML = ""
 
-		for (let tag of tags) {
+		for (const tag of tags) {
 			const pill = document.createElement("span")
 			pill.classList = "tag-pill"
 			pill.textContent = tag.name

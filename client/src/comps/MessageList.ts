@@ -10,13 +10,13 @@ export default class MessageList extends Component {
 	}
 
 	async reset(post: Post) {
-		for (let child of Array.from(this.element.children)) {
+		for (const child of Array.from(this.element.children)) {
 			child.remove()
 		}
 
 		const msgs = await api.getMessages(post.forum_id, post.id)
 		
-		for (let msg of msgs) {
+		for (const msg of msgs) {
 			this.pushMessage(msg)
 		}
 

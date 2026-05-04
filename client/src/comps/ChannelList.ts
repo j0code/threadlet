@@ -13,14 +13,14 @@ export default class ChannelList extends Component {
 	}
 
 	reset(forums: Array<Forum>) {
-		for (let child of Array.from(this.element.children)) {
+		for (const child of Array.from(this.element.children)) {
 			child.remove()
 		}
 
 		const createButton = new FormButton("create-forum-button", "(+) New", () => app.renderView(views.forumCreateForm))
 		this.element.appendChild(createButton.element)
 		
-		for (let forum of forums) {
+		for (const forum of forums) {
 			const tab = new ForumTab(forum)
 			tab.element.addEventListener("click", () => app.renderView(views.forumView, forum))
 			this.element.appendChild(tab.element)

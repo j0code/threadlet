@@ -1,0 +1,1 @@
+export type anyVoid = void | Promise<void>

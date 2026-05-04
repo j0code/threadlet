@@ -22,7 +22,7 @@ const underlineExtension: TokenizerAndRendererExtension = {
 	start(src) {
 		return src.indexOf('__')
 	},
-	tokenizer(src, tokens) {
+	tokenizer(src, _tokens) {
 		// Match text that starts and ends with __ and has at least one non-whitespace char in between.
 		const rule = /^__(?=\S)([\s\S]*?\S)__/
 		const match = rule.exec(src)
@@ -65,7 +65,7 @@ const renderer: RendererObject = {
 marked.use({ extensions: [underlineExtension], renderer}, markedHighlight({
 	emptyLangClass: "hljs",
 	langPrefix: "hljs language-",
-	highlight(code, lang, info) {
+	highlight(code, lang, _info) {
 		const supported = hljs.getLanguage(lang)
 		const language = supported ? lang : "plaintext"
 		if (!supported) code = `${lang}\n${code}` // BUG: this for some reason includes text before ``` on the same line :/

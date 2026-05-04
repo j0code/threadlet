@@ -65,8 +65,8 @@ export default class FormMultiSelect extends Component {
 		})
 		
 		this.input.addEventListener("input", (e: Event) => {
-			// @ts-expect-error TODO typing
-			this.createOptions(e.target?.value)
+			if (!e.target || !(e.target instanceof HTMLInputElement)) return
+			this.createOptions(e.target.value)
 		})
 		
 		this.input.addEventListener("keydown", (e) => {
@@ -126,7 +126,11 @@ export default class FormMultiSelect extends Component {
 		}
 		this.updatePills()
 
-		const checkbox = this.dropdown.querySelector(`[data-tag-id="${optionId}"] > input`)! as HTMLInputElement
+		const checkbox = this.dropdown.querySelector(`[data-tag-id="${optionId}"] > input`)!
+		if (!(checkbox instanceof HTMLInputElement)) {
+			console.error("checkbox is no checkbox?")
+			return
+		}
 		checkbox.checked = !checkbox.checked
 	}
 	

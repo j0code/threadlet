@@ -1,4 +1,3 @@
-import { Post } from "@j0code/threadlet-api/v0/types"
 import PostAuthor from "./PostAuthor"
 import PostContent from "./PostContent"
 import View from "./View"
@@ -7,7 +6,7 @@ import ChatInput from "./ChatInput"
 import MessageList from "./MessageList"
 import TagList from "./TagList"
 
-export default class PostView extends View {
+export default class PostView extends View<[string]> {
 
 	private currentForumId?: string
 	private currentPostId?: string
@@ -44,7 +43,7 @@ export default class PostView extends View {
 		this.head.reset(post.name)
 		this.tagList.reset(post.tags ?? [])
 		this.content.reset(post)
-		this.msgList.reset(post)
+		await this.msgList.reset(post)
 
 		const user = await api.getUser(post.poster_id)
 		this.author.reset(user)
