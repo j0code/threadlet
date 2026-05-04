@@ -5,7 +5,7 @@ import CDN from "@j0code/threadlet-api/v0/cdn"
 import { api, clientUser } from "../../main"
 import twemoji from "@discordapp/twemoji"
 import { MatrixEvent } from "matrix-js-sdk"
-import { matrix } from "../../matrix"
+import { getMXUser, matrix } from "../../matrix"
 import Avatar from "../Avatar"
 import EventBase from "./EventBase"
 
@@ -49,12 +49,7 @@ export default class ChatMessageBase extends EventBase {
 
 	async reset() {
 		const msg = this.message
-		const user = matrix.getUser(msg.getSender()!)
-		let displayname = user?.displayName
-		if(!user) {
-			const profile = await matrix.getProfileInfo(msg.getSender()!)
-			displayname = profile?.displayname || msg.getSender()
-		}
+		const { displayname } = await getMXUser(msg.getSender()!)
 		this.nameElement.innerHTML = twemojiParse(displayname || msg.getSender() || "Unknown")
 		this.timestampElement.dateTime = msg.getDate()?.toISOString() || ""
 		// this.timestampElement.textContent = msg.getDate()?.toISOString() || ""
