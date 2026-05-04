@@ -30,6 +30,8 @@ export default class RoomCreationForm extends Form {
 
 	reset() {
 		this.nameInput.clear()
+		this.topicInput.clear()
+		this.unfederateInput.clear()
 	}
 
 	async submit() {
