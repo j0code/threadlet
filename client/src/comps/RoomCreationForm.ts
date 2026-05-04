@@ -7,7 +7,6 @@ import FormInputList from "./FormInputList"
 import { Room } from "matrix-js-sdk"
 import { matrix } from "../matrix"
 import FormCheckbox from "./FormCheckbox"
-import App from "./App"
 
 export default class RoomCreationForm extends Form {
 
@@ -43,9 +42,8 @@ export default class RoomCreationForm extends Form {
 		})
 		console.log("Room created with ID", res.room_id)
 		await matrix.roomInitialSync(res.room_id, 20)
-		let _app = app as App
-		_app.updateChannelList()
-		_app.renderView(views.roomView, matrix.getRoom(res.room_id))
+		app.updateChannelList()
+		app.renderView(views.roomView, matrix.getRoom(res.room_id))
 	}
 
 }

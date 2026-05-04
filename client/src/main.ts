@@ -14,7 +14,7 @@ import RoomInviteView from "./comps/RoomInviteView"
 import RoomCreationForm from "./comps/RoomCreationForm"
 
 export let api: ThreadletAPI
-export let app: App | Login
+export let app: App
 export let clientUser: User
 
 export const views = {
@@ -28,8 +28,13 @@ export const views = {
 } as const
 
 document.getElementById("loadingScreen")!.remove();
-app = localStorage.getItem("accessToken") ? new App() : new Login()
-document.body.appendChild(app.element)
+if (localStorage.getItem("accessToken")) {
+	app = new App()
+	document.body.appendChild(app.element)
+} else {
+	const login = new Login()
+	document.body.appendChild(login.element)
+}
 
 // setupDiscordSdk().then(async () => {
 // 	console.log("Discord SDK is authenticated")
