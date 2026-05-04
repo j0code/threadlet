@@ -80,21 +80,4 @@ export default class ChatMessageBase extends EventBase {
 			return rtf.format(Math.round(diff / 86400), "day")
 		}
 	}
-
-	async getAvatarUrl(mxc: string) {
-		console.log("Getting avatar url for", mxc)
-		// TODO: caching
-		const url = matrix.mxcUrlToHttp(mxc, undefined, undefined, undefined, false, true, true)
-		if(!url) {
-			return null
-		}
-		const img = await fetch(url, {
-			headers: {
-				Authorization: `Bearer ${matrix.getAccessToken()}`
-			}
-		})
-		const blob = await img.blob()
-		return URL.createObjectURL(blob)
-	}
-
 }

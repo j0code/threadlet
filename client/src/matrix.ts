@@ -21,3 +21,19 @@ export async function initMatrixClient() {
 	}
 	await matrix.startClient();
 }
+
+export async function getMXCData(mxc: string, width?: number, height?: number, resizeMethod?: "crop" | "scale", allowDirectLink = false, allowRedirects = true) {
+	const url = matrix.mxcUrlToHttp(mxc, width, height, resizeMethod, allowDirectLink, allowRedirects, true);
+	if(!url) {
+		return null;
+	}
+	const res = await fetch(url, {
+		headers: {
+			Authorization: "Bearer " + matrix.getAccessToken(),
+		},
+	}).then(res => res.blob()).catch(() => null);
+	if(!res) {
+		return null;
+	}
+	return URL.createObjectURL(res);
+}
