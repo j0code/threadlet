@@ -7,9 +7,6 @@ export default class Login extends Component {
 	constructor() {
 		super("div", { id: "login" })
 
-		this.element.style.width = "100%"
-		this.element.style.height = "100%"
-
 		let title = document.createElement("h1")
 		title.textContent = "Welcome to Threadlet!"
 		title.id = "loginTitle"
