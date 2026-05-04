@@ -37,3 +37,19 @@ export async function getMXCData(mxc: string, width?: number, height?: number, r
 	}
 	return URL.createObjectURL(res);
 }
+
+export async function getMXUser(mxid: string) {
+	const user = matrix.getUser(mxid)
+	let displayname: string
+	let avatar_url: string | undefined = undefined
+	
+	if (user) {
+		displayname = user?.displayName || mxid
+		avatar_url  = user?.avatarUrl
+	} else {
+		const profile = await matrix.getProfileInfo(mxid)
+		displayname = profile?.displayname || mxid
+		avatar_url = profile?.avatar_url
+	}
+	return { displayname, avatar_url };
+}

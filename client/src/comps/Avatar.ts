@@ -1,4 +1,4 @@
-import { matrix } from "../matrix";
+import { getMXUser, matrix } from "../matrix";
 import Component from "./Component";
 import MXCImage from "./MXCImage";
 
@@ -18,18 +18,7 @@ export default class Avatar extends Component {
 
 		this.element.innerHTML = ""
 
-		const user = matrix.getUser(mxid)
-		let displayname: string
-		let avatar_url: string | undefined = undefined
-		
-		if (user) {
-			displayname = user?.displayName || mxid
-			avatar_url  = user?.avatarUrl
-		} else {
-			const profile = await matrix.getProfileInfo(mxid)
-			displayname = profile?.displayname || mxid
-			avatar_url = profile?.avatar_url
-		}
+		const { displayname, avatar_url } = await getMXUser(mxid)
 
 		if(avatar_url) {
 			let img = new MXCImage(avatar_url, {
