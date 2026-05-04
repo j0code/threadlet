@@ -31,7 +31,7 @@ jobs:
         working-directory: ./client
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install ESLint
         run: |
@@ -49,7 +49,9 @@ jobs:
         continue-on-error: true
 
       - name: Upload analysis results to GitHub
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: eslint-results.sarif
+          sarif_file: client/eslint-results.sarif
           wait-for-processing: true
