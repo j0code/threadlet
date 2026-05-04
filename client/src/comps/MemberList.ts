@@ -4,6 +4,8 @@ import MXCImage from "./MXCImage";
 import Avatar from "./Avatar";
 import FormButton from "./FormButton";
 import { matrix } from "../matrix";
+import Modal from "./Modal";
+import RoomInviteForm from "./RoomInviteForm";
 
 export default class MemberList extends Component {
 	constructor() {
@@ -15,9 +17,10 @@ export default class MemberList extends Component {
 
 		if(roomId) {
 			const inviteButton = new FormButton("invite-to-room-button", "Invite", async () => {
-				const user = prompt("Enter the MXID of the user you want to invite (e.g. @example:matrix.org)")
-				if(!user) return
-				await matrix.invite(roomId, user);
+				const inviteForm = new RoomInviteForm()
+				const inviteModal = new Modal(inviteForm)
+				inviteModal.reset(matrix.getRoom(roomId))
+				inviteModal.show()
 			})
 			this.element.appendChild(inviteButton.element)
 		}

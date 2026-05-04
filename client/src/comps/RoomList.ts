@@ -3,6 +3,8 @@ import Component from "./Component";
 import FormButton from "./FormButton";
 import ForumTab from "./ForumTab";
 import { Room } from "matrix-js-sdk";
+import RoomInvitationForm from "./RoomInvitationView";
+import Modal from "./Modal";
 
 export default class RoomList extends Component {
 
@@ -24,7 +26,15 @@ export default class RoomList extends Component {
 			const tab = new ForumTab(forum)
 			tab.tab.addEventListener("click", () => {
 				const membership = forum.getMyMembership()
-				app.renderView(membership == "join" ? views.roomView : views.roomInviteView, forum)
+				//app.renderView(membership == "join" ? views.roomView : views.roomInviteView, forum)
+				if(membership == "join") {
+					app.renderView(views.roomView, forum)
+				} else if(membership == "invite") {
+					const form = new RoomInvitationForm()
+					const modal = new Modal(form)
+					modal.reset(forum)
+					modal.show()
+				}
 			})
 			this.element.appendChild(tab.element)
 		}
