@@ -5,7 +5,6 @@ import Form from "./Form"
 import View from "./View"
 
 export default class App extends Component {
-
 	readonly channelList: ChannelList
 	private currentView?: View | Form
 
@@ -29,5 +28,4 @@ export default class App extends Component {
 	getCurrentView() {
 		return this.currentView
 	}
-
 }

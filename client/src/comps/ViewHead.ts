@@ -1,9 +1,8 @@
-import { twemojiParse } from "../md";
+import { twemojiParse } from "../md"
 import Component from "./Component"
 
 export default class ViewHead extends Component {
-
-	titleElement: HTMLSpanElement;
+	titleElement: HTMLSpanElement
 
 	constructor(title: string) {
 		super("div", { classes: ["view-head"] })
@@ -13,11 +12,9 @@ export default class ViewHead extends Component {
 		this.titleElement.innerHTML = twemojiParse(title)
 
 		this.element.appendChild(this.titleElement)
-		
 	}
 
 	reset(title: string) {
 		this.titleElement.innerHTML = twemojiParse(title)
 	}
-
 }

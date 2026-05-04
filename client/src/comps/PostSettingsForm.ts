@@ -8,7 +8,6 @@ import { twemojiParse } from "../md"
 import FormMultiSelect, { FormMultiSelectOption } from "./FormMultiSelect"
 
 export default class PostSettingsForm extends Form {
-
 	private currentForumId?: string
 
 	readonly nameInput: FormTextInput
@@ -16,7 +15,10 @@ export default class PostSettingsForm extends Form {
 	readonly tagSelect: FormMultiSelect
 
 	constructor(post?: Post, forum?: Forum) {
-		super(`${post ? "Edit" : "Create"} Post`, { id: "post-settings-view", classes: ["view"] } )
+		super(`${post ? "Edit" : "Create"} Post`, {
+			id: "post-settings-view",
+			classes: ["view"],
+		})
 
 		let options: FormMultiSelectOption[] = []
 		if (forum?.tags) {
@@ -24,13 +26,27 @@ export default class PostSettingsForm extends Form {
 		}
 
 		this.nameInput = new FormTextInput("post-name", "Post Name", 0, 128, true)
-		this.descriptionInput = new FormTextarea("post-description", "Post Description", 0, 16384, true, true)
-		this.tagSelect = new FormMultiSelect({ options, placeholder: "Select tags..." })
-		const submitButton = new FormButton("post-submit", post ? "Save" : "Post", () => {
-			if (this.currentForumId) {
-				void submit(this.currentForumId, this)
-			}
+		this.descriptionInput = new FormTextarea(
+			"post-description",
+			"Post Description",
+			0,
+			16384,
+			true,
+			true
+		)
+		this.tagSelect = new FormMultiSelect({
+			options,
+			placeholder: "Select tags...",
 		})
+		const submitButton = new FormButton(
+			"post-submit",
+			post ? "Save" : "Post",
+			() => {
+				if (this.currentForumId) {
+					void submit(this.currentForumId, this)
+				}
+			}
+		)
 
 		this.body.appendChild(this.nameInput.element)
 		this.body.appendChild(this.descriptionInput.element)
@@ -52,13 +68,12 @@ export default class PostSettingsForm extends Form {
 
 		this.currentForumId = forum.id
 	}
-
 }
 
 async function submit(forumId: string, form: PostSettingsForm) {
-	const name        = form.nameInput.value
+	const name = form.nameInput.value
 	const description = form.descriptionInput.value
-	const tags        = form.tagSelect.value
+	const tags = form.tagSelect.value
 	if (!name || !description) return
 
 	console.log("Create Post:", name, tags)

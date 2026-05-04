@@ -5,12 +5,11 @@ import CDN from "@j0code/threadlet-api/v0/cdn"
 import { api, clientUser } from "../main"
 
 export default class Message extends Component {
-
 	readonly message: APIMessage
 
-	readonly contentElement:   HTMLDivElement
-	readonly avatarElement:    HTMLImageElement
-	readonly nameElement:      HTMLSpanElement
+	readonly contentElement: HTMLDivElement
+	readonly avatarElement: HTMLImageElement
+	readonly nameElement: HTMLSpanElement
 	readonly timestampElement: HTMLTimeElement
 
 	constructor(msg: APIMessage) {
@@ -54,7 +53,8 @@ export default class Message extends Component {
 		this.avatarElement.src = CDN.avatar(msg.author_id, user.avatar)
 		this.nameElement.innerHTML = twemojiParse(user.name)
 		this.timestampElement.dateTime = msg.created_at
-		this.timestampElement.textContent = new Date(msg.created_at).toLocaleString(clientUser.locale)
+		this.timestampElement.textContent = new Date(msg.created_at).toLocaleString(
+			clientUser.locale
+		)
 	}
-
 }

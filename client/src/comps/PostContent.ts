@@ -3,7 +3,6 @@ import { markdownToHtml } from "../md"
 import Component from "./Component"
 
 export default class PostContent extends Component {
-
 	readonly currentPostId: string | undefined
 
 	readonly descriptionElement: HTMLDivElement
@@ -21,5 +20,4 @@ export default class PostContent extends Component {
 		if (post.id == this.currentPostId) return
 		this.descriptionElement.innerHTML = markdownToHtml(post.description)
 	}
-
 }

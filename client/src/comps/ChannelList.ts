@@ -1,11 +1,10 @@
-import { Forum } from "@j0code/threadlet-api/v0/types";
-import { app, views } from "../main";
-import Component from "./Component";
-import FormButton from "./FormButton";
-import ForumTab from "./ForumTab";
+import { Forum } from "@j0code/threadlet-api/v0/types"
+import { app, views } from "../main"
+import Component from "./Component"
+import FormButton from "./FormButton"
+import ForumTab from "./ForumTab"
 
 export default class ChannelList extends Component {
-
 	constructor(forums: Array<Forum>) {
 		super("div", { id: "channels" })
 
@@ -17,14 +16,17 @@ export default class ChannelList extends Component {
 			child.remove()
 		}
 
-		const createButton = new FormButton("create-forum-button", "(+) New", () => app.renderView(views.forumCreateForm))
+		const createButton = new FormButton("create-forum-button", "(+) New", () =>
+			app.renderView(views.forumCreateForm)
+		)
 		this.element.appendChild(createButton.element)
-		
+
 		for (const forum of forums) {
 			const tab = new ForumTab(forum)
-			tab.element.addEventListener("click", () => app.renderView(views.forumView, forum))
+			tab.element.addEventListener("click", () =>
+				app.renderView(views.forumView, forum)
+			)
 			this.element.appendChild(tab.element)
 		}
 	}
-
 }

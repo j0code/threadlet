@@ -11,33 +11,33 @@ const marked = new Marked()
 marked.setOptions({
 	pedantic: false,
 	gfm: true,
-	breaks: true
+	breaks: true,
 })
 
 // Create an inline extension that tokenizes __underline__ syntax.
 const underlineExtension: TokenizerAndRendererExtension = {
-	name: 'underline',
-	level: 'inline',
+	name: "underline",
+	level: "inline",
 	// Only look for '__' in the source string
 	start(src) {
-		return src.indexOf('__')
+		return src.indexOf("__")
 	},
 	tokenizer(src, _tokens) {
 		// Match text that starts and ends with __ and has at least one non-whitespace char in between.
 		const rule = /^__(?=\S)([\s\S]*?\S)__/
 		const match = rule.exec(src)
 		if (match) {
-		return {
-			type: 'underline', // a custom token type
-			raw: match[0],
-			text: match[1]
-		}
+			return {
+				type: "underline", // a custom token type
+				raw: match[0],
+				text: match[1],
+			}
 		}
 		return undefined
 	},
 	renderer(token) {
 		return `<u>${token.text}</u>`
-	}
+	},
 }
 
 // Override the link renderer so that links open in a new tab
@@ -59,22 +59,26 @@ const renderer: RendererObject = {
 		return twemoji.parse(text, icon => {
 			return `/twemoji/svg/${icon}.svg`
 		})
-	}
+	},
 }
 
-marked.use({ extensions: [underlineExtension], renderer}, markedHighlight({
-	emptyLangClass: "hljs",
-	langPrefix: "hljs language-",
-	highlight(code, lang, _info) {
-		const supported = hljs.getLanguage(lang)
-		const language = supported ? lang : "plaintext"
-		if (!supported) code = `${lang}\n${code}` // BUG: this for some reason includes text before ``` on the same line :/
-		return hljs.highlight(code, { language }).value
-	}
-}), markedAlert())
+marked.use(
+	{ extensions: [underlineExtension], renderer },
+	markedHighlight({
+		emptyLangClass: "hljs",
+		langPrefix: "hljs language-",
+		highlight(code, lang, _info) {
+			const supported = hljs.getLanguage(lang)
+			const language = supported ? lang : "plaintext"
+			if (!supported) code = `${lang}\n${code}` // BUG: this for some reason includes text before ``` on the same line :/
+			return hljs.highlight(code, { language }).value
+		},
+	}),
+	markedAlert()
+)
 
 // Sanitize configuration (customize as needed)
-DOMPurify.addHook("afterSanitizeAttributes", (node) => {
+DOMPurify.addHook("afterSanitizeAttributes", node => {
 	// Add safe rel attribute to all links
 	if (node.tagName === "A") {
 		node.setAttribute("rel", "nofollow noopener noreferrer")
@@ -84,18 +88,23 @@ DOMPurify.addHook("afterSanitizeAttributes", (node) => {
 export function markdownToHtml(markdown: string): string {
 	// First parse markdown to HTML
 	const rawHtml = marked.parse(markdown, { async: false })
-	
+
 	// Then sanitize with DOMPurify
-	return DOMPurify.sanitize(rawHtml/*, {
+	return DOMPurify.sanitize(
+		rawHtml /*, {
 		ADD_ATTR: ["id"], // Allow id attributes for heading anchors
 		ALLOW_DATA_ATTR: false,
 		FORBID_TAGS: ["style", "script", "applet", "iframe", "object"],
 		FORBID_ATTR: ["style", "onerror", "onload"]
-	}*/)
+	}*/
+	)
 }
 
 export function twemojiParse(text: string) {
-	text = text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+	text = text
+		.replaceAll("&", "&amp;")
+		.replaceAll("<", "&lt;")
+		.replaceAll(">", "&gt;")
 
 	return twemoji.parse(text, icon => {
 		return `/twemoji/svg/${icon}.svg`

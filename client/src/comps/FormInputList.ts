@@ -3,7 +3,6 @@ import FormButton from "./FormButton"
 import FormTextInput from "./FormTextInput"
 
 export default class FormInputList extends Component {
-
 	private readonly parentId: string
 
 	private readonly inputs: FormTextInput[]
@@ -27,7 +26,10 @@ export default class FormInputList extends Component {
 	}
 
 	pushInput() {
-		const input = new FormTextInput(`${this.parentId}-${this.inputList.childElementCount}`, "")
+		const input = new FormTextInput(
+			`${this.parentId}-${this.inputList.childElementCount}`,
+			""
+		)
 		this.inputs.push(input)
 		this.inputList.append(input.element)
 	}
@@ -48,5 +50,4 @@ export default class FormInputList extends Component {
 
 		return values
 	}
-
 }

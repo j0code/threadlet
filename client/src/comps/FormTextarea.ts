@@ -2,10 +2,16 @@ import Component from "./Component"
 import EmojiButton from "./EmojiButton"
 
 export default class FormTextarea extends Component {
-
 	private readonly textarea: HTMLTextAreaElement
 
-	constructor(id: string, placeholder: string, min: number = 0, max: number = 256, emojiInput: boolean = true, flexGrow: boolean = false) {
+	constructor(
+		id: string,
+		placeholder: string,
+		min: number = 0,
+		max: number = 256,
+		emojiInput: boolean = true,
+		flexGrow: boolean = false
+	) {
 		super("div", { id, classes: ["form-input", "form-textarea"] })
 
 		this.textarea = document.createElement("textarea")
@@ -33,5 +39,4 @@ export default class FormTextarea extends Component {
 	clear() {
 		this.textarea.value = ""
 	}
-
 }

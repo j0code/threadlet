@@ -5,7 +5,6 @@ import PostView from "./PostView"
 
 // Credits to DeepSeek-R1, wow (edited though)
 export default class ChatInput extends Component {
-
 	readonly emojiPicker: EmojiPicker
 
 	constructor(postView: PostView) {
@@ -14,11 +13,11 @@ export default class ChatInput extends Component {
 		// Create file upload button
 		const fileUploadLabel = document.createElement("label")
 		fileUploadLabel.className = "file-upload-button"
-		
+
 		const fileInput = document.createElement("input")
 		fileInput.type = "file"
 		fileInput.className = "hidden-file-input"
-		
+
 		fileUploadLabel.appendChild(fileInput)
 
 		// Create chat input
@@ -35,7 +34,7 @@ export default class ChatInput extends Component {
 
 				async function createMessage() {
 					const forum_id = postView.getCurrentForumId()
-					const post_id  = postView.getCurrentPostId()
+					const post_id = postView.getCurrentPostId()
 					if (!forum_id || !post_id) {
 						throw new Error("TODO")
 					}
@@ -48,7 +47,8 @@ export default class ChatInput extends Component {
 				void createMessage()
 			}
 		})
-		chatInput.addEventListener('input', () => { // this fixes weird browser behavior
+		chatInput.addEventListener("input", () => {
+			// this fixes weird browser behavior
 			if (chatInput.innerHTML == "<br>") chatInput.innerHTML = ""
 		})
 
@@ -59,9 +59,13 @@ export default class ChatInput extends Component {
 		emojiButton.setAttribute("popovertargetaction", "show")
 
 		// Emoji Picker
-		this.emojiPicker = new EmojiPicker("chat-input-emoji-picker", "chat-input-container", emoji => {
-			chatInput.textContent += emoji.native
-		})
+		this.emojiPicker = new EmojiPicker(
+			"chat-input-emoji-picker",
+			"chat-input-container",
+			emoji => {
+				chatInput.textContent += emoji.native
+			}
+		)
 
 		// Div-engers, Assemble!
 		this.element.appendChild(fileUploadLabel)
@@ -69,5 +73,4 @@ export default class ChatInput extends Component {
 		this.element.appendChild(emojiButton)
 		this.element.appendChild(this.emojiPicker.element)
 	}
-
 }
