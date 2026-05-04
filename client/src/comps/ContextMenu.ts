@@ -25,10 +25,15 @@ export default class ContextMenu extends Component {
 			this.content.style.top = `${e.clientY}px`
 			this.content.style.display = ""
 			const hide = () => {
+				console.log("Hiding context menu")
 				this.content.style.display = "none"
-				window.removeEventListener("click", hide)
+				document.removeEventListener("click", hide)
+				document.removeEventListener("contextmenu", hide)
 			}
-			window.addEventListener("click", hide)
+			document.addEventListener("click", hide)
+			requestAnimationFrame(() => {
+				document.addEventListener("contextmenu", hide)
+			})
 		})
 	}
 }
