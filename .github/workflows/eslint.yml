@@ -42,8 +42,6 @@ jobs:
         env:
           SARIF_ESLINT_IGNORE_SUPPRESSED: "true"
         run: npx eslint .
-          --config .eslintrc.js
-          --ext .js,.jsx,.ts,.tsx
           --format @microsoft/eslint-formatter-sarif
           --output-file eslint-results.sarif
         continue-on-error: true
@@ -51,7 +49,7 @@ jobs:
       - name: Upload analysis results to GitHub
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: client/eslint-results.sarif
           wait-for-processing: true
