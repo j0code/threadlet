@@ -4,7 +4,6 @@ import {
 } from "@j0code/threadlet-api/v0/types"
 import { api } from "../main"
 import Component from "./Component"
-import Message from "./Message"
 import { MatrixEvent } from "matrix-js-sdk"
 import { renderEvent } from "./events/Event"
 
