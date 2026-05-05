@@ -11,8 +11,6 @@ export default class ContextMenu extends Component {
 		if (id) this.content.id = id
 		this.content.classList.add("context-menu-content")
 		if (classes) this.content.classList.add(...classes)
-		this.content.style.position = "absolute"
-		this.content.style.display = "none"
 		
 		this.element.appendChild(this.content)
 
@@ -23,10 +21,10 @@ export default class ContextMenu extends Component {
 			e.preventDefault()
 			this.content.style.left = `${e.clientX}px`
 			this.content.style.top = `${e.clientY}px`
-			this.content.style.display = ""
+			this.content.classList.add("shown")
 			const hide = () => {
 				console.log("Hiding context menu")
-				this.content.style.display = "none"
+				this.content.classList.remove("shown")
 				document.removeEventListener("click", hide)
 				document.removeEventListener("contextmenu", hide)
 			}
