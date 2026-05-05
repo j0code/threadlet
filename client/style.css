@@ -733,6 +733,11 @@ dialog {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
+	position: absolute;
+}
+
+.context-menu-content:not(.shown) {
+	display: none;
 }
 
 .message-content {
