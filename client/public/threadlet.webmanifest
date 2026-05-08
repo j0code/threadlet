@@ -38,6 +38,16 @@
 		"sizes": "any",
 		"purpose": "monochrome"
 	}, {
+		"src": "/assets/threadlet/512-color-maskable.png",
+		"type": "image/png",
+		"sizes": "any",
+		"purpose": "maskable"
+	}, {
+		"src": "/assets/threadlet/512-mono-maskable.png",
+		"type": "image/png",
+		"sizes": "any",
+		"purpose": "monochrome maskable"
+	}, {
 		"src": "/assets/threadlet/threadlet-color.svg",
 		"type": "image/svg+xml",
 		"sizes": "any"
@@ -46,14 +56,24 @@
 		"type": "image/svg+xml",
 		"sizes": "any",
 		"purpose": "monochrome"
+	}, {
+		"src": "/assets/threadlet/threadlet-color-maskable.svg",
+		"type": "image/svg+xml",
+		"sizes": "any",
+		"purpose": "maskable"
+	}, {
+		"src": "/assets/threadlet/threadlet-mono-maskable.svg",
+		"type": "image/svg+xml",
+		"sizes": "any",
+		"purpose": "monochrome maskable"
 	}],
 	"screenshots": [{
-		"src": "/assets/screenshots/threadlet-wide.png",
+		"src": "/assets/screenshots/threadlet-wide-mono.png",
 		"type": "image/png",
 		"sizes": "1920x1080",
 		"form_factor": "wide"
 	}, {
-		"src": "/assets/screenshots/threadlet-narrow.png",
+		"src": "/assets/screenshots/threadlet-narrow-mono.png",
 		"type": "image/png",
 		"sizes": "1080x1920",
 		"form_factor": "narrow"

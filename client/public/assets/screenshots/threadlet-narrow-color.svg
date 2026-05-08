@@ -9,14 +9,14 @@
 	</defs>
 	<rect x="0" y="0" width="1080" height="1920" fill="#1fc873" />
 	<!--<rect x="284" y="704" width="512" height="512" fill="red" />-->
-	<g transform="translate(284 704)">
-		<text id="text0"
-				x="0"
-				y="400"
-				opacity="1"
-				fill="#000000"
-				style="font-size:437px; font-family:'DejaVu Sans', sans-serif;">
-			<tspan>[t]</tspan>
-		</text>
-	</g>
+	<text id="text0"
+			x="50%"
+			y="50%"
+			opacity="1"
+			fill="#000000"
+			style="font-size:437px; font-family:'DejaVu Sans', sans-serif;"
+			text-anchor="middle"
+			dominant-baseline="central">
+		<tspan>[t]</tspan>
+	</text>
 </svg>

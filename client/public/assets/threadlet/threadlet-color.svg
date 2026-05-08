@@ -9,11 +9,13 @@
 	</defs>
 	<rect x="0" y="0" width="512" height="512" fill="#1fc873" />
 	<text id="text0"
-			x="0"
-			y="400"
+			x="256"
+			y="256"
 			opacity="1"
 			fill="#000000"
-			style="font-size:437px; font-family:'DejaVu Sans', sans-serif;">
+			style="font-size:430px; font-family:'DejaVu Sans', sans-serif;"
+			text-anchor="middle"
+			dominant-baseline="central">
 		<tspan>[t]</tspan>
 	</text>
 </svg>
