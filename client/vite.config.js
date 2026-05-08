@@ -25,7 +25,7 @@ export default defineConfig({
 			},
 		},
 		hmr: {
-			protocol: "wss",
+			protocol: "ws",
 			// path: "/.proxy/"
 		},
 		allowedHosts: [dev_config.vite?.host].filter(Boolean),

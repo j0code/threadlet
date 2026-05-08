@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+		xmlns:svg="http://www.w3.org/2000/svg"
+		version="1.1"
+		width="1080px" height="1920px"
+		viewBox="0 0 1080 1920">
+	<title>threadlet</title>
+	<defs>
+	</defs>
+	<rect x="0" y="0" width="1080" height="1920" fill="white" />
+	<!--<rect x="284" y="704" width="512" height="512" fill="red" />-->
+	<g transform="translate(284 704)">
+		<text id="text0"
+				x="0"
+				y="400"
+				opacity="1"
+				fill="#000000"
+				style="font-size:437px; font-family:'DejaVu Sans', sans-serif;">
+			<tspan>[t]</tspan>
+		</text>
+	</g>
+</svg>
