@@ -10,7 +10,6 @@ import PostView from "./comps/PostView"
 import { User } from "matrix-js-sdk"
 import Login from "./comps/Login"
 import RoomView from "./comps/RoomView"
-import RoomInviteView from "./comps/RoomInvitationView"
 import RoomCreationForm from "./comps/RoomCreationForm"
 
 export let api: ThreadletAPI
