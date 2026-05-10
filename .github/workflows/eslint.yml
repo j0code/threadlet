@@ -52,8 +52,8 @@ jobs:
 
       - name: "Debug: Inspect SARIF"
         run: |
-          cat client/eslint-results.sarif | jq '.runs[0].tool.driver.name'
-          cat client/eslint-results.sarif | jq '.runs | length'
+          cat eslint-results.sarif | jq '.runs[0].tool.driver.name'
+          cat eslint-results.sarif | jq '.runs | length'
 
       - name: Upload analysis results to GitHub
         env:
