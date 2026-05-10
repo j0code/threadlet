@@ -10,6 +10,7 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 
+	--theme-color: #1fc873;
 	--hover-bg: rgba(255 255 255 / 0.08);
 	--background-primary: #242424;
 	--background-secondary: #202020;
@@ -44,15 +45,24 @@ body {
 #loadingScreen {
 	display: flex;
 	text-align: center;
-	align-items: center;
+	align-items: end;
 	justify-content: center;
-	font-size: 24px;
+	font-size: 4vh;
 	font-weight: bold;
 	width: 100vw;
 	height: 100vh;
+	background-image: url("/assets/threadlet/threadlet-color.svg");
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: max(30vh, 20vw);
+	background-color: var(--theme-color);
+	user-select: none;
 }
 
 #loadingText {
+	color: black;
+	margin-bottom: 12vh;
 }
 
 #app {
