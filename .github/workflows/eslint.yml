@@ -44,16 +44,19 @@ jobs:
           --output-file eslint-results.sarif
         continue-on-error: true
 
-      - name: Debug files
+      - name: Debug
         run: |
-          pwd
-          ls -R
+          echo "ref: ${{ github.ref }}"
+          echo "sha: ${{ github.sha }}"
+          echo "head sha: ${{ github.event.pull_request.head.sha }}"
+
 
       - name: Upload analysis results to GitHub
         env:
           FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: ./client/eslint-results.sarif
+          sarif_file: client/eslint-results.sarif
+          ref: ${{ github.ref }}
+          sha: ${{ github.sha }}
           wait-for-processing: true
-          category: eslint
