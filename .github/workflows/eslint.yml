@@ -46,7 +46,7 @@ jobs:
 
       - name: Debug
         run: |
-          echo: "event: ${{ github.event_name }}"
+          echo "event: ${{ github.event_name }}"
           echo "ref: ${{ github.event_name == 'pull_request' && format('refs/pull/{0}/head', github.event.pull_request.number) || github.ref }}
           echo "sha: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 
