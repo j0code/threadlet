@@ -41,8 +41,8 @@ jobs:
           SARIF_ESLINT_IGNORE_SUPPRESSED: "true"
         run: npx eslint .
           --format @microsoft/eslint-formatter-sarif
-          --output-file eslint-results.sarif
-        continue-on-error: true
+          --output-file eslint-results.sarif || true
+        continue-on-error: false
 
       - name: "Debug: commit ref and sha"
         run: |
