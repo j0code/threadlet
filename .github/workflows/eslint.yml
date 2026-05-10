@@ -46,9 +46,9 @@ jobs:
 
       - name: Debug
         run: |
-          echo "ref: ${{ github.ref }}"
-          echo "sha: ${{ github.sha }}"
-          echo "head sha: ${{ github.event.pull_request.head.sha }}"
+          echo: "event: ${{ github.event_name }}"
+          echo "ref: ${{ github.event_name == 'pull_request' && format('refs/pull/{0}/head', github.event.pull_request.number) || github.ref }}
+          echo "sha: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 
 
       - name: Upload analysis results to GitHub
@@ -57,6 +57,6 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: client/eslint-results.sarif
-          ref: ${{ github.ref }}
-          sha: ${{ github.sha }}
+          ref: ${{ github.event_name == 'pull_request' && format('refs/pull/{0}/head', github.event.pull_request.number) || github.ref }}
+          sha: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           wait-for-processing: true
