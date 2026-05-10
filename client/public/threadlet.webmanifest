@@ -1,0 +1,91 @@
+{
+	"name": "Threadlet",
+	"description": "Next-gen Matrix client",
+	"start_url": "/",
+	"display": "standalone",
+	"id": "threadlet",
+	"theme_color": "#1fc873",
+	"background_color": "#242424",
+	"lang": "en",
+	"categories": ["social", "social networking", "matrix"],
+	"icons": [{
+		"src": "/assets/threadlet/512.png",
+		"type": "image/png",
+		"sizes": "512x512"
+	}, {
+		"src": "/assets/threadlet/256.png",
+		"type": "image/png",
+		"sizes": "256x256"
+	}, {
+		"src": "/assets/threadlet/128.png",
+		"type": "image/png",
+		"sizes": "128x128"
+	}, {
+		"src": "/assets/threadlet/64.png",
+		"type": "image/png",
+		"sizes": "64x64"
+	}, {
+		"src": "/assets/threadlet/48.png",
+		"type": "image/png",
+		"sizes": "48x48"
+	}, {
+		"src": "/assets/threadlet/32.png",
+		"type": "image/png",
+		"sizes": "32x32"
+	}, {
+		"src": "/assets/threadlet/512-mono.png",
+		"type": "image/png",
+		"sizes": "any",
+		"purpose": "monochrome"
+	}, {
+		"src": "/assets/threadlet/512-color-maskable.png",
+		"type": "image/png",
+		"sizes": "any",
+		"purpose": "maskable"
+	}, {
+		"src": "/assets/threadlet/512-mono-maskable.png",
+		"type": "image/png",
+		"sizes": "any",
+		"purpose": "monochrome maskable"
+	}, {
+		"src": "/assets/threadlet/threadlet-color.svg",
+		"type": "image/svg+xml",
+		"sizes": "any"
+	}, {
+		"src": "/assets/threadlet/threadlet-mono.svg",
+		"type": "image/svg+xml",
+		"sizes": "any",
+		"purpose": "monochrome"
+	}, {
+		"src": "/assets/threadlet/threadlet-color-maskable.svg",
+		"type": "image/svg+xml",
+		"sizes": "any",
+		"purpose": "maskable"
+	}, {
+		"src": "/assets/threadlet/threadlet-mono-maskable.svg",
+		"type": "image/svg+xml",
+		"sizes": "any",
+		"purpose": "monochrome maskable"
+	}],
+	"screenshots": [{
+		"src": "/assets/screenshots/threadlet-wide-mono.png",
+		"type": "image/png",
+		"sizes": "1920x1080",
+		"form_factor": "wide"
+	}, {
+		"src": "/assets/screenshots/threadlet-narrow-mono.png",
+		"type": "image/png",
+		"sizes": "1080x1920",
+		"form_factor": "narrow"
+	}, {
+		"src": "/assets/screenshots/threadlet-wide-color.png",
+		"type": "image/png",
+		"sizes": "1920x1080",
+		"form_factor": "wide"
+	}, {
+		"src": "/assets/screenshots/threadlet-narrow-color.png",
+		"type": "image/png",
+		"sizes": "1080x1920",
+		"form_factor": "narrow"
+	}]
+}

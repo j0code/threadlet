@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+		xmlns:svg="http://www.w3.org/2000/svg"
+		version="1.1"
+		width="512px" height="512px"
+		viewBox="0 0 512 512">
+	<title>threadlet</title>
+	<defs>
+		<mask id="round-mask">
+			<rect width="512" height="512" fill="black"/>
+			<circle cx="256" cy="256" r="40%" fill="white"/>
+		</mask>
+	</defs>
+	<!--<rect x="0" y="0" width="512" height="512" fill="white" />-->
+	<g _mask="url(#round-mask)">
+		<rect x="0" y="0" width="512" height="512" fill="#1fc873" />
+		<text id="text0"
+				x="256"
+				y="256"
+				opacity="1"
+				fill="#000000"
+				style="font-size:280px; font-family:'DejaVu Sans', sans-serif;"
+				text-anchor="middle"
+				dominant-baseline="central">
+			<tspan>[t]</tspan>
+		</text>
+	</g>
+</svg>
