@@ -18,7 +18,6 @@ export default class RoomVideoMessage extends ChatMessageBase {
 		const video = document.createElement("video")
 		video.controls = true
 		if (blobUrl) video.src = blobUrl
-		video.style.maxWidth = "50%"
 		this.contentElement.appendChild(video)
 		await super.reset()
 	}

@@ -18,7 +18,6 @@ export default class RoomAudioMessage extends ChatMessageBase {
 		const audio = document.createElement("audio")
 		audio.controls = true
 		if (blobUrl) audio.src = blobUrl
-		audio.style.maxWidth = "50%"
 		this.contentElement.appendChild(audio)
 		await super.reset()
 	}
