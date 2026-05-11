@@ -1,13 +1,25 @@
 import { createClient } from "matrix-js-sdk"
+import { MXUser } from "./types"
 
 async function getActualServerUrl(server: string) {
 	const res = await fetch(server + "/.well-known/matrix/client")
-		.then(res => res.json())
+		.then(res => res.json() as unknown)
 		.catch(() => null)
-	if (res && res["m.homeserver"] && res["m.homeserver"].base_url) {
-		return res["m.homeserver"].base_url
-	}
-	return server
+
+	if (!res || typeof res != "object") return server
+	if (
+		!("m.homeserver" in res) ||
+		typeof res["m.homeserver"] != "object" ||
+		!res["m.homeserver"]
+	)
+		return server
+	if (
+		!("base_url" in res["m.homeserver"]) ||
+		typeof res["m.homeserver"].base_url != "string"
+	)
+		return server
+
+	return res["m.homeserver"].base_url
 }
 
 export const matrix = createClient({
@@ -65,18 +77,19 @@ export async function getMXCData(
 	return URL.createObjectURL(res)
 }
 
-export async function getMXUser(mxid: string) {
+export async function getMXUser(mxid: string): Promise<MXUser> {
 	const user = matrix.getUser(mxid)
 	let displayname: string
-	let avatar_url: string | undefined = undefined
+	let avatar_url: string | null
 
 	if (user) {
 		displayname = user?.displayName || mxid
-		avatar_url = user?.avatarUrl
+		avatar_url = user?.avatarUrl ?? null
 	} else {
 		const profile = await matrix.getProfileInfo(mxid)
 		displayname = profile?.displayname || mxid
-		avatar_url = profile?.avatar_url
+		avatar_url = profile?.avatar_url ?? null
 	}
-	return { displayname, avatar_url }
+
+	return { mxid, displayname, avatar_url }
 }

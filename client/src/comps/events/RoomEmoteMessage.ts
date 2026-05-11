@@ -3,6 +3,7 @@ import { markdownToHtml } from "../../md"
 import { matrix } from "../../matrix"
 import EventMessageBase from "./EventMessageBase"
 import { purifyHTML } from "./HTMLFormat"
+import { parseEventContent } from "../../events"
 
 export default class RoomEmoteMessage extends EventMessageBase {
 	constructor(msg: MatrixEvent) {
@@ -14,24 +15,27 @@ export default class RoomEmoteMessage extends EventMessageBase {
 		this.contentElement.innerHTML = ""
 		this.contentElement.style.display = "flex"
 		this.contentElement.style.gap = "1ch"
+
 		const emote = document.createElement("span")
 		emote.innerText = "* " + (sender?.displayName || this.message.getSender())
 		this.contentElement.appendChild(emote)
+
 		const body = document.createElement("span")
+		const content = parseEventContent(this.message.getContent())
+
 		switch (this.message.getContent().format) {
 			case "org.matrix.custom.html":
-				body.innerHTML = purifyHTML(
-					this.message.getContent().formatted_body || ""
-				)
+				body.innerHTML = purifyHTML(content.formatted_body ?? "")
 				break
 			case "org.matrix.custom.markdown": // This is not official, but its useful. Should it be renamed to something else because its not official?
-				body.innerHTML = markdownToHtml(this.message.getContent().body || "")
+				body.innerHTML = markdownToHtml(content.body || "")
 				break
 			case undefined:
 			default:
-				body.innerText = this.message.getContent().body || ""
+				body.innerText = content.body || ""
 				break
 		}
+
 		this.contentElement.appendChild(body)
 		await super.reset()
 	}
