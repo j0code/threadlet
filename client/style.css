@@ -769,3 +769,18 @@ dialog {
 	width: 100vw;
 	height: 100vh;
 }
+
+.message audio,
+.message video {
+	max-width: 50%;
+}
+
+.message[data-event-type="m.room.message"][data-msgtype="m.emote"] {
+	display: flex;
+	gap: 1ch;
+}
+
+.message[data-event-type="m.room.message"][data-msgtype="m.notice"]
+	.message-content {
+	color: var(--text-muted);
+}

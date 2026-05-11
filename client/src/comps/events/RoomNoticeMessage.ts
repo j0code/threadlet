@@ -24,7 +24,6 @@ export default class RoomNoticeMessage extends ChatMessageBase {
 				this.contentElement.innerText = content.body || ""
 				break
 		}
-		this.contentElement.style.color = "#acacac"
 
 		await super.reset()
 	}

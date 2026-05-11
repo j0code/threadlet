@@ -13,8 +13,6 @@ export default class RoomEmoteMessage extends EventMessageBase {
 	async reset(): Promise<void> {
 		const sender = matrix.getUser(this.message.getSender()!)
 		this.contentElement.innerHTML = ""
-		this.contentElement.style.display = "flex"
-		this.contentElement.style.gap = "1ch"
 
 		const emote = document.createElement("span")
 		emote.innerText = "* " + (sender?.displayName || this.message.getSender())
