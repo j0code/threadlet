@@ -1,6 +1,6 @@
-import { MatrixEvent } from "matrix-js-sdk";
-import ChatMessageBase from "./ChatMessageBase";
-import { markdownToHtml } from "../../md";
+import { MatrixEvent } from "matrix-js-sdk"
+import ChatMessageBase from "./ChatMessageBase"
+import { markdownToHtml } from "../../md"
 
 export default class UnknownEvent extends ChatMessageBase {
 	constructor(msg: MatrixEvent) {
@@ -8,7 +8,12 @@ export default class UnknownEvent extends ChatMessageBase {
 	}
 
 	async reset(): Promise<void> {
-		this.contentElement.innerHTML = markdownToHtml(this.message.getType() + "\n```json\n" + JSON.stringify(this.message.getContent(), undefined, "  ") + "\n```")
+		this.contentElement.innerHTML = markdownToHtml(
+			this.message.getType() +
+				"\n```json\n" +
+				JSON.stringify(this.message.getContent(), undefined, "  ") +
+				"\n```"
+		)
 		await super.reset()
 	}
 }

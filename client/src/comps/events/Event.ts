@@ -1,14 +1,14 @@
-import { MatrixEvent } from "matrix-js-sdk";
-import RoomTextMessage from "./RoomTextMessage";
-import RoomImageMessage from "./RoomImageMessage";
-import RoomEmoteMessage from "./RoomEmoteMessage";
-import EventBase from "./EventBase";
-import RoomNoticeMessage from "./RoomNoticeMessage";
-import RoomVideoMessage from "./RoomVideoMessage";
-import RoomAudioMessage from "./RoomAudioMessage";
-import RoomFileMessage from "./RoomFileMessage";
-import UnknownEvent from "./UnknownEvent";
-import RoomNameEvent from "./RoomNameEvent";
+import { MatrixEvent } from "matrix-js-sdk"
+import RoomTextMessage from "./RoomTextMessage"
+import RoomImageMessage from "./RoomImageMessage"
+import RoomEmoteMessage from "./RoomEmoteMessage"
+import EventBase from "./EventBase"
+import RoomNoticeMessage from "./RoomNoticeMessage"
+import RoomVideoMessage from "./RoomVideoMessage"
+import RoomAudioMessage from "./RoomAudioMessage"
+import RoomFileMessage from "./RoomFileMessage"
+import UnknownEvent from "./UnknownEvent"
+import RoomNameEvent from "./RoomNameEvent"
 
 const eventTypes: Record<string, typeof EventBase> = {
 	"m.room.message": RoomTextMessage,
@@ -27,7 +27,7 @@ const msgTypes: Record<string, typeof EventBase> = {
 
 export function renderEvent(event: MatrixEvent) {
 	let EventClass = eventTypes[event.getType()] || UnknownEvent
-	if(event.getType() === "m.room.message" && event.getContent().msgtype) {
+	if (event.getType() === "m.room.message" && event.getContent().msgtype) {
 		const msgtype = event.getContent().msgtype!
 		EventClass = msgTypes[msgtype] || RoomTextMessage
 	}

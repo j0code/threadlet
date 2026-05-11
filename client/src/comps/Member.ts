@@ -1,6 +1,6 @@
-import { RoomMember } from "matrix-js-sdk";
-import Avatar from "./Avatar";
-import Component from "./Component";
+import { RoomMember } from "matrix-js-sdk"
+import Avatar from "./Avatar"
+import Component from "./Component"
 
 export default class Member extends Component {
 	constructor() {

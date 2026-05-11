@@ -1,5 +1,5 @@
-import Component from "./Component";
-import Form from "./Form";
+import Component from "./Component"
+import Form from "./Form"
 
 export default class Modal extends Component {
 	readonly form: Form
@@ -9,16 +9,20 @@ export default class Modal extends Component {
 		this.form = form
 		this.element.appendChild(form.element)
 		this.element.addEventListener("close", () => {
-			if(this.element.isConnected) this.element.remove()
+			if (this.element.isConnected) this.element.remove()
 		})
 	}
 
 	reset(...args: Parameters<Form["reset"]>) {
 		this.form.reset(...args)
-		this.form.element.addEventListener("submit", () => {
-			(this.element as HTMLDialogElement).close()
-			if(this.element.isConnected) this.element.remove()
-		}, { once: true })
+		this.form.element.addEventListener(
+			"submit",
+			() => {
+				;(this.element as HTMLDialogElement).close()
+				if (this.element.isConnected) this.element.remove()
+			},
+			{ once: true }
+		)
 	}
 
 	show() {

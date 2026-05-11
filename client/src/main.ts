@@ -22,10 +22,10 @@ export const views = {
 	forumView: new ForumView(),
 	postView: new PostView(),
 	roomView: new RoomView(),
-	roomCreateForm: new RoomCreationForm()
+	roomCreateForm: new RoomCreationForm(),
 } as const
 
-document.getElementById("loadingScreen")!.remove();
+document.getElementById("loadingScreen")!.remove()
 if (localStorage.getItem("accessToken")) {
 	app = new App()
 	document.body.appendChild(app.element)
@@ -36,7 +36,7 @@ if (localStorage.getItem("accessToken")) {
 
 // setupDiscordSdk().then(async () => {
 // 	console.log("Discord SDK is authenticated")
-	
+
 // 	document.getElementById("loadingScreen")!.remove()
 // 	document.body.appendChild(app.element)
 
@@ -74,11 +74,11 @@ if (localStorage.getItem("accessToken")) {
 // 		app.channelList.reset(forums)
 // 	})
 // })
-	
+
 // async function setupDiscordSdk() {
 // 	await discordSdk.ready()
 // 	console.log("Discord SDK is ready")
-		
+
 // 	// Authorize with Discord Client
 // 	const { code } = await discordSdk.commands.authorize({
 // 		client_id: import.meta.env.VITE_DISCORD_CLIENT_ID,
@@ -91,7 +91,7 @@ if (localStorage.getItem("accessToken")) {
 // 			"applications.commands"
 // 		]
 // 	})
-	
+
 // 	// Retrieve an access_token from your activity's server
 // 	// Note: We need to prefix our backend `/api/token` route with `/.proxy` to stay compliant with the CSP.
 // 	// Read more about constructing a full URL and using external resources at
@@ -106,12 +106,12 @@ if (localStorage.getItem("accessToken")) {
 // 		})
 // 	})
 // 	const { access_token } = await response.json()
-	
+
 // 	// Authenticate with Discord client (using the access_token)
 // 	auth = await discordSdk.commands.authenticate({
 // 		access_token,
 // 	})
-	
+
 // 	if (auth == null) {
 // 		throw new Error("Authenticate command failed")
 // 	}

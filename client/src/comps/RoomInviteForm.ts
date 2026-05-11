@@ -1,7 +1,7 @@
-import { Room } from "matrix-js-sdk";
-import Form from "./Form";
-import FormTextInput from "./FormTextInput";
-import { matrix } from "../matrix";
+import { Room } from "matrix-js-sdk"
+import Form from "./Form"
+import FormTextInput from "./FormTextInput"
+import { matrix } from "../matrix"
 
 export default class RoomInviteForm extends Form {
 	constructor() {
