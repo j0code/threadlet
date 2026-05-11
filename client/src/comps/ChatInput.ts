@@ -1,5 +1,4 @@
 import { MsgType } from "matrix-js-sdk"
-import { api, app } from "../main"
 import { matrix } from "../matrix"
 import Component from "./Component"
 import EmojiPicker from "./EmojiPicker"

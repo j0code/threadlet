@@ -1,11 +1,4 @@
-import { type Message as APIMessage } from "@j0code/threadlet-api/v0/types"
-import { markdownToHtml, twemojiParse } from "../../md"
-import Component from "../Component"
-import CDN from "@j0code/threadlet-api/v0/cdn"
-import { api, clientUser } from "../../main"
-import twemoji from "@discordapp/twemoji"
 import { MatrixEvent } from "matrix-js-sdk"
-import { matrix } from "../../matrix"
 import Avatar from "../Avatar"
 import EventBase from "./EventBase"
 
@@ -39,17 +32,18 @@ export default class EventMessageBase extends EventBase {
 
 		this.element.append(aside, main)
 
-		this.reset()
+		void this.reset()
 	}
 
+	// eslint-disable-next-line @typescript-eslint/require-await
 	async reset() {
 		const msg = this.message
 		this.timestampElement.dateTime = msg.getDate()?.toISOString() || ""
 		// this.timestampElement.textContent = msg.getDate()?.toISOString() || ""
-		this.timestampElement.textContent = await this.relativeTimeFormat(msg.getDate() || new Date())
+		this.timestampElement.textContent = this.relativeTimeFormat(msg.getDate() || new Date())
 	}
 
-	async relativeTimeFormat(date: Date) {
+	relativeTimeFormat(date: Date) {
 		const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" })
 		const now = new Date()
 		const diff = (date.getTime() - now.getTime()) / 1000

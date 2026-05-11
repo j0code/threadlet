@@ -117,7 +117,7 @@ export default class Login extends Component {
 
 		el.querySelector<HTMLInputElement>("#registerHomeserver")!.value = localStorage.getItem("homeserver") || "https://matrix.org"
 
-		el.querySelector("#registerHSSubmit")!.addEventListener("click", async () => {
+		el.querySelector("#registerHSSubmit")!.addEventListener("click", () => {
 			const homeserver = (el.querySelector("#registerHomeserver") as HTMLInputElement).value
 			if(homeserver != localStorage.getItem("homeserver")) {
 				localStorage.setItem("homeserver", homeserver);

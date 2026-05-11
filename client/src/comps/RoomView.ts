@@ -1,12 +1,7 @@
-import { Post } from "@j0code/threadlet-api/v0/types"
-import PostAuthor from "./PostAuthor"
-import PostContent from "./PostContent"
 import View from "./View"
-import { api } from "../main"
 import ChatInput from "./ChatInput"
 import EventList from "./EventList"
-import TagList from "./TagList"
-import { MatrixEvent, Room, RoomEvent, RoomMember } from "matrix-js-sdk"
+import { MatrixEvent, Room, RoomEvent } from "matrix-js-sdk"
 import { matrix } from "../matrix"
 import MemberList from "./MemberList"
 
@@ -42,7 +37,7 @@ export default class RoomView extends View {
 	}
 
 	onTimelineEvent(room: Room) {
-		return async (event: MatrixEvent) => {
+		return (event: MatrixEvent) => {
 			if(event.getRoomId() === room.roomId) {
 				this.msgList.pushMessage(event);
 			}
@@ -65,9 +60,9 @@ export default class RoomView extends View {
 		this.updateMemberList(room)
 	}
 
-	async updateMemberList(room: Room | null) {
+	updateMemberList(room: Room | null) {
 		const members = matrix.getRoom(room?.roomId)?.getMembers() || []
-		await this.memberList.reset(members, room?.roomId)
+		this.memberList.reset(members, room?.roomId)
 	}
 
 	getCurrentRoom() {

@@ -1,4 +1,4 @@
-import { getMXUser, matrix } from "../matrix";
+import { getMXUser } from "../matrix";
 import Component from "./Component";
 import MXCImage from "./MXCImage";
 
@@ -9,7 +9,7 @@ export default class Avatar extends Component {
 		super("div", { classes: className ? ["avatar", className] : ["avatar"]})
 		this.mxid = mxid
 		this.element.setAttribute("data-mxid", mxid)
-		this.reset()
+		void this.reset()
 	}
 
 	async reset() {

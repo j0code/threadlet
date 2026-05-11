@@ -1,8 +1,6 @@
 import { MatrixEvent } from "matrix-js-sdk";
 import ChatMessageBase from "./ChatMessageBase";
-import { markdownToHtml } from "../../md";
-import { getMXCData, matrix } from "../../matrix";
-import MXCImage from "../MXCImage";
+import { getMXCData } from "../../matrix";
 
 export default class RoomAudioMessage extends ChatMessageBase {
 	constructor(msg: MatrixEvent) {
@@ -17,7 +15,7 @@ export default class RoomAudioMessage extends ChatMessageBase {
 		audio.src = await getMXCData(this.message.getContent().url || "") || ""
 		audio.style.maxWidth = "50%"
 		this.contentElement.appendChild(audio)
-		super.reset()
+		await super.reset()
 	}
 
 }

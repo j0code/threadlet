@@ -1,8 +1,6 @@
 import { MatrixEvent } from "matrix-js-sdk";
 import ChatMessageBase from "./ChatMessageBase";
 import { markdownToHtml } from "../../md";
-import { matrix } from "../../matrix";
-import MXCImage from "../MXCImage";
 import { purifyHTML } from "./HTMLFormat";
 
 export default class RoomNoticeMessage extends ChatMessageBase {
@@ -24,6 +22,6 @@ export default class RoomNoticeMessage extends ChatMessageBase {
 				break
 		}
 		this.contentElement.style.color = "#acacac"
-		super.reset()
+		await super.reset()
 	}
 }

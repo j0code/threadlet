@@ -1,8 +1,3 @@
-import {
-	type Post,
-	type Message as APIMessage,
-} from "@j0code/threadlet-api/v0/types"
-import { api } from "../main"
 import Component from "./Component"
 import { MatrixEvent } from "matrix-js-sdk"
 import { renderEvent } from "./events/Event"
@@ -13,7 +8,7 @@ export default class EventList extends Component {
 		super("div", { id: `events` })
 	}
 
-	async reset(events: MatrixEvent[]) {
+	reset(events: MatrixEvent[]) {
 		for (const child of Array.from(this.element.children)) {
 			child.remove()
 		}

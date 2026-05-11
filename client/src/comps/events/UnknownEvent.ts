@@ -9,6 +9,6 @@ export default class UnknownEvent extends ChatMessageBase {
 
 	async reset(): Promise<void> {
 		this.contentElement.innerHTML = markdownToHtml(this.message.getType() + "\n```json\n" + JSON.stringify(this.message.getContent(), undefined, "  ") + "\n```")
-		super.reset()
+		await super.reset()
 	}
 }

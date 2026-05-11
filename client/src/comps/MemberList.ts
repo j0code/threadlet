@@ -1,7 +1,5 @@
 import { RoomMember } from "matrix-js-sdk";
 import Component from "./Component";
-import MXCImage from "./MXCImage";
-import Avatar from "./Avatar";
 import FormButton from "./FormButton";
 import { matrix } from "../matrix";
 import Modal from "./Modal";
@@ -13,11 +11,11 @@ export default class MemberList extends Component {
 		super("div", { id: "members" })
 	}
 
-	async reset(members: RoomMember[], roomId?: string) {
+	reset(members: RoomMember[], roomId?: string) {
 		this.element.innerHTML = ""
 
 		if(roomId) {
-			const inviteButton = new FormButton("invite-to-room-button", "Invite", async () => {
+			const inviteButton = new FormButton("invite-to-room-button", "Invite", () => {
 				const inviteForm = new RoomInviteForm()
 				const inviteModal = new Modal(inviteForm)
 				inviteModal.reset(matrix.getRoom(roomId))
