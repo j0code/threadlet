@@ -1,21 +1,24 @@
 import { MatrixEvent } from "matrix-js-sdk"
-import { markdownToHtml } from "../../md"
-import { matrix } from "../../matrix"
-import EventMessageBase from "./EventMessageBase"
+import { markdownToHtml, twemojiParse } from "../../md"
 import { purifyHTML } from "./HTMLFormat"
 import { parseEventContent } from "../../events"
+import ChatMessageBase from "./ChatMessageBase"
+import { getMXUser } from "../../matrix"
 
-export default class RoomEmoteMessage extends EventMessageBase {
+export default class RoomEmoteMessage extends ChatMessageBase {
 	constructor(msg: MatrixEvent) {
 		super(msg)
 	}
 
 	async reset(): Promise<void> {
-		const sender = matrix.getUser(this.message.getSender()!)
+		const { mxid, displayname } = await getMXUser(this.message.getSender()!)
 		this.contentElement.innerHTML = ""
 
 		const emote = document.createElement("span")
-		emote.innerText = "* " + (sender?.displayName || this.message.getSender())
+		emote.innerHTML = twemojiParse(
+			displayname || mxid || "Unknown"
+		)
+		emote.className = "emote"
 		this.contentElement.appendChild(emote)
 
 		const body = document.createElement("span")
