@@ -775,9 +775,14 @@ dialog {
 	max-width: 50%;
 }
 
-.message[data-event-type="m.room.message"][data-msgtype="m.emote"] {
+.message[data-event-type="m.room.message"][data-msgtype="m.emote"]
+	.message-content {
 	display: flex;
 	gap: 1ch;
+
+	.emote::before {
+		content: "* "
+	}
 }
 
 .message[data-event-type="m.room.message"][data-msgtype="m.notice"]
