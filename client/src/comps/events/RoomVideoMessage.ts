@@ -1,6 +1,7 @@
 import { MatrixEvent } from "matrix-js-sdk"
 import ChatMessageBase from "./ChatMessageBase"
 import { getMXCData } from "../../matrix"
+import { parseEventContent } from "../../events"
 
 export default class RoomVideoMessage extends ChatMessageBase {
 	constructor(msg: MatrixEvent) {
@@ -10,9 +11,13 @@ export default class RoomVideoMessage extends ChatMessageBase {
 	async reset(): Promise<void> {
 		this.contentElement.innerHTML = ""
 
+		const content = parseEventContent(this.message.getContent())
+		const blobUrl =
+			typeof content.url == "string" ? await getMXCData(content.url) : null
+
 		const video = document.createElement("video")
 		video.controls = true
-		video.src = (await getMXCData(this.message.getContent().url || "")) || ""
+		if (blobUrl) video.src = blobUrl
 		video.style.maxWidth = "50%"
 		this.contentElement.appendChild(video)
 		await super.reset()
