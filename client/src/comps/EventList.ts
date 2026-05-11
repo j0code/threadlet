@@ -14,11 +14,11 @@ export default class EventList extends Component {
 	}
 
 	async reset(events: MatrixEvent[]) {
-		for (let child of Array.from(this.element.children)) {
+		for (const child of Array.from(this.element.children)) {
 			child.remove()
 		}
 
-		for (let event of events) {
+		for (const event of events) {
 			this.pushMessage(event)
 		}
 

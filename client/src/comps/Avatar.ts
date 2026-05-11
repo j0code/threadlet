@@ -21,7 +21,7 @@ export default class Avatar extends Component {
 		const { displayname, avatar_url } = await getMXUser(mxid)
 
 		if(avatar_url) {
-			let img = new MXCImage(avatar_url, {
+			const img = new MXCImage(avatar_url, {
 				width: 64,
 				height: 64,
 				resizeMethod: "scale"
