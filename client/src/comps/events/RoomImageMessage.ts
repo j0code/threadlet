@@ -11,7 +11,7 @@ export default class RoomImageMessage extends ChatMessageBase {
 
 	async reset(): Promise<void> {
 		this.contentElement.innerHTML = ""
-		let img = new MXCImage(this.message.getContent().url || "")
+		const img = new MXCImage(this.message.getContent().url || "")
 		await img.reset()
 		this.contentElement.appendChild(img.element)
 		super.reset()

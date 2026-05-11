@@ -11,7 +11,7 @@ export default class RoomNameEvent extends EventMessageBase {
 	async reset() {
 		await super.reset();
 		
-		let author = matrix.getUser(this.message.getSender() || "");
+		const author = matrix.getUser(this.message.getSender() || "");
 		this.contentElement.textContent = `${author?.displayName || this.message.getSender()} changed the room name to ${this.message.getContent().name}`;
 	}
 }

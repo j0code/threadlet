@@ -7,17 +7,17 @@ export default class Login extends Component {
 	constructor() {
 		super("div", { id: "login" })
 
-		let title = document.createElement("h1")
+		const title = document.createElement("h1")
 		title.textContent = "Welcome to Threadlet!"
 		title.id = "loginTitle"
 		this.element.appendChild(title)
 
-		let morpheusImg = document.createElement("img")
+		const morpheusImg = document.createElement("img")
 		morpheusImg.src = "/2pills.png"
 		morpheusImg.id = "morpehusImg"
 		this.element.appendChild(morpheusImg)
 
-		let loginButton = document.createElement("button")
+		const loginButton = document.createElement("button")
 		loginButton.textContent = "Login"
 		loginButton.style.bottom = "calc(anchor(bottom) + 10.5vw)"
 		loginButton.style.left   = "calc(anchor(left)   + 12.5vw)"
@@ -27,7 +27,7 @@ export default class Login extends Component {
 
 		loginButton.addEventListener("click", () => this.loginDialog())
 
-		let registerButton = document.createElement("button")
+		const registerButton = document.createElement("button")
 		registerButton.textContent = "Register"
 		registerButton.style.bottom = "calc(anchor(bottom) +  9vw)"
 		registerButton.style.right  = "calc(anchor(right)  + 17vw)"
