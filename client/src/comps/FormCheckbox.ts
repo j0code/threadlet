@@ -1,5 +1,4 @@
 import Component from "./Component"
-import EmojiButton from "./EmojiButton"
 
 export default class FormCheckbox extends Component {
 

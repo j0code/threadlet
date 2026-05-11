@@ -1,10 +1,7 @@
-import { Forum } from "@j0code/threadlet-api/v0/types"
-import { api, app, views } from "../main"
+import { app, views } from "../main"
 import Form from "./Form"
 import FormButton from "./FormButton"
 import FormTextInput from "./FormTextInput"
-import FormInputList from "./FormInputList"
-import { Room } from "matrix-js-sdk"
 import { matrix } from "../matrix"
 import FormCheckbox from "./FormCheckbox"
 

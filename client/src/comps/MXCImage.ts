@@ -1,4 +1,4 @@
-import { getMXCData, matrix } from "../matrix";
+import { getMXCData } from "../matrix";
 import Component from "./Component";
 
 interface MXCImageOptions {

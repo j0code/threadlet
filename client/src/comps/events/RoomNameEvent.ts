@@ -5,7 +5,7 @@ import { matrix } from "../../matrix";
 export default class RoomNameEvent extends EventMessageBase {
 	constructor(msg: MatrixEvent) {
 		super(msg);
-		this.reset();
+		void this.reset();
 	}
 
 	async reset() {

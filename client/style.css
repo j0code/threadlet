@@ -722,6 +722,7 @@ dialog {
 	width: 30px;
 	aspect-ratio: 1 / 1;
 	border-radius: 100%;
+	/* eslint-disable-next-line css/no-important -- It's not unexpected, I expected it! */
 	font-size: 14px !important;
 }
 

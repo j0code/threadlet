@@ -1,8 +1,6 @@
 import { MatrixEvent } from "matrix-js-sdk";
 import ChatMessageBase from "./ChatMessageBase";
-import { markdownToHtml } from "../../md";
-import { getMXCData, matrix } from "../../matrix";
-import MXCImage from "../MXCImage";
+import { getMXCData } from "../../matrix";
 
 export default class RoomFileMessage extends ChatMessageBase {
 	constructor(msg: MatrixEvent) {
@@ -18,7 +16,7 @@ export default class RoomFileMessage extends ChatMessageBase {
 		file.rel = "noopener noreferrer"
 		file.textContent = this.message.getContent().body || "Download File"
 		this.contentElement.appendChild(file)
-		super.reset()
+		await super.reset()
 	}
 
 }

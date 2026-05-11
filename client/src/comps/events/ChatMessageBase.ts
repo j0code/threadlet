@@ -1,11 +1,6 @@
-import { type Message as APIMessage } from "@j0code/threadlet-api/v0/types"
-import { markdownToHtml, twemojiParse } from "../../md"
-import Component from "../Component"
-import CDN from "@j0code/threadlet-api/v0/cdn"
-import { api, clientUser } from "../../main"
-import twemoji from "@discordapp/twemoji"
+import { twemojiParse } from "../../md"
 import { MatrixEvent } from "matrix-js-sdk"
-import { getMXUser, matrix } from "../../matrix"
+import { getMXUser } from "../../matrix"
 import Avatar from "../Avatar"
 import EventBase from "./EventBase"
 
@@ -44,7 +39,7 @@ export default class ChatMessageBase extends EventBase {
 
 		this.element.append(aside, main)
 
-		this.reset()
+		void this.reset()
 	}
 
 	async reset() {
@@ -53,14 +48,14 @@ export default class ChatMessageBase extends EventBase {
 		this.nameElement.innerHTML = twemojiParse(displayname || msg.getSender() || "Unknown")
 		this.timestampElement.dateTime = msg.getDate()?.toISOString() || ""
 		// this.timestampElement.textContent = msg.getDate()?.toISOString() || ""
-		this.timestampElement.textContent = await this.relativeTimeFormat(msg.getDate() || new Date())
+		this.timestampElement.textContent = this.relativeTimeFormat(msg.getDate() || new Date())
 
 		this.contentElement.querySelectorAll<HTMLSpanElement>("[data-mx-spoiler]").forEach(el => {
 			el.addEventListener("click", () => el.style.filter = "none");
 		});
 	}
 
-	async relativeTimeFormat(date: Date) {
+	relativeTimeFormat(date: Date) {
 		const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" })
 		const now = new Date()
 		const diff = (date.getTime() - now.getTime()) / 1000

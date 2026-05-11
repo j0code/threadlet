@@ -1,10 +1,7 @@
 import { MatrixEvent } from "matrix-js-sdk";
-import Component from "../Component";
 import RoomTextMessage from "./RoomTextMessage";
-import ChatMessageBase from "./ChatMessageBase";
 import RoomImageMessage from "./RoomImageMessage";
 import RoomEmoteMessage from "./RoomEmoteMessage";
-import EventMessageBase from "./EventMessageBase";
 import EventBase from "./EventBase";
 import RoomNoticeMessage from "./RoomNoticeMessage";
 import RoomVideoMessage from "./RoomVideoMessage";

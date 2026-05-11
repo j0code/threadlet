@@ -1,8 +1,6 @@
 import { MatrixEvent } from "matrix-js-sdk";
-import ChatMessageBase from "./ChatMessageBase";
 import { markdownToHtml } from "../../md";
 import { matrix } from "../../matrix";
-import MXCImage from "../MXCImage";
 import EventMessageBase from "./EventMessageBase";
 import { purifyHTML } from "./HTMLFormat";
 
@@ -33,6 +31,6 @@ export default class RoomEmoteMessage extends EventMessageBase {
 				break
 		}
 		this.contentElement.appendChild(body)
-		super.reset()
+		await super.reset()
 	}
 }

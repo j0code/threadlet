@@ -42,7 +42,7 @@ export default class PostView extends View<[string]> {
 		this.head.reset(post.name)
 		this.tagList.reset(post.tags ?? [])
 		this.content.reset(post)
-		await this.msgList.reset(post)
+		//await this.msgList.reset(post)
 
 		const user = await api.getUser(post.poster_id)
 		this.author.reset(user)
