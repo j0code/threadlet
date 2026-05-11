@@ -1,8 +1,8 @@
-import { MatrixEvent } from "matrix-js-sdk";
-import { markdownToHtml } from "../../md";
-import { matrix } from "../../matrix";
-import EventMessageBase from "./EventMessageBase";
-import { purifyHTML } from "./HTMLFormat";
+import { MatrixEvent } from "matrix-js-sdk"
+import { markdownToHtml } from "../../md"
+import { matrix } from "../../matrix"
+import EventMessageBase from "./EventMessageBase"
+import { purifyHTML } from "./HTMLFormat"
 
 export default class RoomEmoteMessage extends EventMessageBase {
 	constructor(msg: MatrixEvent) {
@@ -20,7 +20,9 @@ export default class RoomEmoteMessage extends EventMessageBase {
 		const body = document.createElement("span")
 		switch (this.message.getContent().format) {
 			case "org.matrix.custom.html":
-				body.innerHTML = purifyHTML(this.message.getContent().formatted_body || "")
+				body.innerHTML = purifyHTML(
+					this.message.getContent().formatted_body || ""
+				)
 				break
 			case "org.matrix.custom.markdown": // This is not official, but its useful. Should it be renamed to something else because its not official?
 				body.innerHTML = markdownToHtml(this.message.getContent().body || "")

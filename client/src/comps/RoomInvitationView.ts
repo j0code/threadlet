@@ -1,7 +1,7 @@
-import { Room } from "matrix-js-sdk";
-import { matrix } from "../matrix";
-import { app, views } from "../main";
-import Form from "./Form";
+import { Room } from "matrix-js-sdk"
+import { matrix } from "../matrix"
+import { app, views } from "../main"
+import Form from "./Form"
 
 export default class RoomInvitationForm extends Form {
 	constructor() {

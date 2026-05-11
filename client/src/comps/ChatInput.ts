@@ -53,7 +53,7 @@ export default class ChatInput extends Component {
 
 					await matrix.sendMessage(room.roomId, {
 						body: content,
-						msgtype: MsgType.Text
+						msgtype: MsgType.Text,
 					})
 				}
 

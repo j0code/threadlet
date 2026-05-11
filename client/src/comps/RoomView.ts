@@ -6,7 +6,6 @@ import { matrix } from "../matrix"
 import MemberList from "./MemberList"
 
 export default class RoomView extends View {
-
 	private currentRoom?: Room
 
 	public readonly msgList: EventList
@@ -18,7 +17,7 @@ export default class RoomView extends View {
 	constructor() {
 		super("div", { id: "room-view" })
 
-		this.msgList   = new EventList()
+		this.msgList = new EventList()
 		this.chatInput = new ChatInput(this)
 		this.memberList = new MemberList()
 
@@ -38,24 +37,25 @@ export default class RoomView extends View {
 
 	onTimelineEvent(room: Room) {
 		return (event: MatrixEvent) => {
-			if(event.getRoomId() === room.roomId) {
-				this.msgList.pushMessage(event);
+			if (event.getRoomId() === room.roomId) {
+				this.msgList.pushMessage(event)
 			}
-		};
+		}
 	}
 
 	async reset(room: Room) {
 		this.head.reset(room.name)
-		await matrix.roomInitialSync(room.roomId, 20);
+		await matrix.roomInitialSync(room.roomId, 20)
 		const events = room.getLiveTimeline().getEvents()
 		this.msgList.reset(events)
 
-		if(this.timelineEventHandler) matrix.off(RoomEvent.Timeline, this.timelineEventHandler);
+		if (this.timelineEventHandler)
+			matrix.off(RoomEvent.Timeline, this.timelineEventHandler)
 
 		this.currentRoom = room
 
 		this.timelineEventHandler = this.onTimelineEvent(this.currentRoom)
-		matrix.on(RoomEvent.Timeline, this.timelineEventHandler);
+		matrix.on(RoomEvent.Timeline, this.timelineEventHandler)
 
 		this.updateMemberList(room)
 	}
@@ -68,5 +68,4 @@ export default class RoomView extends View {
 	getCurrentRoom() {
 		return this.currentRoom
 	}
-
 }

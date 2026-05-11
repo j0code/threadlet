@@ -1,6 +1,6 @@
-import { MatrixEvent } from "matrix-js-sdk";
-import ChatMessageBase from "./ChatMessageBase";
-import MXCImage from "../MXCImage";
+import { MatrixEvent } from "matrix-js-sdk"
+import ChatMessageBase from "./ChatMessageBase"
+import MXCImage from "../MXCImage"
 
 export default class RoomImageMessage extends ChatMessageBase {
 	constructor(msg: MatrixEvent) {

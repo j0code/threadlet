@@ -1,12 +1,11 @@
-import { Room } from "matrix-js-sdk";
-import { matrix } from "../matrix";
-import { twemojiParse } from "../md";
-import Component from "./Component";
-import ContextMenu from "./ContextMenu";
-import { app } from "../main";
+import { Room } from "matrix-js-sdk"
+import { matrix } from "../matrix"
+import { twemojiParse } from "../md"
+import Component from "./Component"
+import ContextMenu from "./ContextMenu"
+import { app } from "../main"
 
 export default class ForumTab extends Component {
-
 	readonly tab: HTMLElement
 
 	constructor(forum: Room) {
@@ -17,7 +16,7 @@ export default class ForumTab extends Component {
 		const leaveButton = document.createElement("div")
 		leaveButton.textContent = "Leave"
 		leaveButton.addEventListener("click", async () => {
-			if(!confirm(`Are you sure you want to leave ${forum.name}?`)) return
+			if (!confirm(`Are you sure you want to leave ${forum.name}?`)) return
 			await matrix.leave(forum.roomId)
 			app.updateChannelList()
 			app.renderView(undefined)

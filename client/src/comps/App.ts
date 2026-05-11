@@ -6,7 +6,6 @@ import Form from "./Form"
 import View from "./View"
 
 export default class App extends Component {
-
 	readonly roomList: RoomList
 	private currentView?: View | Form
 
@@ -17,11 +16,11 @@ export default class App extends Component {
 		this.element.appendChild(this.roomList.element)
 
 		matrix.once(ClientEvent.Sync, () => {
-			this.updateChannelList();
+			this.updateChannelList()
 		})
 
 		matrix.on(RoomEvent.MyMembership, () => {
-			this.updateChannelList();
+			this.updateChannelList()
 		})
 
 		void initMatrixClient()
@@ -36,7 +35,7 @@ export default class App extends Component {
 		if (this.currentView) {
 			this.currentView.element.remove()
 		}
-		if(!view) return
+		if (!view) return
 
 		void view.reset(...args)
 		this.element.appendChild(view.element)

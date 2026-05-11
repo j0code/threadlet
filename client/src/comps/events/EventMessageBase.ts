@@ -3,9 +3,8 @@ import Avatar from "../Avatar"
 import EventBase from "./EventBase"
 
 export default class EventMessageBase extends EventBase {
-
-	readonly contentElement:   HTMLDivElement
-	readonly avatarElement:    Avatar
+	readonly contentElement: HTMLDivElement
+	readonly avatarElement: Avatar
 	readonly timestampElement: HTMLTimeElement
 
 	constructor(msg: MatrixEvent) {
@@ -40,7 +39,9 @@ export default class EventMessageBase extends EventBase {
 		const msg = this.message
 		this.timestampElement.dateTime = msg.getDate()?.toISOString() || ""
 		// this.timestampElement.textContent = msg.getDate()?.toISOString() || ""
-		this.timestampElement.textContent = this.relativeTimeFormat(msg.getDate() || new Date())
+		this.timestampElement.textContent = this.relativeTimeFormat(
+			msg.getDate() || new Date()
+		)
 	}
 
 	relativeTimeFormat(date: Date) {

@@ -1,12 +1,12 @@
-import { getMXUser } from "../matrix";
-import Component from "./Component";
-import MXCImage from "./MXCImage";
+import { getMXUser } from "../matrix"
+import Component from "./Component"
+import MXCImage from "./MXCImage"
 
 export default class Avatar extends Component {
 	public readonly mxid: string
 
 	constructor(mxid: string, className?: string) {
-		super("div", { classes: className ? ["avatar", className] : ["avatar"]})
+		super("div", { classes: className ? ["avatar", className] : ["avatar"] })
 		this.mxid = mxid
 		this.element.setAttribute("data-mxid", mxid)
 		void this.reset()
@@ -14,17 +14,17 @@ export default class Avatar extends Component {
 
 	async reset() {
 		const mxid = this.element.getAttribute("data-mxid")
-		if(!mxid) return
+		if (!mxid) return
 
 		this.element.innerHTML = ""
 
 		const { displayname, avatar_url } = await getMXUser(mxid)
 
-		if(avatar_url) {
+		if (avatar_url) {
 			const img = new MXCImage(avatar_url, {
 				width: 64,
 				height: 64,
-				resizeMethod: "scale"
+				resizeMethod: "scale",
 			})
 			await img.reset()
 			this.element.appendChild(img.element)
@@ -37,10 +37,10 @@ export default class Avatar extends Component {
 
 	private stringToColor(str: string) {
 		let hash = 0
-		for(let i = 0; i < str.length; i++) {
+		for (let i = 0; i < str.length; i++) {
 			hash = str.charCodeAt(i) + ((hash << 5) - hash)
 		}
-		const color = (hash & 0x00FFFFFF).toString(16).toUpperCase()
+		const color = (hash & 0x00ffffff).toString(16).toUpperCase()
 		return `#${color.padStart(6, "0")}`
 	}
 

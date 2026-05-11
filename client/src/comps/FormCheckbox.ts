@@ -1,7 +1,6 @@
 import Component from "./Component"
 
 export default class FormCheckbox extends Component {
-
 	private readonly input: HTMLInputElement
 	private readonly label: HTMLSpanElement
 
@@ -24,5 +23,4 @@ export default class FormCheckbox extends Component {
 	clear() {
 		this.input.checked = false
 	}
-
 }

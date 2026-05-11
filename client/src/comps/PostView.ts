@@ -19,10 +19,10 @@ export default class PostView extends View<[string]> {
 	constructor() {
 		super("div", { id: "post-view" })
 
-		this.author    = new PostAuthor()
-		this.tagList   = new TagList()
-		this.content   = new PostContent()
-		this.msgList   = new EventList()
+		this.author = new PostAuthor()
+		this.tagList = new TagList()
+		this.content = new PostContent()
+		this.msgList = new EventList()
 		this.chatInput = new ChatInput(this)
 
 		const container = document.createElement("div")

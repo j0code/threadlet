@@ -5,10 +5,9 @@ import Avatar from "../Avatar"
 import EventBase from "./EventBase"
 
 export default class ChatMessageBase extends EventBase {
-
-	readonly contentElement:   HTMLDivElement
-	readonly avatarElement:    Avatar
-	readonly nameElement:      HTMLSpanElement
+	readonly contentElement: HTMLDivElement
+	readonly avatarElement: Avatar
+	readonly nameElement: HTMLSpanElement
 	readonly timestampElement: HTMLTimeElement
 
 	constructor(msg: MatrixEvent) {
@@ -45,14 +44,20 @@ export default class ChatMessageBase extends EventBase {
 	async reset() {
 		const msg = this.message
 		const { displayname } = await getMXUser(msg.getSender()!)
-		this.nameElement.innerHTML = twemojiParse(displayname || msg.getSender() || "Unknown")
+		this.nameElement.innerHTML = twemojiParse(
+			displayname || msg.getSender() || "Unknown"
+		)
 		this.timestampElement.dateTime = msg.getDate()?.toISOString() || ""
 		// this.timestampElement.textContent = msg.getDate()?.toISOString() || ""
-		this.timestampElement.textContent = this.relativeTimeFormat(msg.getDate() || new Date())
+		this.timestampElement.textContent = this.relativeTimeFormat(
+			msg.getDate() || new Date()
+		)
 
-		this.contentElement.querySelectorAll<HTMLSpanElement>("[data-mx-spoiler]").forEach(el => {
-			el.addEventListener("click", () => el.style.filter = "none");
-		});
+		this.contentElement
+			.querySelectorAll<HTMLSpanElement>("[data-mx-spoiler]")
+			.forEach(el => {
+				el.addEventListener("click", () => (el.style.filter = "none"))
+			})
 	}
 
 	relativeTimeFormat(date: Date) {
