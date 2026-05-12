@@ -5,18 +5,14 @@ import EventBase from "./EventBase"
 import { relativeTimeFormat } from "../../util"
 
 export default class ChatMessageBase extends EventBase {
-	readonly nameElement: HTMLSpanElement
-
 	constructor(msg: MatrixEvent) {
 		super(msg, "div", { id: `message-${msg.getId()}`, classes: ["message"] })
-
-		this.nameElement = document.createElement("span")
-		this.nameElement.className = "message-author-name"
 
 		const header = document.createElement("div")
 		header.className = "message-header"
 		header.append(this.nameElement, this.timestampElement)
 
+		this.asideElement.append(this.avatar.element)
 		this.mainElement.append(header, this.contentElement)
 
 		const content = this.message.getContent()

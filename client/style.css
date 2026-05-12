@@ -781,11 +781,32 @@ dialog {
 	gap: 1ch;
 
 	.emote::before {
-		content: "* "
+		content: "* ";
 	}
 }
 
 .message[data-event-type="m.room.message"][data-msgtype="m.notice"]
 	.message-content {
 	color: var(--text-muted);
+}
+
+.message[data-event-type="m.room.name"] {
+	font-size: 0.8em;
+
+	> .message-main {
+		flex-direction: row;
+		gap: 1ch;
+		align-items: center;
+		> .message-content {
+			color: var(--text-muted);
+		}
+	}
+
+	.message-author-avatar {
+		width: 1.5em;
+		height: 1.5em;
+		> img {
+			width: 1.5em;
+		}
+	}
 }

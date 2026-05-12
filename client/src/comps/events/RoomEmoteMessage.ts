@@ -15,9 +15,7 @@ export default class RoomEmoteMessage extends ChatMessageBase {
 		this.contentElement.innerHTML = ""
 
 		const emote = document.createElement("span")
-		emote.innerHTML = twemojiParse(
-			displayname || mxid || "Unknown"
-		)
+		emote.innerHTML = twemojiParse(displayname || mxid || "Unknown")
 		emote.className = "emote"
 		this.contentElement.appendChild(emote)
 
