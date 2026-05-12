@@ -14,9 +14,7 @@ export default class Member extends Component {
 		this.element.appendChild(avatar.element)
 		const name = document.createElement("span")
 		name.className = "member-name"
-		name.innerHTML = twemojiParse(
-			member.name || member.userId || "Unknown"
-		)
+		name.innerHTML = twemojiParse(member.name || member.userId || "Unknown")
 		this.element.appendChild(name)
 	}
 }

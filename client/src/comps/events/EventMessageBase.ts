@@ -7,10 +7,11 @@ export default class EventMessageBase extends EventBase {
 		super(msg, "div", { id: `message-${msg.getId()}`, classes: ["message"] })
 
 		this.mainElement.className = "message-main"
-		this.mainElement.style.flexDirection = "row"
-		this.mainElement.style.gap = "0.5em"
-		this.mainElement.style.alignItems = "center"
-		this.mainElement.append(this.contentElement, this.timestampElement)
+		this.mainElement.append(
+			this.avatar.element,
+			this.contentElement,
+			this.timestampElement
+		)
 
 		void this.reset()
 	}
