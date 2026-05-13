@@ -671,6 +671,8 @@ dialog {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	width: 100vw;
+	height: 100vh;
 }
 
 #loginTitle {
@@ -763,11 +765,6 @@ dialog {
 	display: flex;
 	flex-direction: column;
 	flex: 1 1 auto;
-}
-
-#login {
-	width: 100vw;
-	height: 100vh;
 }
 
 .message audio,
