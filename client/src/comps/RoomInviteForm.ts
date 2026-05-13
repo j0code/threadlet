@@ -5,12 +5,12 @@ import { matrix } from "../matrix"
 
 export default class RoomInviteForm extends Form {
 	constructor() {
-		super("Invite to Room", { id: "roomInviteForm" })
+		super("Invite to Room", { id: "room-invite-form" })
 	}
 
 	reset(room: Room): void {
 		this.titleElement.textContent = `Invite to ${room.name || room.roomId}`
-		const userInput = new FormTextInput("roomInviteUser", "MXID")
+		const userInput = new FormTextInput("room-invite-user", "MXID")
 		this.body.appendChild(userInput.element)
 
 		const inviteButton = document.createElement("button")
