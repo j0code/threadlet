@@ -39,6 +39,7 @@ export async function initMatrixClient() {
 			localStorage.getItem("deviceId")
 		)
 	) {
+		console.error("No access token, user ID, or device ID found in localStorage. Not starting Matrix client.")
 		return
 	}
 	await matrix.startClient()
