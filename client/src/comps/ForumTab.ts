@@ -19,7 +19,7 @@ export default class ForumTab extends Component {
 			if (!confirm(`Are you sure you want to leave ${forum.name}?`)) return
 			await matrix.leave(forum.roomId)
 			app.updateChannelList()
-			app.renderView(undefined)
+			app.clearView()
 		})
 		ctxMenu.content.appendChild(leaveButton)
 

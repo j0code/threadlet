@@ -24,7 +24,7 @@ export default class RoomInvitationForm extends Form {
 		declineButton.textContent = "Decline"
 		declineButton.addEventListener("click", async () => {
 			await matrix.leave(room.roomId)
-			app.renderView(undefined)
+			app.clearView()
 			app.updateChannelList()
 			this.element.dispatchEvent(new Event("submit"))
 		})
