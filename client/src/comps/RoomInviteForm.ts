@@ -10,7 +10,7 @@ export default class RoomInviteForm extends Form {
 
 	reset(room: Room): void {
 		this.titleElement.textContent = `Invite to ${room.name || room.roomId}`
-		const userInput = new FormTextInput("room-invite-user", "MXID")
+		const userInput = new FormTextInput("room-invite-user", "MXID", 1, 255)
 		this.body.appendChild(userInput.element)
 
 		const inviteButton = document.createElement("button")
