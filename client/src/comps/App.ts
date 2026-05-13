@@ -31,15 +31,19 @@ export default class App extends Component {
 		this.roomList.reset(rooms)
 	}
 
-	renderView(view: View | Form | undefined, ...args: unknown[]) {
-		if (this.currentView) {
-			this.currentView.element.remove()
-		}
-		if (!view) return
+	renderView(view: View | Form, ...args: unknown[]) {
+		this.clearView()
 
 		void view.reset(...args)
 		this.element.appendChild(view.element)
 		this.currentView = view
+	}
+
+	clearView() {
+		if (this.currentView) {
+			this.currentView.element.remove()
+			this.currentView = undefined
+		}
 	}
 
 	getCurrentView() {
