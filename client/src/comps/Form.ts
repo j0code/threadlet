@@ -1,4 +1,5 @@
 import { twemojiParse } from "../md"
+import { MaybePromise } from "../types";
 import Component from "./Component"
 
 export default abstract class Form<
@@ -30,12 +31,12 @@ export default abstract class Form<
 
 		this.body = formBody
 
-		this.element.addEventListener("submit", (e) => {
-			this.submit(e.submitter!.id)
+		this.element.addEventListener("submit", async (e) => {
 			e.preventDefault()
+			await this.submit(e.submitter!.id)
 		})
 	}
 
 	abstract reset(...args: ResetArgs): void
-	abstract submit(id: string): void
+	abstract submit(id: string): MaybePromise<void>
 }

@@ -15,7 +15,7 @@ export default class ForumTab extends Component {
 
 		const leaveButton = document.createElement("div")
 		leaveButton.textContent = "Leave"
-		leaveButton.addEventListener("click", async () => {
+		leaveButton.addEventListener("click", () => {
 			modals.confirmModal.show(`Are you sure you want to leave ${forum.name}?`, async () => {
 				await matrix.leave(forum.roomId)
 				app.updateChannelList()
