@@ -749,9 +749,12 @@ dialog {
 }
 
 [data-mx-spoiler] {
-	filter: blur(5px);
 	transition: filter 0.3s;
 	cursor: pointer;
+}
+
+[data-mx-spoiler]:not(.revealed) {
+	filter: blur(5px);
 }
 
 .avatar:not(:has(img)) {
