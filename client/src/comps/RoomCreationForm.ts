@@ -1,9 +1,9 @@
 import { app, views } from "../main"
 import Form from "./Form"
-import FormButton from "./FormButton"
 import FormTextInput from "./FormTextInput"
 import { matrix } from "../matrix"
 import FormCheckbox from "./FormCheckbox"
+import SubmitButton from "./SubmitButton"
 
 export default class RoomCreationForm extends Form {
 	readonly nameInput: FormTextInput
@@ -25,9 +25,7 @@ export default class RoomCreationForm extends Form {
 			"room-unfederate",
 			"Disable Federation (cannot be undone)"
 		)
-		const submitButton = new FormButton("room-submit", "Create", () =>
-			this.submit()
-		)
+		const submitButton = new SubmitButton("room-submit", "Create");
 
 		this.body.appendChild(this.nameInput.element)
 		this.body.appendChild(this.topicInput.element)
@@ -41,7 +39,9 @@ export default class RoomCreationForm extends Form {
 		this.unfederateInput.clear()
 	}
 
-	async submit() {
+	async submit(id: string) {
+		if(id !== "room-submit") return;
+
 		const res = await matrix.createRoom({
 			name: this.nameInput.value,
 			topic: this.topicInput.value == "" ? undefined : this.topicInput.value,

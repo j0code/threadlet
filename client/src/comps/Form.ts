@@ -13,7 +13,7 @@ export default abstract class Form<
 	) {
 		const cls = ["form"]
 		if (classes) cls.push(...classes)
-		super("div", { id, classes: cls })
+		super("form", { id, classes: cls })
 
 		this.titleElement = document.createElement("span")
 		this.titleElement.className = "form-title"
@@ -29,8 +29,13 @@ export default abstract class Form<
 		this.element.appendChild(formBody)
 
 		this.body = formBody
+
+		this.element.addEventListener("submit", (e) => {
+			this.submit(e.submitter!.id)
+			e.preventDefault()
+		})
 	}
 
 	abstract reset(...args: ResetArgs): void
-	// abstract submit(): void
+	abstract submit(id: string): void
 }
