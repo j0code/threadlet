@@ -2,9 +2,7 @@ import "../style.css"
 import "../md.css"
 import "highlight.js/styles/github-dark.min.css"
 import App from "./comps/App"
-import ForumSettingsForm from "./comps/ForumSettingsForm"
 import ThreadletAPI from "@j0code/threadlet-api/v0"
-import PostSettingsForm from "./comps/PostSettingsForm"
 import ForumView from "./comps/ForumView"
 import PostView from "./comps/PostView"
 import { User } from "matrix-js-sdk"
@@ -27,8 +25,6 @@ export const modals = {
 } as const;
 
 export const views = {
-	forumCreateForm: new ForumSettingsForm(),
-	postCreateForm: new PostSettingsForm(),
 	forumView: new ForumView(),
 	postView: new PostView(),
 	roomView: new RoomView(),
