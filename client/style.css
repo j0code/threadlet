@@ -807,3 +807,14 @@ dialog {
 		}
 	}
 }
+
+.modal {
+	background-color: var(--background-primary);
+}
+
+#confirm-form .form-body,
+#room-invite-view .form-body {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}

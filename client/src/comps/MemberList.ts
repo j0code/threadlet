@@ -2,9 +2,8 @@ import { RoomMember } from "matrix-js-sdk"
 import Component from "./Component"
 import FormButton from "./FormButton"
 import { matrix } from "../matrix"
-import Modal from "./Modal"
-import RoomInviteForm from "./RoomInviteForm"
 import Member from "./Member"
+import { modals } from "../main"
 
 export default class MemberList extends Component {
 	constructor() {
@@ -19,10 +18,7 @@ export default class MemberList extends Component {
 				"invite-to-room-button",
 				"Invite",
 				() => {
-					const inviteForm = new RoomInviteForm()
-					const inviteModal = new Modal(inviteForm)
-					inviteModal.reset(matrix.getRoom(roomId))
-					inviteModal.show()
+					modals.inviteModal.show(matrix.getRoom(roomId));
 				}
 			)
 			this.element.appendChild(inviteButton.element)

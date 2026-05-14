@@ -7,10 +7,9 @@ export default class Modal extends Component {
 	constructor(form: Form) {
 		super("dialog", { classes: ["modal"] })
 		this.form = form
+		this.element.setAttribute("closedBy", "any")
 		this.element.appendChild(form.element)
-		this.element.addEventListener("close", () => {
-			if (this.element.isConnected) this.element.remove()
-		})
+		document.body.appendChild(this.element)
 	}
 
 	reset(...args: Parameters<Form["reset"]>) {
@@ -19,14 +18,13 @@ export default class Modal extends Component {
 			"submit",
 			() => {
 				;(this.element as HTMLDialogElement).close()
-				if (this.element.isConnected) this.element.remove()
 			},
 			{ once: true }
 		)
 	}
 
-	show() {
-		document.body.appendChild(this.element)
+	show(...args: Parameters<Form["reset"]>) {
+		this.reset(...args)
 		;(this.element as HTMLDialogElement).showModal()
 	}
 }

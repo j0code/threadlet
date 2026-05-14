@@ -32,4 +32,5 @@ export default abstract class Form<
 	}
 
 	abstract reset(...args: ResetArgs): void
+	// abstract submit(): void
 }
