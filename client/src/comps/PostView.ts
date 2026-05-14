@@ -3,7 +3,7 @@ import PostContent from "./PostContent"
 import View from "./View"
 import { api } from "../main"
 import ChatInput from "./ChatInput"
-import MessageList from "./MessageList"
+import EventList from "./EventList"
 import TagList from "./TagList"
 
 export default class PostView extends View<[string]> {
@@ -13,7 +13,7 @@ export default class PostView extends View<[string]> {
 	public readonly author: PostAuthor
 	private tagList: TagList
 	public readonly content: PostContent
-	public readonly msgList: MessageList
+	public readonly msgList: EventList
 	public readonly chatInput: ChatInput
 
 	constructor() {
@@ -22,7 +22,7 @@ export default class PostView extends View<[string]> {
 		this.author = new PostAuthor()
 		this.tagList = new TagList()
 		this.content = new PostContent()
-		this.msgList = new MessageList()
+		this.msgList = new EventList()
 		this.chatInput = new ChatInput(this)
 
 		const container = document.createElement("div")
@@ -42,7 +42,7 @@ export default class PostView extends View<[string]> {
 		this.head.reset(post.name)
 		this.tagList.reset(post.tags ?? [])
 		this.content.reset(post)
-		await this.msgList.reset(post)
+		//await this.msgList.reset(post)
 
 		const user = await api.getUser(post.poster_id)
 		this.author.reset(user)

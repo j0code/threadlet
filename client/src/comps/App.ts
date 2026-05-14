@@ -1,28 +1,49 @@
-import { Forum } from "@j0code/threadlet-api/v0/types"
-import ChannelList from "./ChannelList"
+import { ClientEvent, RoomEvent } from "matrix-js-sdk"
+import { initMatrixClient, matrix } from "../matrix"
+import RoomList from "./RoomList"
 import Component from "./Component"
 import Form from "./Form"
 import View from "./View"
 
 export default class App extends Component {
-	readonly channelList: ChannelList
+	readonly roomList: RoomList
 	private currentView?: View | Form
 
-	constructor(forums: Array<Forum>) {
+	constructor() {
 		super("div", { id: "app" })
 
-		this.channelList = new ChannelList(forums)
-		this.element.appendChild(this.channelList.element)
+		this.roomList = new RoomList([])
+		this.element.appendChild(this.roomList.element)
+
+		matrix.once(ClientEvent.Sync, () => {
+			this.updateChannelList()
+		})
+
+		matrix.on(RoomEvent.MyMembership, () => {
+			this.updateChannelList()
+		})
+
+		void initMatrixClient()
+	}
+
+	updateChannelList() {
+		const rooms = matrix.getRooms()
+		this.roomList.reset(rooms)
 	}
 
 	renderView(view: View | Form, ...args: unknown[]) {
-		if (this.currentView) {
-			this.currentView.element.remove()
-		}
+		this.clearView()
 
 		void view.reset(...args)
 		this.element.appendChild(view.element)
 		this.currentView = view
+	}
+
+	clearView() {
+		if (this.currentView) {
+			this.currentView.element.remove()
+			this.currentView = undefined
+		}
 	}
 
 	getCurrentView() {

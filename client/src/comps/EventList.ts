@@ -1,36 +1,30 @@
-import {
-	type Post,
-	type Message as APIMessage,
-} from "@j0code/threadlet-api/v0/types"
-import { api } from "../main"
 import Component from "./Component"
-import Message from "./Message"
+import { MatrixEvent } from "matrix-js-sdk"
+import { renderEvent } from "./events/Event"
 
-export default class MessageList extends Component {
+export default class EventList extends Component {
 	constructor() {
-		super("div", { id: `messages` })
+		super("div", { id: `events` })
 	}
 
-	async reset(post: Post) {
+	reset(events: MatrixEvent[]) {
 		for (const child of Array.from(this.element.children)) {
 			child.remove()
 		}
 
-		const msgs = await api.getMessages(post.forum_id, post.id)
-
-		for (const msg of msgs) {
-			this.pushMessage(msg)
+		for (const event of events) {
+			this.pushMessage(event)
 		}
 
 		this.element.scrollTop = this.element.scrollHeight
 	}
 
-	pushMessage(msg: APIMessage) {
+	pushMessage(event: MatrixEvent) {
 		const autoscroll =
 			this.element.scrollTop + this.element.clientHeight >=
 			this.element.scrollHeight - 10
 
-		const comp = new Message(msg)
+		const comp = renderEvent(event)
 		this.element.appendChild(comp.element)
 
 		if (autoscroll) {

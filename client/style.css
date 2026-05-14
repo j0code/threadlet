@@ -23,6 +23,7 @@
 	--button-color: #b9bbbe;
 	--hover-highlight: #dcddde;
 	--input-bg: #121212;
+	--button-bg: #6b6b6b;
 	--multi-select-pill-hover-bg: #1a1a1a;
 	--pill-bg: #121212;
 }
@@ -67,13 +68,17 @@ body {
 
 #app {
 	display: flex;
+	flex-direction: row;
+	overflow: hidden;
 }
 
-#channels {
+#channels,
+#members {
 	display: flex;
 	flex-direction: column;
 	height: 100vh;
 	width: var(--sidebar-width);
+	min-width: var(--sidebar-width);
 	background-color: var(--background-secondary);
 }
 
@@ -91,11 +96,9 @@ body {
 	display: flex;
 	flex: 1 1 auto;
 	flex-direction: column;
-	width: calc(100vw - var(--sidebar-width));
 	height: 100vh;
 	background-color: var(--background-primary);
-	padding-block: var(--gap);
-	gap: var(--gap);
+	width: 0px;
 }
 
 .view-head,
@@ -104,6 +107,10 @@ body {
 	justify-content: center;
 	padding-inline: var(--gap);
 	padding-block: var(--gap-half);
+}
+
+.view-head {
+	background-color: var(--background-secondary);
 }
 
 .view-body,
@@ -153,12 +160,43 @@ body {
 	border: none;
 	border-radius: 5px;
 	background-color: var(--input-bg);
+	margin: 0px;
 
 	:hover,
 	:active {
 		border: none;
 		border-radius: 5px;
 	}
+}
+
+.form-input.form-checkbox-input input {
+	appearance: none;
+	box-sizing: border-box;
+	width: 1em;
+	height: 1em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: none;
+
+	&:checked {
+		background-color: var(--button-bg);
+
+		&::after {
+			content: "✔";
+			color: white;
+			font-size: 1em;
+			display: block;
+			text-align: center;
+		}
+	}
+}
+
+.form-input.form-checkbox-input {
+	display: flex;
+	gap: var(--gap-half);
+	flex-direction: row;
+	align-items: center;
 }
 
 .form-textarea,
@@ -186,6 +224,9 @@ body {
 	cursor: pointer;
 	padding: 0.38em 1.4em;
 	font-size: 22px;
+	background-color: var(--button-bg);
+	border: none;
+	border-radius: 5px;
 }
 
 .form-input-list {
@@ -269,9 +310,10 @@ body {
 }
 
 #post-content,
-#messages {
+#events {
 	overflow: hidden auto;
 	scrollbar-gutter: stable;
+	width: 100%;
 }
 
 #post-content {
@@ -279,11 +321,12 @@ body {
 	max-height: 50%;
 }
 
-#messages {
+#events {
 	display: flex;
 	flex-direction: column;
 	flex: 1 1 auto;
 	gap: var(--gap-half);
+	padding-block: var(--gap);
 }
 
 .post-description {
@@ -309,7 +352,8 @@ body {
 	align-items: flex-start;
 }
 
-.message-author-avatar {
+.message-author-avatar,
+.message-author-avatar img {
 	width: 50px;
 	aspect-ratio: 1 / 1;
 	border-radius: 100%;
@@ -319,6 +363,7 @@ body {
 	flex: 1 1 auto;
 	display: flex;
 	flex-direction: column;
+	width: 0px;
 }
 
 .message-header {
@@ -614,4 +659,165 @@ body {
 	border-radius: 20px;
 	font-size: 10px;
 	font-family: monospace;
+}
+
+dialog {
+	border: 2px solid #202020;
+	border-radius: 8px;
+}
+
+#login {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	width: 100vw;
+	height: 100vh;
+}
+
+#loginTitle {
+	position: absolute;
+	top: anchor(top);
+	left: anchor(center);
+	transform: translateX(-50%);
+	font-size: 4vw;
+	position-anchor: --morpheusAnchor;
+}
+
+#morpehusImg {
+	anchor-name: --morpheusAnchor;
+}
+
+.loginButton {
+	width: 8vw;
+	height: 8vw;
+	font-size: 1.5vw;
+	background: none;
+	border: none;
+	border-radius: 100%;
+	cursor: pointer;
+	position-anchor: --morpheusAnchor;
+	position: absolute;
+}
+
+.loginButton:hover {
+	background: radial-gradient(#ffffff50, transparent);
+}
+
+#members {
+	gap: var(--gap-half);
+}
+
+.member {
+	display: flex;
+	gap: var(--gap-half);
+	align-items: center;
+	margin-left: 10px;
+}
+
+.member:first-of-type {
+	margin-top: 10px;
+}
+
+.member-avatar,
+.member-avatar img {
+	width: 30px;
+	aspect-ratio: 1 / 1;
+	border-radius: 100%;
+	/* eslint-disable-next-line css/no-important -- It's not unexpected, I expected it! */
+	font-size: 14px !important;
+}
+
+.context-menu-content {
+	background-color: var(--background-secondary);
+	border: 2px solid #40444b;
+	border-radius: 5px;
+	padding: 5px 0;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	position: absolute;
+}
+
+.context-menu-content:not(.shown) {
+	display: none;
+}
+
+.message-content {
+	max-width: 100%;
+	overflow: hidden hidden;
+}
+
+[data-mx-spoiler] {
+	transition: filter 0.3s;
+	cursor: pointer;
+}
+
+[data-mx-spoiler]:not(.revealed) {
+	filter: blur(5px);
+}
+
+.avatar:not(:has(img)) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 24px;
+}
+
+.room-wrapper {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+}
+
+.message audio,
+.message video {
+	max-width: 50%;
+}
+
+.message[data-event-type="m.room.message"][data-msgtype="m.emote"]
+	.message-content {
+	display: flex;
+	gap: 1ch;
+
+	.emote::before {
+		content: "* ";
+	}
+}
+
+.message[data-event-type="m.room.message"][data-msgtype="m.notice"]
+	.message-content {
+	color: var(--text-muted);
+}
+
+.message[data-event-type="m.room.name"] {
+	font-size: 0.8em;
+
+	> .message-main {
+		flex-direction: row;
+		gap: 1ch;
+		align-items: center;
+		> .message-content {
+			color: var(--text-muted);
+		}
+	}
+
+	.message-author-avatar {
+		width: 1.5em;
+		height: 1.5em;
+		> img {
+			width: 1.5em;
+		}
+	}
+}
+
+.modal {
+	background-color: var(--background-primary);
+}
+
+#confirm-form .form-body,
+#room-invite-view .form-body {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
 }

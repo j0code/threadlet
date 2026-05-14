@@ -1,4 +1,5 @@
 import { twemojiParse } from "../md"
+import { MaybePromise } from "../types";
 import Component from "./Component"
 
 export default abstract class Form<
@@ -13,7 +14,7 @@ export default abstract class Form<
 	) {
 		const cls = ["form"]
 		if (classes) cls.push(...classes)
-		super("div", { id, classes: cls })
+		super("form", { id, classes: cls })
 
 		this.titleElement = document.createElement("span")
 		this.titleElement.className = "form-title"
@@ -29,7 +30,13 @@ export default abstract class Form<
 		this.element.appendChild(formBody)
 
 		this.body = formBody
+
+		this.element.addEventListener("submit", async (e) => {
+			e.preventDefault()
+			await this.submit(e.submitter!.id)
+		})
 	}
 
 	abstract reset(...args: ResetArgs): void
+	abstract submit(id: string): MaybePromise<void>
 }
