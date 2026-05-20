@@ -1,9 +1,5 @@
 import { IEventRelation, IMentions, Membership, MsgType } from "matrix-js-sdk"
 
-/**
- * @deprecated Use MaybePromise<void> instead
- */
-export type anyVoid = void | Promise<void>
 export type MaybePromise<T> = T | Promise<T>
 
 export interface MXUser {
