@@ -1,6 +1,6 @@
 import { MatrixEvent } from "matrix-js-sdk"
 import EventBase from "./EventBase"
-import { relativeTimeFormat } from "../../util"
+import { relativeTimeFormat } from "../../intl"
 
 export default class EventMessageBase extends EventBase {
 	constructor(msg: MatrixEvent) {
