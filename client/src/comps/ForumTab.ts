@@ -19,7 +19,8 @@ export default class ForumTab extends Component {
 		leaveButton.addEventListener("click", () => {
 			new ConfirmForm().openModal(
 				`Are you sure you want to leave ${forum.name}?`,
-				async () => {
+				async (confirmed: boolean) => {
+					if (!confirmed) return
 					await matrix.leave(forum.roomId)
 					app.updateChannelList()
 					app.clearView()

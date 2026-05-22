@@ -3,7 +3,7 @@ import Form from "./Form"
 import SubmitButton from "./SubmitButton"
 
 export default class ConfirmForm extends Form {
-	handler!: () => MaybePromise<void>
+	handler!: (confirmed: boolean) => MaybePromise<void>
 
 	constructor() {
 		super("Confirm Action", { id: "confirm-form" })
@@ -15,14 +15,15 @@ export default class ConfirmForm extends Form {
 		this.body.appendChild(cancelButton.element)
 	}
 
-	reset(text: string, handler: () => MaybePromise<void>): void {
+	reset(
+		text: string,
+		handler: (confirmed: boolean) => MaybePromise<void>
+	): void {
 		this.handler = handler
 		this.titleElement.textContent = text
 	}
 
 	async submit(id: string) {
-		if (id === "confirm-button") {
-			await this.handler()
-		}
+		await this.handler(id === "confirm-button")
 	}
 }
