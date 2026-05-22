@@ -17,10 +17,7 @@ export default class ForumTab extends Component {
 		this.tab = nameEl
 		this.element.appendChild(nameEl)
 
-		const ctxMenu = new ContextMenu(
-			"forum-tab-menu",
-			this.element
-		)
+		const ctxMenu = new ContextMenu("forum-tab-menu", this.element)
 		ctxMenu.reset([
 			{
 				label: "Leave",
