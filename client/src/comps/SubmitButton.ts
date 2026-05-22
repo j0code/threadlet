@@ -1,4 +1,4 @@
-import FormButton from "./FormButton";
+import FormButton from "./FormButton"
 
 export default class SubmitButton extends FormButton {
 	constructor(id: string, value: string) {

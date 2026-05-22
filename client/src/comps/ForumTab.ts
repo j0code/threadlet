@@ -17,11 +17,14 @@ export default class ForumTab extends Component {
 		const leaveButton = document.createElement("div")
 		leaveButton.textContent = "Leave"
 		leaveButton.addEventListener("click", () => {
-			new ConfirmForm().openModal(`Are you sure you want to leave ${forum.name}?`, async () => {
-				await matrix.leave(forum.roomId)
-				app.updateChannelList()
-				app.clearView()
-			})
+			new ConfirmForm().openModal(
+				`Are you sure you want to leave ${forum.name}?`,
+				async () => {
+					await matrix.leave(forum.roomId)
+					app.updateChannelList()
+					app.clearView()
+				}
+			)
 		})
 		ctxMenu.content.appendChild(leaveButton)
 

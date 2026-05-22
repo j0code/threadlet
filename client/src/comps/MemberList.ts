@@ -18,7 +18,7 @@ export default class MemberList extends Component {
 				"invite-to-room-button",
 				"Invite",
 				() => {
-					forms.invite.openModal(matrix.getRoom(roomId));
+					forms.invite.openModal(matrix.getRoom(roomId))
 				}
 			)
 			this.element.appendChild(inviteButton.element)

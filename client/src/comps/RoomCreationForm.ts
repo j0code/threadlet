@@ -25,7 +25,7 @@ export default class RoomCreationForm extends Form {
 			"room-unfederate",
 			"Disable Federation (cannot be undone)"
 		)
-		const submitButton = new SubmitButton("room-submit", "Create");
+		const submitButton = new SubmitButton("room-submit", "Create")
 
 		this.body.appendChild(this.nameInput.element)
 		this.body.appendChild(this.topicInput.element)
@@ -40,7 +40,7 @@ export default class RoomCreationForm extends Form {
 	}
 
 	async submit(id: string) {
-		if(id !== "room-submit") return;
+		if (id !== "room-submit") return
 
 		const res = await matrix.createRoom({
 			name: this.nameInput.value,

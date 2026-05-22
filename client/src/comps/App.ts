@@ -68,7 +68,7 @@ export default class App extends Component {
 	closeModal(modal: Modal) {
 		const index = this.modals.indexOf(modal)
 		if (index == -1) throw new Error("App.closeModal(): modal not opened")
-		
+
 		if (index == this.modals.length - 1) {
 			const element = modal.element as HTMLDialogElement
 			element.close()
@@ -86,5 +86,4 @@ export default class App extends Component {
 	getCurrentModal(): Modal | undefined {
 		return this.modals[this.modals.length - 1]
 	}
-
 }
