@@ -839,3 +839,30 @@ dialog {
 	flex-direction: row;
 	justify-content: center;
 }
+
+#typing-indicator {
+	display: flex;
+	gap: var(--space-width);
+	align-items: center;
+	margin-left: var(--gap);
+	min-height: 20px;
+}
+
+.typing-avatar {
+	height: 20px;
+	/* eslint-disable-next-line css/no-important */
+	font-size: 16px !important;
+	aspect-ratio: 1 / 1;
+	outline: 4px solid var(--background-primary);
+	border-radius: 100%;
+}
+
+.typing-avatars .typing-avatar:not(:first-child) {
+	margin-right: -8px;
+}
+
+.typing-avatars {
+	display: flex;
+	flex-direction: row-reverse;
+	align-items: center;
+}
