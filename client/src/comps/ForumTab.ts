@@ -13,7 +13,7 @@ export default class ForumTab extends Component {
 		super("div", { classes: ["list-tab"] })
 
 		const nameEl = document.createElement("span")
-		nameEl.textContent = twemojiParse(forum.name)
+		nameEl.innerHTML = twemojiParse(forum.name)
 		this.tab = nameEl
 
 		const ctxMenu = new ContextMenu(
