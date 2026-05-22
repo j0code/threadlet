@@ -21,7 +21,7 @@ export default class RoomNameEvent extends EventMessageBase {
 		const roomName = twemojiParse(content.name || "Unknown")
 
 		this.nameElement.innerHTML = authorName
-		this.contentElement.innerHTML = ` changed the room name to ${roomName}`
+		this.contentElement.innerHTML = `<span>changed the room name to ${roomName}</span>`
 		this.contentElement.prepend(this.nameElement)
 	}
 }
