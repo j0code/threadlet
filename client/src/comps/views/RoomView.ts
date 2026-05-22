@@ -1,9 +1,9 @@
 import View from "./View"
-import ChatInput from "./ChatInput"
-import EventList from "./EventList"
+import ChatInput from "../ChatInput"
+import EventList from "../EventList"
 import { MatrixEvent, Room, RoomEvent } from "matrix-js-sdk"
-import { matrix } from "../matrix"
-import MemberList from "./MemberList"
+import { matrix } from "../../matrix"
+import MemberList from "../MemberList"
 
 export default class RoomView extends View {
 	private currentRoom?: Room

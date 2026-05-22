@@ -2,8 +2,8 @@ import { ClientEvent, RoomEvent } from "matrix-js-sdk"
 import { initMatrixClient, matrix } from "../matrix"
 import RoomList from "./RoomList"
 import Component from "./Component"
-import Form from "./Form"
-import View from "./View"
+import Form from "./forms/Form"
+import View from "./views/View"
 import Modal from "./Modal"
 
 export default class App extends Component {

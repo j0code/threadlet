@@ -1,10 +1,10 @@
-import PostAuthor from "./PostAuthor"
-import PostContent from "./PostContent"
+import PostAuthor from "../PostAuthor"
+import PostContent from "../PostContent"
 import View from "./View"
-import { api } from "../main"
-import ChatInput from "./ChatInput"
-import EventList from "./EventList"
-import TagList from "./TagList"
+import { api } from "../../main"
+import ChatInput from "../ChatInput"
+import EventList from "../EventList"
+import TagList from "../TagList"
 
 export default class PostView extends View<[string]> {
 	private currentForumId?: string

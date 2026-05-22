@@ -1,6 +1,6 @@
 import { RoomMember } from "matrix-js-sdk"
 import Component from "./Component"
-import FormButton from "./FormButton"
+import FormButton from "./form-comps/FormButton"
 import { matrix } from "../matrix"
 import Member from "./Member"
 import { forms } from "../main"

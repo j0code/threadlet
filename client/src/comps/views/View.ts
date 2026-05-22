@@ -1,5 +1,5 @@
-import Component from "./Component"
-import ViewHead from "./ViewHead"
+import Component from "../Component"
+import ViewHead from "../ViewHead"
 
 export default abstract class View<
 	ResetArgs extends Array<unknown> = Array<unknown>,
