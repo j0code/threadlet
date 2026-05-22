@@ -1,4 +1,4 @@
-import { app, modals, views } from "../main"
+import { app, forms, views } from "../main"
 import Component from "./Component"
 import FormButton from "./FormButton"
 import ForumTab from "./ForumTab"
@@ -29,7 +29,7 @@ export default class RoomList extends Component {
 				if (membership == "join") {
 					app.renderView(views.roomView, forum)
 				} else if (membership == "invite") {
-					modals.roomInvitation.show(forum)
+					forms.roomInvitation.openModal(forum)
 				}
 			})
 			this.element.appendChild(tab.element)

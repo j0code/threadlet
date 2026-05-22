@@ -1,6 +1,8 @@
+import { app } from "../main";
 import { twemojiParse } from "../md"
 import { MaybePromise } from "../types";
 import Component from "./Component"
+import Modal from "./Modal";
 
 export default abstract class Form<
 	ResetArgs extends Array<unknown> = Array<unknown>,
@@ -39,4 +41,11 @@ export default abstract class Form<
 
 	abstract reset(...args: ResetArgs): void
 	abstract submit(id: string): MaybePromise<void>
+
+	openModal(...args: ResetArgs) {
+		this.reset(...args)
+
+		const modal = new Modal(this)
+		app.openModal(modal)
+	}
 }

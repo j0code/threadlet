@@ -3,7 +3,8 @@ import { matrix } from "../matrix"
 import { twemojiParse } from "../md"
 import Component from "./Component"
 import ContextMenu from "./ContextMenu"
-import { app, modals } from "../main"
+import { app } from "../main"
+import ConfirmForm from "./ConfirmForm"
 
 export default class ForumTab extends Component {
 	readonly tab: HTMLElement
@@ -16,7 +17,7 @@ export default class ForumTab extends Component {
 		const leaveButton = document.createElement("div")
 		leaveButton.textContent = "Leave"
 		leaveButton.addEventListener("click", () => {
-			modals.confirmModal.show(`Are you sure you want to leave ${forum.name}?`, async () => {
+			new ConfirmForm().openModal(`Are you sure you want to leave ${forum.name}?`, async () => {
 				await matrix.leave(forum.roomId)
 				app.updateChannelList()
 				app.clearView()
