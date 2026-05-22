@@ -829,7 +829,7 @@ dialog {
 }
 
 #confirm-form .form-body,
-#room-invite-view .form-body {
+#room-invite-form .form-body {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
