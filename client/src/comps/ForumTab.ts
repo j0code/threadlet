@@ -16,12 +16,16 @@ export default class ForumTab extends Component {
 		nameEl.textContent = twemojiParse(forum.name)
 		this.tab = nameEl
 
-		const ctxMenu = new ContextMenu("div", { classes: ["forum-tab-menu"] }, nameEl)
+		const ctxMenu = new ContextMenu(
+			"div",
+			{ classes: ["forum-tab-menu"] },
+			nameEl
+		)
 		ctxMenu.reset([
 			{
 				label: "Leave",
 				action: () => {
-					new ConfirmForm().openModal(
+					new ConfirmForm(
 						`Are you sure you want to leave ${forum.name}?`,
 						async (confirmed: boolean) => {
 							if (!confirmed) return
@@ -29,9 +33,9 @@ export default class ForumTab extends Component {
 							app.updateChannelList()
 							app.clearView()
 						}
-					)
-				}
-			}
+					).openModal()
+				},
+			},
 		])
 
 		this.element.appendChild(ctxMenu.element)
