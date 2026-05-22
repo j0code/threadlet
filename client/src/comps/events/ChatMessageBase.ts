@@ -1,8 +1,10 @@
 import { twemojiParse } from "../../md"
 import { MatrixEvent } from "matrix-js-sdk"
-import { getMXUser } from "../../matrix"
+import { getMXUser, matrix } from "../../matrix"
 import EventBase from "./EventBase"
 import { relativeTimeFormat } from "../../intl"
+import ContextMenu, { ContextMenuItem } from "../ContextMenu"
+import ConfirmForm from "../ConfirmForm"
 
 export default class ChatMessageBase extends EventBase {
 	constructor(msg: MatrixEvent) {
@@ -17,6 +19,33 @@ export default class ChatMessageBase extends EventBase {
 
 		const content = this.message.getContent()
 		this.element.dataset.msgtype = content.msgtype || "m.text"
+
+		const ctxMenu = new ContextMenu("message-menu", this.element)
+		const ctxMenuItems: ContextMenuItem[] = []
+		const canRedact = !this.message?.isRedacted()
+		if (canRedact) {
+			ctxMenuItems.push({
+				label: "Redact",
+				action: () => {
+					if (!this.message) return
+					new ConfirmForm(
+						`Are you sure you want to redact this message?`,
+						async (confirmed: boolean) => {
+							if (!confirmed) return
+							await matrix.redactEvent(
+								this.message.getRoomId()!,
+								this.message.getId()!
+							)
+							await matrix.fetchRoomEvent(this.message.getRoomId()!, this.message.getId()!)
+							await this.reset()
+						}
+					).openModal()
+				},
+			})
+		}
+
+		ctxMenu.reset(ctxMenuItems)
+		this.element.appendChild(ctxMenu.element)
 
 		void this.reset()
 	}
