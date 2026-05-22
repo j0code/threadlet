@@ -1,4 +1,10 @@
+import { MaybePromise } from "../types"
 import Component from "./Component"
+
+export interface ContextMenuItem {
+	label: string
+	action: () => MaybePromise<void>
+}
 
 export default class ContextMenu extends Component {
 	public readonly content: HTMLElement
@@ -6,7 +12,8 @@ export default class ContextMenu extends Component {
 
 	constructor(
 		tagName: keyof HTMLElementTagNameMap,
-		{ id, classes }: { id?: string; classes?: string[] }
+		{ id, classes }: { id?: string; classes?: string[] },
+		trigger: HTMLElement
 	) {
 		super("div", { classes: ["context-menu"] })
 
@@ -17,7 +24,7 @@ export default class ContextMenu extends Component {
 
 		this.element.appendChild(this.content)
 
-		this.trigger = document.createElement("div")
+		this.trigger = trigger
 		this.element.appendChild(this.trigger)
 
 		this.trigger.addEventListener("contextmenu", e => {
@@ -35,6 +42,20 @@ export default class ContextMenu extends Component {
 			requestAnimationFrame(() => {
 				document.addEventListener("contextmenu", hide)
 			})
+		})
+	}
+
+	reset(items: ContextMenuItem[]): void {
+		this.content.innerHTML = ""
+		items.forEach(item => {
+			const el = document.createElement("div")
+			el.className = "context-menu-item"
+			el.textContent = item.label
+			el.addEventListener("click", async () => {
+				await item.action()
+				this.content.classList.remove("shown")
+			})
+			this.content.appendChild(el)
 		})
 	}
 }
