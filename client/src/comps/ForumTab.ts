@@ -15,11 +15,11 @@ export default class ForumTab extends Component {
 		const nameEl = document.createElement("span")
 		nameEl.innerHTML = twemojiParse(forum.name)
 		this.tab = nameEl
+		this.element.appendChild(nameEl)
 
 		const ctxMenu = new ContextMenu(
-			"div",
-			{ classes: ["forum-tab-menu"] },
-			nameEl
+			"forum-tab-menu",
+			this.element
 		)
 		ctxMenu.reset([
 			{
