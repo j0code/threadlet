@@ -8,7 +8,7 @@ export default class RoomInvitationForm extends Form {
 	room: Room | null = null
 
 	constructor() {
-		super("Room Invite", { id: "room-invite-view" })
+		super("Room Invite", { id: "room-invite-form" })
 	}
 
 	reset(room: Room): void {
