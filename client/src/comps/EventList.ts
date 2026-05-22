@@ -1,12 +1,17 @@
 import Component from "./Component"
 import { MatrixEvent } from "matrix-js-sdk"
 import { renderEvent } from "./events/Event"
+import ChatMessageBase from "./events/ChatMessageBase"
+import EventMessageBase from "./events/EventMessageBase"
 
 const HIDDEN_EVENTS = ["m.room.redaction"]
 
 export default class EventList extends Component {
+	eventComponents: Map<string, ChatMessageBase | EventMessageBase>
+
 	constructor() {
 		super("div", { id: `events` })
+		this.eventComponents = new Map()
 	}
 
 	reset(events: MatrixEvent[]) {
@@ -29,6 +34,7 @@ export default class EventList extends Component {
 			this.element.scrollHeight - 10
 
 		const comp = renderEvent(event)
+		this.eventComponents.set(event.getId()!, comp)
 		this.element.appendChild(comp.element)
 
 		if (autoscroll) {

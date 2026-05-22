@@ -13,6 +13,7 @@ export default class RoomView extends View {
 	public readonly memberList: MemberList
 
 	private timelineEventHandler?: (event: MatrixEvent) => void
+	private redactionEventHandler?: (event: MatrixEvent) => Promise<void>
 
 	constructor() {
 		super("div", { id: "room-view" })
@@ -43,6 +44,18 @@ export default class RoomView extends View {
 		}
 	}
 
+	onRedaction(room: Room) {
+		return async (event: MatrixEvent) => {
+			if (event.getRoomId() === room.roomId && event.getType() === "m.room.redaction") {
+				const content = event.getContent()
+				if (!content.redacts || typeof content.redacts !== "string") return
+				const comp = this.msgList.eventComponents.get(content.redacts)
+				if (!comp) return
+				await comp.reset()
+			}
+		}
+	}
+
 	async reset(room: Room) {
 		this.head.reset(room.name)
 		await matrix.roomInitialSync(room.roomId, 20)
@@ -51,11 +64,15 @@ export default class RoomView extends View {
 
 		if (this.timelineEventHandler)
 			matrix.off(RoomEvent.Timeline, this.timelineEventHandler)
+		if (this.redactionEventHandler)
+			matrix.off(RoomEvent.Redaction, this.redactionEventHandler)
 
 		this.currentRoom = room
 
 		this.timelineEventHandler = this.onTimelineEvent(this.currentRoom)
+		this.redactionEventHandler = this.onRedaction(this.currentRoom)
 		matrix.on(RoomEvent.Timeline, this.timelineEventHandler)
+		matrix.on(RoomEvent.Redaction, this.redactionEventHandler)
 
 		this.updateMemberList(room)
 	}
