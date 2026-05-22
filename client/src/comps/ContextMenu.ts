@@ -9,10 +9,7 @@ export interface ContextMenuItem {
 export default class ContextMenu extends Component {
 	public readonly trigger: HTMLElement
 
-	constructor(
-		className: string,
-		trigger: HTMLElement
-	) {
+	constructor(className: string, trigger: HTMLElement) {
 		super("div", { classes: ["context-menu", className] })
 
 		this.element.popover = "manual"
