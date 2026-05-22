@@ -839,3 +839,24 @@ dialog {
 	flex-direction: row;
 	justify-content: center;
 }
+
+.tiptap {
+	outline: none;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+	color: #adb5bd;
+	content: attr(data-placeholder);
+	float: left;
+	height: 0;
+	pointer-events: none;
+}
+
+.bubble-menu {
+	position: absolute;
+	background-color: var(--background-secondary);
+	padding: 5px;
+	border-radius: 5px;
+	display: flex;
+	gap: 5px;
+}

@@ -4,13 +4,20 @@ import Component from "./Component"
 import EmojiPicker from "./EmojiPicker"
 import PostView from "./PostView"
 import RoomView from "./RoomView"
+import { Editor, Extension } from "@tiptap/core"
+import StarterKit from "@tiptap/starter-kit"
+import { BubbleMenu } from "@tiptap/extension-bubble-menu"
+import { Placeholder } from "@tiptap/extensions/placeholder"
 
 // Credits to DeepSeek-R1, wow (edited though)
 export default class ChatInput extends Component {
 	readonly emojiPicker: EmojiPicker
+	readonly editor: Editor
+	readonly view: PostView | RoomView
 
 	constructor(view: PostView | RoomView) {
 		super("div", { id: "chat-input-container" })
+		this.view = view
 
 		// Create file upload button
 		const fileUploadLabel = document.createElement("label")
@@ -25,45 +32,33 @@ export default class ChatInput extends Component {
 		// Create chat input
 		const chatInput = document.createElement("div")
 		chatInput.className = "chat-input"
-		chatInput.setAttribute("contenteditable", "true")
-		chatInput.setAttribute("placeholder", "Message #channel")
-		chatInput.addEventListener("keypress", e => {
-			if (e.code == "Enter" && !e.shiftKey) {
-				e.preventDefault()
-				const content = chatInput.innerText.trim()
-				if (content == "") return
-				chatInput.innerHTML = ""
 
-				async function createMessage() {
-					// const forum_id = view.getCurrentForumId()
-					// const post_id  = view.getCurrentPostId()
-					// if (!forum_id || !post_id) {
-					// 	throw new Error("TODO")
-					// }
+		const bubbleMenu = this.createBubbleMenu()
+		this.element.appendChild(bubbleMenu)
 
-					// const msg = await api.createMessage(forum_id, post_id, { content })
-					// console.log(msg)
-					if (view instanceof PostView) {
-						// TODO
-						return
+		const enterHandler = () => {
+			this.sendMessage()
+			return true
+		}
+
+		this.editor = new Editor({
+			element: chatInput,
+			extensions: [
+				StarterKit,
+				BubbleMenu.configure({
+					element: bubbleMenu,
+				}),
+				Placeholder.configure({
+					placeholder: "Type a message..."
+				}),
+				Extension.create({
+					addKeyboardShortcuts() {
+						return {
+							"Enter": enterHandler
+						}
 					}
-
-					const room = view.getCurrentRoom()
-					if (!room) return
-
-					await matrix.sendMessage(room.roomId, {
-						body: content,
-						msgtype: MsgType.Text,
-					})
-				}
-
-				console.log("Send MSG:", chatInput.innerText)
-				void createMessage()
-			}
-		})
-		chatInput.addEventListener("input", () => {
-			// this fixes weird browser behavior
-			if (chatInput.innerHTML == "<br>") chatInput.innerHTML = ""
+				})
+			]
 		})
 
 		// Create emoji button
@@ -77,7 +72,7 @@ export default class ChatInput extends Component {
 			"chat-input-emoji-picker",
 			"chat-input-container",
 			emoji => {
-				chatInput.textContent += emoji.native
+				this.editor.commands.insertContent(emoji.native)
 			}
 		)
 
@@ -86,5 +81,60 @@ export default class ChatInput extends Component {
 		this.element.appendChild(chatInput)
 		this.element.appendChild(emojiButton)
 		this.element.appendChild(this.emojiPicker.element)
+	}
+
+	private createBubbleMenu() {
+		const bubbleMenu = document.createElement("div")
+		bubbleMenu.style.visibility = "hidden"
+		bubbleMenu.classList.add("bubble-menu")
+
+		const boldButton = document.createElement("button")
+		boldButton.textContent = "B"
+		boldButton.addEventListener("click", () => {
+			this.editor.chain().focus().toggleBold().run()
+		})
+		bubbleMenu.appendChild(boldButton)
+
+		const italicButton = document.createElement("button")
+		italicButton.textContent = "I"
+		italicButton.addEventListener("click", () => {
+			this.editor.chain().focus().toggleItalic().run()
+		})
+		bubbleMenu.appendChild(italicButton)
+
+		const strikeButton = document.createElement("button")
+		strikeButton.textContent = "S"
+		strikeButton.addEventListener("click", () => {
+			this.editor.chain().focus().toggleStrike().run()
+		})
+		bubbleMenu.appendChild(strikeButton)
+
+		return bubbleMenu
+	}
+
+	async createMessage(content: string, formatted: string) {
+		if(!(this.view instanceof RoomView)) {
+			// TODO
+			return
+		}
+
+		const room = this.view.getCurrentRoom()
+		if (!room) return
+
+		await matrix.sendMessage(room.roomId, {
+			body: content,
+			formatted_body: formatted,
+			msgtype: MsgType.Text,
+			format: "org.matrix.custom.html",
+		})
+	}
+
+	sendMessage() {
+		const content = this.editor.getHTML().trim()
+		const text = this.editor.getText().trim()
+		if (content == "") return
+		this.editor.commands.clearContent()
+
+		void this.createMessage(text, content)
 	}
 }
