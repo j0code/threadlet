@@ -1,8 +1,8 @@
-import { app } from "../main";
+import { app } from "../main"
 import { twemojiParse } from "../md"
-import { MaybePromise } from "../types";
+import { MaybePromise } from "../types"
 import Component from "./Component"
-import Modal from "./Modal";
+import Modal from "./Modal"
 
 export default abstract class Form<
 	ResetArgs extends Array<unknown> = Array<unknown>,
@@ -33,7 +33,7 @@ export default abstract class Form<
 
 		this.body = formBody
 
-		this.element.addEventListener("submit", async (e) => {
+		this.element.addEventListener("submit", async e => {
 			e.preventDefault()
 			await this.submit(e.submitter!.id)
 		})

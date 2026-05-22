@@ -1,6 +1,6 @@
-import { MaybePromise } from "../types";
-import Form from "./Form";
-import SubmitButton from "./SubmitButton";
+import { MaybePromise } from "../types"
+import Form from "./Form"
+import SubmitButton from "./SubmitButton"
 
 export default class ConfirmForm extends Form {
 	handler!: () => MaybePromise<void>
@@ -14,10 +14,10 @@ export default class ConfirmForm extends Form {
 		this.body.innerHTML = ""
 		this.titleElement.textContent = text
 
-		const confirmButton = new SubmitButton("confirm-button", "Confirm");
+		const confirmButton = new SubmitButton("confirm-button", "Confirm")
 		this.body.appendChild(confirmButton.element)
 
-		const cancelButton = new SubmitButton("cancel-button", "Cancel");
+		const cancelButton = new SubmitButton("cancel-button", "Cancel")
 		this.body.appendChild(cancelButton.element)
 	}
 

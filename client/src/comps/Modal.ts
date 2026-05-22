@@ -24,5 +24,4 @@ export default class Modal extends Component {
 			{ once: true }
 		)
 	}
-
 }

@@ -813,7 +813,7 @@ dialog {
 			width: 1.5em;
 		}
 	}
-	
+
 	.message-timestamp {
 		margin-inline-start: var(--gap-half);
 	}
@@ -822,9 +822,9 @@ dialog {
 .modal {
 	background-color: var(--background-primary);
 	border: none;
-	
+
 	&::backdrop {
-		background-color: rgb(0, 0, 0, 0.75)
+		background-color: rgb(0, 0, 0, 0.75);
 	}
 }
 
