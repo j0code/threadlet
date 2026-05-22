@@ -2,6 +2,8 @@ import Component from "./Component"
 import { MatrixEvent } from "matrix-js-sdk"
 import { renderEvent } from "./events/Event"
 
+const HIDDEN_EVENTS = ["m.room.redaction"]
+
 export default class EventList extends Component {
 	constructor() {
 		super("div", { id: `events` })
@@ -20,6 +22,8 @@ export default class EventList extends Component {
 	}
 
 	pushMessage(event: MatrixEvent) {
+		if(HIDDEN_EVENTS.includes(event.getType())) return;
+
 		const autoscroll =
 			this.element.scrollTop + this.element.clientHeight >=
 			this.element.scrollHeight - 10
