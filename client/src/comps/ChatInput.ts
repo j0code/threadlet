@@ -65,6 +65,28 @@ export default class ChatInput extends Component {
 			// this fixes weird browser behavior
 			if (chatInput.innerHTML == "<br>") chatInput.innerHTML = ""
 		})
+		let lastTypingSent = 0
+		let lastTypingValue = false
+		const TYPING_TIMEOUT = 10000
+		chatInput.addEventListener("keyup", async () => {
+			if (!(view instanceof RoomView)) return
+			if (view.getCurrentRoom() == undefined) return
+			const isEmpty = chatInput.innerText.trim() == ""
+			if (
+				lastTypingValue != isEmpty ||
+				Date.now() - lastTypingSent > TYPING_TIMEOUT
+			) {
+				lastTypingSent = Date.now()
+				lastTypingValue = isEmpty
+				// TODO: configurable timeout?
+				// TODO: allow disabling typing notifications?
+				await matrix.sendTyping(
+					view.getCurrentRoom()!.roomId,
+					!isEmpty,
+					TYPING_TIMEOUT
+				)
+			}
+		})
 
 		// Create emoji button
 		const emojiButton = document.createElement("button")
