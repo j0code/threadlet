@@ -36,7 +36,7 @@ export default class ChatMessageBase extends EventBase {
 		this.contentElement
 			.querySelectorAll<HTMLSpanElement>("[data-mx-spoiler]")
 			.forEach(el => {
-				el.addEventListener("click", () => el.classList.add("revealed"))
+				el.addEventListener("click", () => el.classList.toggle("revealed"))
 			})
 	}
 }
