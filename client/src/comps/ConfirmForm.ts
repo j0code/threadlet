@@ -7,18 +7,17 @@ export default class ConfirmForm extends Form {
 
 	constructor() {
 		super("Confirm Action", { id: "confirm-form" })
-	}
-
-	reset(text: string, handler: () => MaybePromise<void>): void {
-		this.handler = handler
-		this.body.innerHTML = ""
-		this.titleElement.textContent = text
 
 		const confirmButton = new SubmitButton("confirm-button", "Confirm")
 		this.body.appendChild(confirmButton.element)
 
 		const cancelButton = new SubmitButton("cancel-button", "Cancel")
 		this.body.appendChild(cancelButton.element)
+	}
+
+	reset(text: string, handler: () => MaybePromise<void>): void {
+		this.handler = handler
+		this.titleElement.textContent = text
 	}
 
 	async submit(id: string) {
