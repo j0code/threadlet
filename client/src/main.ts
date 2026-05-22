@@ -8,20 +8,20 @@ import { User } from "matrix-js-sdk"
 import Login from "./comps/Login"
 import RoomView from "./comps/RoomView"
 import RoomCreationForm from "./comps/RoomCreationForm"
-import Modal from "./comps/Modal"
 import RoomInvitationForm from "./comps/RoomInvitationForm"
 import RoomInviteForm from "./comps/RoomInviteForm"
-import ConfirmForm from "./comps/ConfirmForm"
 
 export let api: ThreadletAPI
 export let app: App
 export let clientUser: User
 
-export const modals = {
-	roomInvitation: new Modal(new RoomInvitationForm()),
-	inviteModal: new Modal(new RoomInviteForm()),
-	confirmModal: new Modal(new ConfirmForm())
-} as const;
+/**
+ * Only for forms that are not expected to be opened twice at once
+ */
+export const forms = {
+	roomInvitation: new RoomInvitationForm(),
+	invite: new RoomInviteForm(),
+} as const
 
 export const views = {
 	postView: new PostView(),

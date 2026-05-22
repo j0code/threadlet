@@ -3,7 +3,7 @@ import Component from "./Component"
 import FormButton from "./FormButton"
 import { matrix } from "../matrix"
 import Member from "./Member"
-import { modals } from "../main"
+import { forms } from "../main"
 
 export default class MemberList extends Component {
 	constructor() {
@@ -18,7 +18,7 @@ export default class MemberList extends Component {
 				"invite-to-room-button",
 				"Invite",
 				() => {
-					modals.inviteModal.show(matrix.getRoom(roomId));
+					forms.invite.openModal(matrix.getRoom(roomId));
 				}
 			)
 			this.element.appendChild(inviteButton.element)

@@ -1,3 +1,4 @@
+import { app } from "../main"
 import Component from "./Component"
 import Form from "./Form"
 
@@ -9,22 +10,19 @@ export default class Modal extends Component {
 		this.form = form
 		this.element.setAttribute("closedBy", "any")
 		this.element.appendChild(form.element)
-		document.body.appendChild(this.element)
-	}
 
-	reset(...args: Parameters<Form["reset"]>) {
-		this.form.reset(...args)
+		this.element.addEventListener("cancel", event => {
+			event.stopPropagation()
+			app.closeModal(this)
+		})
+
 		this.form.element.addEventListener(
 			"submit",
 			() => {
-				;(this.element as HTMLDialogElement).close()
+				app.closeModal(this)
 			},
 			{ once: true }
 		)
 	}
 
-	show(...args: Parameters<Form["reset"]>) {
-		this.reset(...args)
-		;(this.element as HTMLDialogElement).showModal()
-	}
 }
