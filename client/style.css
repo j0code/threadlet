@@ -26,6 +26,7 @@
 	--button-bg: #6b6b6b;
 	--multi-select-pill-hover-bg: #1a1a1a;
 	--pill-bg: #121212;
+	--space-width: 0.5ch; /* confirmed for Times New Roman and Liberation Serif */
 }
 
 a {
@@ -778,7 +779,7 @@ dialog {
 .message[data-event-type="m.room.message"][data-msgtype="m.emote"]
 	.message-content {
 	display: flex;
-	gap: 1ch;
+	gap: var(--space-width);
 
 	.emote::before {
 		content: "* ";
@@ -795,10 +796,13 @@ dialog {
 
 	> .message-main {
 		flex-direction: row;
-		gap: 1ch;
 		align-items: center;
 		> .message-content {
 			color: var(--text-muted);
+			display: flex;
+			flex-direction: row;
+			gap: var(--space-width);
+			margin-inline-start: var(--space-width);
 		}
 	}
 
@@ -808,6 +812,10 @@ dialog {
 		> img {
 			width: 1.5em;
 		}
+	}
+	
+	.message-timestamp {
+		margin-inline-start: var(--gap-half);
 	}
 }
 
