@@ -1,5 +1,5 @@
 import { twemojiParse } from "../../md"
-import { MatrixEvent } from "matrix-js-sdk"
+import { Direction, MatrixEvent } from "matrix-js-sdk"
 import { getMXUser, matrix } from "../../matrix"
 import EventBase from "./EventBase"
 import { relativeTimeFormat } from "../../intl"
@@ -20,9 +20,11 @@ export default class ChatMessageBase extends EventBase {
 		const content = this.message.getContent()
 		this.element.dataset.msgtype = content.msgtype || "m.text"
 
+		const room = matrix.getRoom(this.message.getRoomId())
+
 		const ctxMenu = new ContextMenu("message-menu", this.element)
 		const ctxMenuItems: ContextMenuItem[] = []
-		const canRedact = !this.message?.isRedacted()
+		const canRedact = room?.getLiveTimeline().getState(Direction.Forward)?.maySendRedactionForEvent(this.message, matrix.getUserId()!)
 		if (canRedact) {
 			ctxMenuItems.push({
 				label: "Redact",
