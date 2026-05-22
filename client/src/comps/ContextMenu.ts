@@ -7,55 +7,54 @@ export interface ContextMenuItem {
 }
 
 export default class ContextMenu extends Component {
-	public readonly content: HTMLElement
 	public readonly trigger: HTMLElement
 
 	constructor(
-		tagName: keyof HTMLElementTagNameMap,
-		{ id, classes }: { id?: string; classes?: string[] },
+		className: string,
 		trigger: HTMLElement
 	) {
-		super("div", { classes: ["context-menu"] })
+		super("div", { classes: ["context-menu", className] })
 
-		this.content = document.createElement(tagName)
-		if (id) this.content.id = id
-		this.content.classList.add("context-menu-content")
-		if (classes) this.content.classList.add(...classes)
-
-		this.element.appendChild(this.content)
+		this.element.popover = "manual"
 
 		this.trigger = trigger
-		this.element.appendChild(this.trigger)
 
+		let open = false
 		this.trigger.addEventListener("contextmenu", e => {
 			e.preventDefault()
-			this.content.style.left = `${e.clientX}px`
-			this.content.style.top = `${e.clientY}px`
-			this.content.classList.add("shown")
-			const hide = () => {
+			const elem = this.element as HTMLDialogElement
+			elem.style.left = `${e.clientX}px`
+			elem.style.top = `${e.clientY}px`
+			const hide = (event: PointerEvent) => {
+				if (!open) {
+					open = true
+					return
+				}
+				if (this.trigger.contains(event.target as Node)) return
 				console.log("Hiding context menu")
-				this.content.classList.remove("shown")
+				elem.hidePopover()
 				document.removeEventListener("click", hide)
 				document.removeEventListener("contextmenu", hide)
+				open = false
 			}
 			document.addEventListener("click", hide)
-			requestAnimationFrame(() => {
-				document.addEventListener("contextmenu", hide)
-			})
+			document.addEventListener("contextmenu", hide)
+
+			elem.showPopover({ source: this.trigger })
 		})
 	}
 
 	reset(items: ContextMenuItem[]): void {
-		this.content.innerHTML = ""
+		this.element.innerHTML = ""
 		items.forEach(item => {
 			const el = document.createElement("div")
 			el.className = "context-menu-item"
 			el.textContent = item.label
 			el.addEventListener("click", async () => {
 				await item.action()
-				this.content.classList.remove("shown")
+				this.element.hidePopover()
 			})
-			this.content.appendChild(el)
+			this.element.appendChild(el)
 		})
 	}
 }
