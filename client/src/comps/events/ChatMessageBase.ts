@@ -2,7 +2,7 @@ import { twemojiParse } from "../../md"
 import { MatrixEvent } from "matrix-js-sdk"
 import { getMXUser } from "../../matrix"
 import EventBase from "./EventBase"
-import { relativeTimeFormat } from "../../util"
+import { relativeTimeFormat } from "../../intl"
 
 export default class ChatMessageBase extends EventBase {
 	constructor(msg: MatrixEvent) {
