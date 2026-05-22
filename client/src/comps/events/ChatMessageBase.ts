@@ -62,6 +62,12 @@ export default class ChatMessageBase extends EventBase {
 			msg.getDate() || new Date()
 		)
 
+		if (msg.isRedacted()) {
+			this.contentElement.classList.add("redacted")
+			this.contentElement.textContent = "(redacted)"
+			return
+		}
+
 		this.contentElement
 			.querySelectorAll<HTMLSpanElement>("[data-mx-spoiler]")
 			.forEach(el => {
