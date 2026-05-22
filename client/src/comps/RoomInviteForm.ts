@@ -10,17 +10,17 @@ export default class RoomInviteForm extends Form {
 
 	constructor() {
 		super("Invite to Room", { id: "room-invite-form" })
-	}
 
-	reset(room: Room): void {
-		this.room = room
-		this.body.innerHTML = ""
-		this.titleElement.textContent = `Invite to ${room.name || room.roomId}`
 		this.userInput = new FormTextInput("room-invite-user", "MXID", 1, 255)
 		this.body.appendChild(this.userInput.element)
 
 		const inviteButton = new SubmitButton("room-invite-button", "Invite")
 		this.body.appendChild(inviteButton.element)
+	}
+
+	reset(room: Room): void {
+		this.room = room
+		this.titleElement.textContent = `Invite to ${room.name || room.roomId}`
 	}
 
 	async submit(id: string) {
