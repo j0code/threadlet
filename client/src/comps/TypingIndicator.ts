@@ -1,28 +1,23 @@
 import { RoomMember } from "matrix-js-sdk"
 import Component from "./Component"
-import Avatar from "./Avatar"
 import { twemojiParse } from "../md"
+import AvatarList from "./AvatarList"
 
 export default class TypingIndicator extends Component {
-	avatarsDiv: HTMLDivElement
+	avatarList: AvatarList
 	label: HTMLSpanElement
 
 	constructor() {
 		super("div", { id: "typing-indicator" })
-		this.avatarsDiv = document.createElement("div")
-		this.avatarsDiv.className = "typing-avatars"
+		this.avatarList = new AvatarList([], ["typing-avatar-list"])
 		this.label = document.createElement("span")
 		this.label.className = "typing-label"
-		this.element.appendChild(this.avatarsDiv)
+		this.element.appendChild(this.avatarList.element)
 		this.element.appendChild(this.label)
 	}
 
 	reset(users: RoomMember[]) {
-		this.avatarsDiv.innerHTML = ""
-		for (const user of users.toReversed().slice(0, 3)) {
-			const avatar = new Avatar(user.userId, "typing-avatar")
-			this.avatarsDiv.appendChild(avatar.element)
-		}
+		this.avatarList.reset(users.map(u => u.userId))
 		this.label.innerHTML = this.renderLabel(users)
 	}
 
