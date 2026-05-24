@@ -873,3 +873,8 @@ dialog {
 	font-size: 0.75em;
 	color: var(--text-muted);
 }
+
+.typing-user {
+	font-weight: bold;
+	color: white;
+}

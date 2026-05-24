@@ -22,16 +22,39 @@ export default class TypingIndicator extends Component {
 			const avatar = new Avatar(user.userId, "typing-avatar")
 			this.avatarsDiv.appendChild(avatar.element)
 		}
-		this.label.textContent = this.getLabel(users)
+		this.renderLabel(users, this.label)
 	}
 
-	getLabel(users: RoomMember[]) {
-		if (users.length === 0) return ""
-		if (users.length === 1) return `${users[0].name} is typing...`
-		if (users.length === 2)
-			return `${users[0].name} and ${users[1].name} are typing...`
-		if (users.length === 3)
-			return `${users[0].name}, ${users[1].name} and ${users[2].name} are typing...`
-		return `${users[0].name} and ${users.length - 1} others are typing...`
+	renderLabel(users: RoomMember[], label: HTMLSpanElement) {
+		label.innerHTML = ""
+		if (users.length === 0) return
+		if (users.length === 1) {
+			label.appendChild(this.createLabelPart(users[0].name, "typing-user"))
+			label.appendChild(this.createLabelPart(" is typing..."))
+		} else if (users.length === 2) {
+			label.appendChild(this.createLabelPart(users[0].name, "typing-user"))
+			label.appendChild(this.createLabelPart(" and "))
+			label.appendChild(this.createLabelPart(users[1].name, "typing-user"))
+			label.appendChild(this.createLabelPart(" are typing..."))
+		} else if (users.length === 3) {
+			label.appendChild(this.createLabelPart(users[0].name, "typing-user"))
+			label.appendChild(this.createLabelPart(", "))
+			label.appendChild(this.createLabelPart(users[1].name, "typing-user"))
+			label.appendChild(this.createLabelPart(" and "))
+			label.appendChild(this.createLabelPart(users[2].name, "typing-user"))
+			label.appendChild(this.createLabelPart(" are typing..."))
+		} else {
+			label.appendChild(this.createLabelPart(users[0].name, "typing-user"))
+			label.appendChild(this.createLabelPart(" and "))
+			label.appendChild(this.createLabelPart(`${users.length - 1} others`, "typing-user"))
+			label.appendChild(this.createLabelPart(" are typing..."))
+		}
+	}
+
+	private createLabelPart(text: string, className?: string) {
+		const span = document.createElement("span")
+		span.textContent = text
+		if (className) span.className = className
+		return span
 	}
 }
