@@ -81,10 +81,10 @@ export default class RoomView extends View {
 	}
 
 	updateTypingIndicator(room: Room) {
-		this.typingUsers = room.getMembers().filter(m => m.typing)
-		this.typingIndicator.reset(
-			this.typingUsers.filter(m => m.userId !== matrix.getUserId())
-		)
+		this.typingUsers = room
+			.getMembers()
+			.filter(m => m.typing && m.userId !== matrix.getUserId())
+		this.typingIndicator.reset(this.typingUsers)
 	}
 
 	async reset(room: Room) {
