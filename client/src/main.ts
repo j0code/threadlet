@@ -2,7 +2,6 @@ import "../style.css"
 import "../md.css"
 import "highlight.js/styles/github-dark.min.css"
 import App from "./comps/App"
-import PostView from "./comps/PostView"
 import { User } from "matrix-js-sdk"
 import Login from "./comps/Login"
 import RoomView from "./comps/RoomView"
@@ -22,7 +21,6 @@ export const forms = {
 } as const
 
 export const views = {
-	postView: new PostView(),
 	roomView: new RoomView(),
 	roomCreateForm: new RoomCreationForm(),
 } as const

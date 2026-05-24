@@ -1,4 +1,3 @@
-import { Post } from "@j0code/threadlet-api/v0/types"
 import { markdownToHtml } from "../md"
 import Component from "./Component"
 
@@ -16,8 +15,10 @@ export default class PostContent extends Component {
 		this.element.appendChild(this.descriptionElement)
 	}
 
-	reset(post: Post) {
+	reset(post: unknown) {
+		/*
 		if (post.id == this.currentPostId) return
 		this.descriptionElement.innerHTML = markdownToHtml(post.description)
+		*/
 	}
 }

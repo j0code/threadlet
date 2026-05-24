@@ -1,6 +1,4 @@
 import Component from "./Component"
-import { User } from "@j0code/threadlet-api/v0/types"
-import CDN from "@j0code/threadlet-api/v0/cdn"
 import { twemojiParse } from "../md"
 
 export default class PostAuthor extends Component {
@@ -19,8 +17,10 @@ export default class PostAuthor extends Component {
 		this.element.append(this.avatar, this.name)
 	}
 
-	reset(user: User) {
+	reset(user: unknown) {
+		/*
 		this.avatar.src = CDN.avatar(user.id, user.avatar)
 		this.name.innerHTML = twemojiParse(user.name)
+		*/
 	}
 }
