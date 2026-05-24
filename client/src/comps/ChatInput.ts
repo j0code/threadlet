@@ -7,6 +7,8 @@ import RoomView from "./RoomView"
 
 // Credits to DeepSeek-R1, wow (edited though)
 export default class ChatInput extends Component {
+	public static readonly TYPING_TIMEOUT = 10000
+
 	readonly emojiPicker: EmojiPicker
 
 	constructor(view: PostView | RoomView) {
@@ -67,14 +69,13 @@ export default class ChatInput extends Component {
 		})
 		let lastTypingSent = 0
 		let lastTypingValue = false
-		const TYPING_TIMEOUT = 10000
 		chatInput.addEventListener("keyup", async () => {
 			if (!(view instanceof RoomView)) return
 			if (view.getCurrentRoom() == undefined) return
 			const isEmpty = chatInput.innerText.trim() == ""
 			if (
 				lastTypingValue != isEmpty ||
-				Date.now() - lastTypingSent > TYPING_TIMEOUT
+				Date.now() - lastTypingSent > ChatInput.TYPING_TIMEOUT
 			) {
 				lastTypingSent = Date.now()
 				lastTypingValue = isEmpty
@@ -83,7 +84,7 @@ export default class ChatInput extends Component {
 				await matrix.sendTyping(
 					view.getCurrentRoom()!.roomId,
 					!isEmpty,
-					TYPING_TIMEOUT
+					ChatInput.TYPING_TIMEOUT
 				)
 			}
 		})
