@@ -1,6 +1,7 @@
 import { RoomMember } from "matrix-js-sdk"
 import Component from "./Component"
 import Avatar from "./Avatar"
+import { twemojiParse } from "../md"
 
 export default class TypingIndicator extends Component {
 	avatarsDiv: HTMLDivElement
@@ -53,7 +54,7 @@ export default class TypingIndicator extends Component {
 
 	private createLabelPart(text: string, className?: string) {
 		const span = document.createElement("span")
-		span.textContent = text
+		span.innerHTML = twemojiParse(text)
 		if (className) span.className = className
 		return span
 	}
