@@ -868,3 +868,8 @@ dialog {
 	flex-direction: row-reverse;
 	align-items: center;
 }
+
+.typing-label {
+	font-size: 0.75em;
+	color: var(--text-muted);
+}

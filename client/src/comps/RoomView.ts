@@ -83,7 +83,7 @@ export default class RoomView extends View {
 	updateTypingIndicator(room: Room) {
 		this.typingUsers = room.getMembers().filter(m => m.typing)
 		this.typingIndicator.reset(
-			this.typingUsers.filter(m => m.userId !== matrix.getUserId()).flatMap(u => [u, u])
+			this.typingUsers.filter(m => m.userId !== matrix.getUserId())
 		)
 	}
 
