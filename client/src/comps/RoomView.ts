@@ -4,6 +4,7 @@ import EventList from "./EventList"
 import { MatrixEvent, Room, RoomEvent } from "matrix-js-sdk"
 import { matrix } from "../matrix"
 import MemberList from "./MemberList"
+import { parseEventContent } from "../events"
 
 export default class RoomView extends View {
 	private currentRoom?: Room
@@ -47,7 +48,7 @@ export default class RoomView extends View {
 	onRedaction(room: Room) {
 		return async (event: MatrixEvent) => {
 			if (event.getRoomId() === room.roomId && event.getType() === "m.room.redaction") {
-				const content = event.getContent()
+				const content = parseEventContent(event.getContent())
 				if (!("redacts" in content) || typeof content.redacts !== "string") return
 				const comp = this.msgList.eventComponents.get(content.redacts)
 				if (!comp) return
