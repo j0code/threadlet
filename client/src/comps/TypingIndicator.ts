@@ -23,39 +23,15 @@ export default class TypingIndicator extends Component {
 			const avatar = new Avatar(user.userId, "typing-avatar")
 			this.avatarsDiv.appendChild(avatar.element)
 		}
-		this.renderLabel(users, this.label)
+		this.label.innerHTML = this.renderLabel(users)
 	}
 
-	renderLabel(users: RoomMember[], label: HTMLSpanElement) {
-		label.innerHTML = ""
-		if (users.length === 0) return
-		if (users.length === 1) {
-			label.appendChild(this.createLabelPart(users[0].name, "typing-user"))
-			label.appendChild(this.createLabelPart(" is typing..."))
-		} else if (users.length === 2) {
-			label.appendChild(this.createLabelPart(users[0].name, "typing-user"))
-			label.appendChild(this.createLabelPart(" and "))
-			label.appendChild(this.createLabelPart(users[1].name, "typing-user"))
-			label.appendChild(this.createLabelPart(" are typing..."))
-		} else if (users.length === 3) {
-			label.appendChild(this.createLabelPart(users[0].name, "typing-user"))
-			label.appendChild(this.createLabelPart(", "))
-			label.appendChild(this.createLabelPart(users[1].name, "typing-user"))
-			label.appendChild(this.createLabelPart(" and "))
-			label.appendChild(this.createLabelPart(users[2].name, "typing-user"))
-			label.appendChild(this.createLabelPart(" are typing..."))
-		} else {
-			label.appendChild(this.createLabelPart(users[0].name, "typing-user"))
-			label.appendChild(this.createLabelPart(" and "))
-			label.appendChild(this.createLabelPart(`${users.length - 1} others`, "typing-user"))
-			label.appendChild(this.createLabelPart(" are typing..."))
-		}
-	}
-
-	private createLabelPart(text: string, className?: string) {
-		const span = document.createElement("span")
-		span.innerHTML = twemojiParse(text)
-		if (className) span.className = className
-		return span
+	renderLabel(users: RoomMember[]) {
+		const names = users.map(u => twemojiParse(u.name))
+		if (users.length === 0) return ""
+		if (users.length === 1) return `<span class="typing-user">${names[0]}</span> is typing...`
+		if (users.length === 2) return `<span class="typing-user">${names[0]}</span> and <span class="typing-user">${names[1]}</span> are typing...`
+		if (users.length === 3) return `<span class="typing-user">${names[0]}</span>, <span class="typing-user">${names[1]}</span> and <span class="typing-user">${names[2]}</span> are typing...`
+		return `<span class="typing-user">${names[0]}</span> and <span class="typing-user">${users.length - 1} others</span> are typing...`
 	}
 }
