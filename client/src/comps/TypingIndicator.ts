@@ -19,7 +19,7 @@ export default class TypingIndicator extends Component {
 
 	reset(users: RoomMember[]) {
 		this.avatarsDiv.innerHTML = ""
-		for (const user of users.toReversed()) {
+		for (const user of users.toReversed().slice(0, 3)) {
 			const avatar = new Avatar(user.userId, "typing-avatar")
 			this.avatarsDiv.appendChild(avatar.element)
 		}
