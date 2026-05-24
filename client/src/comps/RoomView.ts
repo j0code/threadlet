@@ -48,7 +48,7 @@ export default class RoomView extends View {
 		return async (event: MatrixEvent) => {
 			if (event.getRoomId() === room.roomId && event.getType() === "m.room.redaction") {
 				const content = event.getContent()
-				if (!content.redacts || typeof content.redacts !== "string") return
+				if (!("redacts" in content) || typeof content.redacts !== "string") return
 				const comp = this.msgList.eventComponents.get(content.redacts)
 				if (!comp) return
 				await comp.reset()
