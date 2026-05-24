@@ -1,5 +1,3 @@
-import { Forum } from "@j0code/threadlet-api/v0/types"
-import { api } from "../main"
 import Component from "./Component"
 import PostPreview from "./PostPreview"
 
@@ -8,7 +6,8 @@ export default class PostPreviewGrid extends Component {
 		super("div", { id: "post-previews" })
 	}
 
-	async reset(forum: Forum) {
+	async reset(forum: unknown) {
+		/*
 		const posts = await api.getPosts(forum.id)
 
 		for (const child of Array.from(this.element.children)) {
@@ -20,5 +19,6 @@ export default class PostPreviewGrid extends Component {
 			//preview.element.addEventListener("click", () => app.renderView(views.forumView, forum))
 			this.element.appendChild(preview.element)
 		}
+			*/
 	}
 }

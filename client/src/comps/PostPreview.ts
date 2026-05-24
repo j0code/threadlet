@@ -1,12 +1,11 @@
-import { Post } from "@j0code/threadlet-api/v0/types"
 import { app, views } from "../main"
 import Component from "./Component"
 import { twemojiParse } from "../md"
 
 export default class PostPreview extends Component {
-	readonly post: Post
+	readonly post: unknown
 
-	constructor(post: Post) {
+	/*constructor(post: unknown) {
 		super("div", { id: `post-preview-${post.id}`, classes: ["post-preview"] })
 
 		this.post = post
@@ -24,5 +23,5 @@ export default class PostPreview extends Component {
 		this.element.addEventListener("click", () => {
 			app.renderView(views.postView, this.post.id)
 		})
-	}
+	}*/
 }
