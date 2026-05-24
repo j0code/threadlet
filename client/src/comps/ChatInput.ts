@@ -2,8 +2,8 @@ import { MsgType } from "matrix-js-sdk"
 import { matrix } from "../matrix"
 import Component from "./Component"
 import EmojiPicker from "./EmojiPicker"
-import PostView from "./PostView"
-import RoomView from "./RoomView"
+import PostView from "./views/PostView"
+import RoomView from "./views/RoomView"
 
 // Credits to DeepSeek-R1, wow (edited though)
 export default class ChatInput extends Component {

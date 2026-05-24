@@ -1,5 +1,5 @@
-import { twemojiParse } from "../md"
-import Component from "./Component"
+import { twemojiParse } from "../../md"
+import Component from "../Component"
 
 export default class ViewHead extends Component {
 	titleElement: HTMLSpanElement

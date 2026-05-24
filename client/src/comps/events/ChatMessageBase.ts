@@ -4,7 +4,7 @@ import { getMXUser, matrix } from "../../matrix"
 import EventBase from "./EventBase"
 import { relativeTimeFormat } from "../../intl"
 import ContextMenu, { ContextMenuItem } from "../ContextMenu"
-import ConfirmForm from "../ConfirmForm"
+import ConfirmForm from "../forms/ConfirmForm"
 
 export default class ChatMessageBase extends EventBase {
 	constructor(msg: MatrixEvent) {

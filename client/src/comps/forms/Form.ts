@@ -1,8 +1,8 @@
-import { app } from "../main"
-import { twemojiParse } from "../md"
-import { MaybePromise } from "../types"
-import Component from "./Component"
-import Modal from "./Modal"
+import { app } from "../../main"
+import { twemojiParse } from "../../md"
+import { MaybePromise } from "../../types"
+import Component from "../Component"
+import Modal from "../Modal"
 
 export default abstract class Form<
 	ResetArgs extends Array<unknown> = Array<unknown>,

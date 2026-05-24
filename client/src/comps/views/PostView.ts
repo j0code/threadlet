@@ -1,9 +1,9 @@
-import PostAuthor from "./PostAuthor"
-import PostContent from "./PostContent"
-import View from "./View"
-import ChatInput from "./ChatInput"
-import EventList from "./EventList"
-import TagList from "./TagList"
+import PostAuthor from "../PostAuthor"
+import PostContent from "../PostContent"
+import View from "../views/View"
+import ChatInput from "../ChatInput"
+import EventList from "../EventList"
+import TagList from "../TagList"
 
 export default class PostView extends View<[string]> {
 	private currentForumId?: string
