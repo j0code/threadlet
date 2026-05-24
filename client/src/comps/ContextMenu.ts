@@ -19,6 +19,7 @@ export default class ContextMenu extends Component {
 		let open = false
 		this.trigger.addEventListener("contextmenu", e => {
 			e.preventDefault()
+			if (this.element.children.length === 0) return
 			const elem = this.element as HTMLDialogElement
 			elem.style.left = `${e.clientX}px`
 			elem.style.top = `${e.clientY}px`
