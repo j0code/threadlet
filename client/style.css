@@ -400,6 +400,7 @@ body {
 	margin: var(--gap);
 	gap: var(--gap-half);
 	anchor-name: --emoji-picker-anchor;
+	margin-top: 0;
 }
 
 .file-upload-button,
@@ -774,6 +775,7 @@ dialog {
 	display: flex;
 	flex-direction: column;
 	flex: 1 1 auto;
+	gap: var(--gap-half);
 }
 
 .message audio,
