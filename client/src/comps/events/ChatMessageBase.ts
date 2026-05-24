@@ -24,7 +24,7 @@ export default class ChatMessageBase extends EventBase {
 
 		const ctxMenu = new ContextMenu("message-menu", this.element)
 		const ctxMenuItems: ContextMenuItem[] = []
-		const canRedact = room?.getLiveTimeline().getState(Direction.Forward)?.maySendRedactionForEvent(this.message, matrix.getUserId()!)
+		const canRedact = this.message.getSender() === matrix.getUserId() || room?.getLiveTimeline().getState(Direction.Forward)?.maySendRedactionForEvent(this.message, matrix.getUserId()!)
 		if (canRedact) {
 			ctxMenuItems.push({
 				label: "Redact",
