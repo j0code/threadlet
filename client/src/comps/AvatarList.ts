@@ -9,7 +9,7 @@ export default class AvatarList extends Component {
 
 	reset(users: string[]) {
 		this.element.innerHTML = ""
-		for (const user of users.toReversed().slice(0, 3)) {
+		for (const user of users.slice(0, 3).toReversed()) {
 			const avatar = new Avatar(user, "avatar-list-avatar")
 			this.element.appendChild(avatar.element)
 		}
