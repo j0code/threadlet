@@ -29,9 +29,12 @@ export default class TypingIndicator extends Component {
 	renderLabel(users: RoomMember[]) {
 		const names = users.map(u => twemojiParse(u.name))
 		if (users.length === 0) return ""
-		if (users.length === 1) return `<span class="typing-user">${names[0]}</span> is typing...`
-		if (users.length === 2) return `<span class="typing-user">${names[0]}</span> and <span class="typing-user">${names[1]}</span> are typing...`
-		if (users.length === 3) return `<span class="typing-user">${names[0]}</span>, <span class="typing-user">${names[1]}</span> and <span class="typing-user">${names[2]}</span> are typing...`
+		if (users.length === 1)
+			return `<span class="typing-user">${names[0]}</span> is typing...`
+		if (users.length === 2)
+			return `<span class="typing-user">${names[0]}</span> and <span class="typing-user">${names[1]}</span> are typing...`
+		if (users.length === 3)
+			return `<span class="typing-user">${names[0]}</span>, <span class="typing-user">${names[1]}</span> and <span class="typing-user">${names[2]}</span> are typing...`
 		return `<span class="typing-user">${names[0]}</span> and <span class="typing-user">${users.length - 1} others</span> are typing...`
 	}
 }
