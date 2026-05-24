@@ -8,6 +8,9 @@ import { Editor, Extension } from "@tiptap/core"
 import StarterKit from "@tiptap/starter-kit"
 import { BubbleMenu } from "@tiptap/extension-bubble-menu"
 import { Placeholder } from "@tiptap/extensions/placeholder"
+import CodeBlock from "@tiptap/extension-code-block"
+import Blockquote from "@tiptap/extension-blockquote"
+import { BulletList, OrderedList } from "@tiptap/extension-list"
 
 // Credits to DeepSeek-R1, wow (edited though)
 export default class ChatInput extends Component {
@@ -32,6 +35,7 @@ export default class ChatInput extends Component {
 		// Create chat input
 		const chatInput = document.createElement("div")
 		chatInput.className = "chat-input"
+		chatInput.classList.add("md")
 
 		const bubbleMenu = this.createBubbleMenu()
 		this.element.appendChild(bubbleMenu)
@@ -51,6 +55,13 @@ export default class ChatInput extends Component {
 				Placeholder.configure({
 					placeholder: "Type a message..."
 				}),
+				CodeBlock.configure({
+					enableTabIndentation: true,
+					tabSize: 2
+				}),
+				Blockquote,
+				BulletList,
+				OrderedList,
 				Extension.create({
 					addKeyboardShortcuts() {
 						return {
