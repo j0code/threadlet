@@ -27,7 +27,7 @@ export default class EventList extends Component {
 	}
 
 	pushMessage(event: MatrixEvent) {
-		if(HIDDEN_EVENTS.includes(event.getType())) return;
+		if (HIDDEN_EVENTS.includes(event.getType())) return
 
 		const autoscroll =
 			this.element.scrollTop + this.element.clientHeight >=
