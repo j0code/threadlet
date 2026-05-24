@@ -1,6 +1,4 @@
-import { app, views } from "../main"
 import Component from "./Component"
-import { twemojiParse } from "../md"
 
 export default class PostPreview extends Component {
 	readonly post: unknown
