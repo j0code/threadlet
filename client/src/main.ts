@@ -1,5 +1,3 @@
-import "../style.css"
-import "../md.css"
 import "highlight.js/styles/github-dark.min.css"
 import App from "./comps/App"
 import { User } from "matrix-js-sdk"
