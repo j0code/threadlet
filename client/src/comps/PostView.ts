@@ -1,7 +1,6 @@
 import PostAuthor from "./PostAuthor"
 import PostContent from "./PostContent"
 import View from "./View"
-import { api } from "../main"
 import ChatInput from "./ChatInput"
 import EventList from "./EventList"
 import TagList from "./TagList"
@@ -37,7 +36,7 @@ export default class PostView extends View<[string]> {
 	}
 
 	async reset(postId: string) {
-		const post = await api.getPost("44", postId)
+		/*const post = await api.getPost("44", postId)
 
 		this.head.reset(post.name)
 		this.tagList.reset(post.tags ?? [])
@@ -48,7 +47,7 @@ export default class PostView extends View<[string]> {
 		this.author.reset(user)
 
 		this.currentForumId = post.forum_id
-		this.currentPostId = post.id
+		this.currentPostId = post.id*/
 	}
 
 	getCurrentPostId() {
