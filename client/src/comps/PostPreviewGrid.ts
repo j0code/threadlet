@@ -1,12 +1,11 @@
 import Component from "./Component"
-import PostPreview from "./PostPreview"
 
 export default class PostPreviewGrid extends Component {
 	constructor() {
 		super("div", { id: "post-previews" })
 	}
 
-	async reset(forum: unknown) {
+	async reset(_forum: unknown) {
 		/*
 		const posts = await api.getPosts(forum.id)
 

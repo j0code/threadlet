@@ -35,7 +35,7 @@ export default class PostView extends View<[string]> {
 		this.element.appendChild(this.chatInput.element)
 	}
 
-	async reset(postId: string) {
+	async reset(_postId: string) {
 		/*const post = await api.getPost("44", postId)
 
 		this.head.reset(post.name)

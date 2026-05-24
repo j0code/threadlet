@@ -1,5 +1,4 @@
 import Component from "./Component"
-import { twemojiParse } from "../md"
 
 export default class PostAuthor extends Component {
 	private readonly avatar: HTMLImageElement
@@ -17,7 +16,7 @@ export default class PostAuthor extends Component {
 		this.element.append(this.avatar, this.name)
 	}
 
-	reset(user: unknown) {
+	reset(_user: unknown) {
 		/*
 		this.avatar.src = CDN.avatar(user.id, user.avatar)
 		this.name.innerHTML = twemojiParse(user.name)
