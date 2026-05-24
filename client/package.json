@@ -1,7 +1,7 @@
 {
 	"name": "threadlet-client",
 	"version": "1.0.0",
-	"description": "",
+	"description": "Next-gen Matrix client",
 	"license": "ISC",
 	"author": "j0code",
 	"type": "module",
