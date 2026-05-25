@@ -1,9 +1,9 @@
-import { app, views } from "../main"
+import { app, views } from "../../main"
 import Form from "./Form"
-import FormTextInput from "./FormTextInput"
-import { matrix } from "../matrix"
-import FormCheckbox from "./FormCheckbox"
-import SubmitButton from "./SubmitButton"
+import FormTextInput from "../form-comps/FormTextInput"
+import { matrix } from "../../matrix"
+import FormCheckbox from "../form-comps/FormCheckbox"
+import SubmitButton from "../form-comps/SubmitButton"
 
 export default class RoomCreationForm extends Form {
 	readonly nameInput: FormTextInput

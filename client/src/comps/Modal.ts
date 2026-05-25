@@ -1,6 +1,6 @@
 import { app } from "../main"
 import Component from "./Component"
-import Form from "./Form"
+import Form from "./forms/Form"
 
 export default class Modal extends Component {
 	readonly form: Form

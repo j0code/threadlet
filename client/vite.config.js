@@ -1,13 +1,5 @@
 import { defineConfig } from "vite"
 import { viteStaticCopy } from "vite-plugin-static-copy"
-import YSON from "@j0code/yson"
-
-const dev_config = await YSON.load("./dev_config.yson").catch(() => ({
-	vite: {
-		port: undefined,
-		host: undefined,
-	},
-}))
 
 // https://vitejs.dev/config/
 /** @type {import('vite').UserConfig} */
@@ -15,7 +7,7 @@ export default defineConfig({
 	envDir: "../",
 	server: {
 		host: "0.0.0.0",
-		port: dev_config.vite?.port,
+		port: 5173,
 		proxy: {
 			"/api": {
 				target: "http://localhost:3001",
@@ -26,9 +18,8 @@ export default defineConfig({
 		},
 		hmr: {
 			protocol: "ws",
-			// path: "/.proxy/"
 		},
-		allowedHosts: [dev_config.vite?.host].filter(Boolean),
+		allowedHosts: [],
 		strictPort: true,
 	},
 	plugins: [

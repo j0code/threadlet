@@ -1,4 +1,4 @@
-import Component from "./Component"
+import Component from "../Component"
 import FormButton from "./FormButton"
 import FormTextInput from "./FormTextInput"
 

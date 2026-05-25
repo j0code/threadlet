@@ -1,6 +1,6 @@
 import { app, forms, views } from "../main"
 import Component from "./Component"
-import FormButton from "./FormButton"
+import FormButton from "./form-comps/FormButton"
 import ForumTab from "./ForumTab"
 import { Room } from "matrix-js-sdk"
 

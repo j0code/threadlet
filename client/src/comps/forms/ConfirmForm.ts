@@ -1,6 +1,6 @@
-import { MaybePromise } from "../types"
+import { MaybePromise } from "../../types"
 import Form from "./Form"
-import SubmitButton from "./SubmitButton"
+import SubmitButton from "../form-comps/SubmitButton"
 
 export default class ConfirmForm extends Form {
 	handler!: (confirmed: boolean) => MaybePromise<void>
