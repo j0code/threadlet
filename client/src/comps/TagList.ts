@@ -5,7 +5,7 @@ export default class TagList extends Component {
 		super("div", { classes: ["tag-list"] })
 	}
 
-	reset(tags: unknown[]) {
+	reset(_tags: unknown[]) {
 		/*
 		this.element.innerHTML = ""
 
