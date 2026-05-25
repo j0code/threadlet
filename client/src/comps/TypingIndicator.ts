@@ -9,7 +9,10 @@ export default class TypingIndicator extends Component {
 
 	constructor() {
 		super("div", { id: "typing-indicator" })
-		this.avatarList = new AvatarList([], ["typing-avatar-list"])
+		this.avatarList = new AvatarList([], {
+			classes: ["typing-avatar-list"],
+			maxAvatars: 3,
+		})
 		this.label = document.createElement("span")
 		this.label.className = "typing-label"
 		this.element.appendChild(this.avatarList.element)
@@ -22,12 +25,12 @@ export default class TypingIndicator extends Component {
 	}
 
 	renderLabel(users: RoomMember[]) {
-		const names = users.map(u => `<span class="typing-user">${twemojiParse(u.name)}</span>`)
+		const names = users.map(
+			u => `<span class="typing-user">${twemojiParse(u.name)}</span>`
+		)
 		if (users.length === 0) return ""
-		if (users.length === 1)
-			return `${names[0]} is typing...`
-		if (users.length === 2)
-			return `${names[0]} and ${names[1]} are typing...`
+		if (users.length === 1) return `${names[0]} is typing...`
+		if (users.length === 2) return `${names[0]} and ${names[1]} are typing...`
 		if (users.length === 3)
 			return `${names[0]}, ${names[1]}, and ${names[2]} are typing...`
 		return `${names[0]} and <span class="typing-user">${users.length - 1} others</span> are typing...`
