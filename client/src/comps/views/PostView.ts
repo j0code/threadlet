@@ -57,4 +57,8 @@ export default class PostView extends View<[string]> {
 	getCurrentForumId() {
 		return this.currentForumId
 	}
+
+	get defaultTextInput() {
+		return this.chatInput.input
+	}
 }
