@@ -6,6 +6,43 @@ import Form from "./forms/Form"
 import View from "./views/View"
 import Modal from "./Modal"
 
+/** 
+ * Keyboard- and layout-independent key codes that trigger autofocus
+ * 
+ * Keys starting with "Key" or "Digit" don't need to be listed explictly.  
+ * AltGraph is layout-dependent and must not be listed.
+ * Numpad number keys and NumpadDecimal are dependent on Numpad key state and must not be listed.
+ */
+const autofocusCodes = [
+	// Row 1 (top)
+	"Backquote",
+	"Minus",
+	"Equal",
+	"Backspace",
+	// Row 2
+	"BracketLeft",
+	"BracketRight",
+	"Enter",
+	// Row 3
+	"CapsLock",
+	"Semicolon",
+	"Quote",
+	"Backslash",
+	// Row 4
+	"ShiftLeft",
+	"IntlBackslash",
+	"Period",
+	"Comma",
+	"Slash",
+	// Row 5
+	"Space",
+	// Numpad
+	"NumpadDivide",
+	"NumpadMultiply",
+	"NumpadSubtract",
+	"NumpadAdd",
+]
+
 export default class App extends Component {
 	readonly roomList: RoomList
 	private currentView?: View | Form
@@ -27,6 +64,30 @@ export default class App extends Component {
 		})
 
 		void initMatrixClient()
+
+		document.addEventListener("keydown", event => {
+			const code = event.code // keyboard-/layout-independent key code
+			const key  = event.key  // key (respects layout, modifiers, and numpad key)
+			// console.log("keydown event fired on", event.target, "for key", code, key)
+			// console.log("modifiers:", ["ctrl", "shift", "alt", "meta"].filter(mod => event[mod + "Key"]).join(", "))
+
+			if (event.altKey || event.ctrlKey || event.metaKey) {
+				// console.log("modifier detected, skip")
+				return
+			}
+
+			if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || (event.target instanceof HTMLDivElement && event.target.hasAttribute("contenteditable"))) {
+				// console.log("is input, skip")
+				return
+			}
+
+			if (!code.startsWith("Key") && !code.startsWith("Digit") && !autofocusCodes.includes(code) && key != "AltGraph" && isNaN(Number(key)) && key != ",") {
+				// console.log("key doesn't trigger autofocus, skip")
+				return
+			}
+
+			this.autofocus()
+		})
 	}
 
 	updateChannelList() {
@@ -40,6 +101,8 @@ export default class App extends Component {
 		void view.reset(...args)
 		this.element.appendChild(view.element)
 		this.currentView = view
+
+		this.autofocus()
 	}
 
 	clearView() {
@@ -63,6 +126,8 @@ export default class App extends Component {
 		const element = modal.element as HTMLDialogElement
 		document.body.appendChild(element)
 		element.showModal()
+
+		modal.form.defaultTextInput?.focus()
 	}
 
 	closeModal(modal: Modal) {
@@ -85,5 +150,15 @@ export default class App extends Component {
 
 	getCurrentModal(): Modal | undefined {
 		return this.modals[this.modals.length - 1]
+	}
+
+	autofocus() {
+		const modal = this.getCurrentModal()
+
+		if (modal) {
+			modal.form.defaultTextInput?.focus()
+		} else {
+			this.currentView?.defaultTextInput?.focus()
+		}
 	}
 }

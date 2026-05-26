@@ -8,6 +8,7 @@ import RoomView from "./views/RoomView"
 // Credits to DeepSeek-R1, wow (edited though)
 export default class ChatInput extends Component {
 	readonly emojiPicker: EmojiPicker
+	readonly input: HTMLDivElement
 
 	constructor(view: PostView | RoomView) {
 		super("div", { id: "chat-input-container" })
@@ -23,16 +24,16 @@ export default class ChatInput extends Component {
 		fileUploadLabel.appendChild(fileInput)
 
 		// Create chat input
-		const chatInput = document.createElement("div")
-		chatInput.className = "chat-input"
-		chatInput.setAttribute("contenteditable", "true")
-		chatInput.setAttribute("placeholder", "Message #channel")
-		chatInput.addEventListener("keypress", e => {
+		this.input = document.createElement("div")
+		this.input.className = "chat-input"
+		this.input.setAttribute("contenteditable", "true")
+		this.input.setAttribute("placeholder", "Message #channel")
+		this.input.addEventListener("keypress", e => {
 			if (e.code == "Enter" && !e.shiftKey) {
 				e.preventDefault()
-				const content = chatInput.innerText.trim()
+				const content = this.input.innerText.trim()
 				if (content == "") return
-				chatInput.innerHTML = ""
+				this.input.innerHTML = ""
 
 				async function createMessage() {
 					// const forum_id = view.getCurrentForumId()
@@ -57,13 +58,13 @@ export default class ChatInput extends Component {
 					})
 				}
 
-				console.log("Send MSG:", chatInput.innerText)
+				console.log("Send MSG:", this.input.innerText)
 				void createMessage()
 			}
 		})
-		chatInput.addEventListener("input", () => {
+		this.input.addEventListener("input", () => {
 			// this fixes weird browser behavior
-			if (chatInput.innerHTML == "<br>") chatInput.innerHTML = ""
+			if (this.input.innerHTML == "<br>") this.input.innerHTML = ""
 		})
 
 		// Create emoji button
@@ -77,13 +78,13 @@ export default class ChatInput extends Component {
 			"chat-input-emoji-picker",
 			"chat-input-container",
 			emoji => {
-				chatInput.textContent += emoji.native
+				this.input.textContent += emoji.native
 			}
 		)
 
 		// Div-engers, Assemble!
 		this.element.appendChild(fileUploadLabel)
-		this.element.appendChild(chatInput)
+		this.element.appendChild(this.input)
 		this.element.appendChild(emojiButton)
 		this.element.appendChild(this.emojiPicker.element)
 	}

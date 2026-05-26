@@ -48,4 +48,9 @@ export default abstract class Form<
 		const modal = new Modal(this)
 		app.openModal(modal)
 	}
+
+	get defaultTextInput(): HTMLElement | undefined {
+		const form = this.element as HTMLFormElement
+		return Array.from(form.elements).find(elem => !(elem instanceof HTMLOutputElement)) as HTMLElement | undefined
+	}
 }
