@@ -51,6 +51,25 @@ export default abstract class Form<
 
 	get defaultTextInput(): HTMLElement | undefined {
 		const form = this.element as HTMLFormElement
-		return Array.from(form.elements).find(elem => !(elem instanceof HTMLOutputElement)) as HTMLElement | undefined
+		return Array.from(form.elements).find(isTextInput)
 	}
+
+	get defaultInput(): HTMLElement | undefined {
+		const form = this.element as HTMLFormElement
+		return Array.from(form.elements).find(isFormInput)
+	}
+}
+
+function isFormInput(formControl: Element): formControl is HTMLElement {
+	if (formControl instanceof HTMLFieldSetElement) return false
+	if (formControl instanceof HTMLOutputElement) return false
+	return true
+}
+
+function isTextInput(formControl: Element): formControl is HTMLElement {
+	if (formControl instanceof HTMLTextAreaElement) return true
+	if (formControl instanceof HTMLInputElement) {
+		return ["text", "number", "email", "password", "search", "tel", "url"].includes(formControl.type)
+	}
+	return false
 }

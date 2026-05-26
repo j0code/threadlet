@@ -86,7 +86,7 @@ export default class App extends Component {
 				return
 			}
 
-			this.autofocus()
+			this.autofocus(true)
 		})
 	}
 
@@ -152,13 +152,14 @@ export default class App extends Component {
 		return this.modals[this.modals.length - 1]
 	}
 
-	autofocus() {
+	autofocus(textOnly: boolean = false) {
 		const modal = this.getCurrentModal()
+		const getter = textOnly ? "defaultInput" : "defaultTextInput"
 
 		if (modal) {
-			modal.form.defaultTextInput?.focus()
+			modal.form[getter]?.focus()
 		} else {
-			this.currentView?.defaultTextInput?.focus()
+			this.currentView?.[getter]?.focus()
 		}
 	}
 }
