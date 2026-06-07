@@ -2,7 +2,7 @@ import { MatrixEvent } from "matrix-js-sdk"
 import ChatMessageBase from "./ChatMessageBase"
 import { markdownToHtml } from "../../md"
 import { purifyHTML } from "./HTMLFormat"
-import { parseEventContent } from "../../events"
+import { Text } from "../../schemas/msgtypes/m/Text"
 
 export default class RoomTextMessage extends ChatMessageBase {
 	constructor(msg: MatrixEvent) {
@@ -10,7 +10,7 @@ export default class RoomTextMessage extends ChatMessageBase {
 	}
 
 	async reset(): Promise<void> {
-		const content = parseEventContent(this.message.getContent())
+		const content = this.content as Text
 
 		switch (this.message.getContent().format) {
 			case "org.matrix.custom.html":

@@ -51,9 +51,8 @@ export default class RoomView extends View {
 				event.getRoomId() === room.roomId &&
 				event.getType() === "m.room.redaction"
 			) {
-				const content = parseEventContent(event.getContent())
-				if (!("redacts" in content) || typeof content.redacts !== "string")
-					return
+				const content = parseEventContent("m.room.redaction", event.getContent())
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 				const comp = this.msgList.eventComponents.get(content.redacts)
 				if (!comp) return
 				await comp.reset()

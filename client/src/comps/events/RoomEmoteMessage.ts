@@ -1,9 +1,9 @@
 import { MatrixEvent } from "matrix-js-sdk"
 import { markdownToHtml, twemojiParse } from "../../md"
 import { purifyHTML } from "./HTMLFormat"
-import { parseEventContent } from "../../events"
 import ChatMessageBase from "./ChatMessageBase"
 import { getMXUser } from "../../matrix"
+import { Emote } from "../../schemas/msgtypes/m/Emote"
 
 export default class RoomEmoteMessage extends ChatMessageBase {
 	constructor(msg: MatrixEvent) {
@@ -20,7 +20,7 @@ export default class RoomEmoteMessage extends ChatMessageBase {
 		this.contentElement.appendChild(emote)
 
 		const body = document.createElement("span")
-		const content = parseEventContent(this.message.getContent())
+		const content = this.content as Emote
 
 		switch (this.message.getContent().format) {
 			case "org.matrix.custom.html":
