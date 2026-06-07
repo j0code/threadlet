@@ -5,13 +5,13 @@ import { URI } from "../../../uris"
 const SignedThirdPartyInvite = z.object({
 	mxid: UserId,
 	signatures: z.record(z.string(), z.record(z.string(), z.string())),
-	token: z.string()
+	token: z.string(),
 })
 export type SignedThirdPartyInvite = z.infer<typeof SignedThirdPartyInvite>
 
 const ThirdPartyInvite = z.object({
 	display_name: z.string(),
-	signed: SignedThirdPartyInvite
+	signed: SignedThirdPartyInvite,
 })
 export type ThirdPartyInvite = z.infer<typeof ThirdPartyInvite>
 
@@ -20,7 +20,7 @@ export const MembershipUnion = z.union([
 	z.literal("join"),
 	z.literal("knock"),
 	z.literal("leave"),
-	z.literal("ban")
+	z.literal("ban"),
 ])
 export type MembershipUnion = z.infer<typeof MembershipUnion>
 
@@ -31,6 +31,6 @@ export const RoomMemberContent = z.object({
 	join_authorised_via_users_server: z.string().optional(),
 	membership: MembershipUnion,
 	reason: z.string().optional(),
-	third_party_invite: ThirdPartyInvite.optional()
+	third_party_invite: ThirdPartyInvite.optional(),
 })
 export type RoomMemberContent = z.infer<typeof RoomMemberContent>

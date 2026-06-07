@@ -16,7 +16,7 @@ const schemas = [
 	File,
 	Audio,
 	Location,
-	Video
+	Video,
 ] as const
 
 const supportedMsgtypes = schemas.map(schema => schema.shape.msgtype.value)

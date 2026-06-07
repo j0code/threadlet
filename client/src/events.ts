@@ -1,12 +1,16 @@
 import z from "zod"
-import { EventContentMap, isSupported, SupportedEvents } from "./schemas/ClientEvent"
+import {
+	EventContentMap,
+	isSupported,
+	SupportedEvents,
+} from "./schemas/ClientEvent"
 import { IContent } from "matrix-js-sdk"
 
 // TODO: zod
 export function parseEventContent<Type extends SupportedEvents>(
 	type: Type,
 	content: IContent
-): z.infer<typeof EventContentMap[Type]> {
+): z.infer<(typeof EventContentMap)[Type]> {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
 	if (!isSupported(type)) return content as any // this is for UnknownEvent
 

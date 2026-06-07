@@ -3,6 +3,6 @@ import { EventId } from "../../../ids"
 
 export const RoomRedactionContent = z.object({
 	reason: z.string().default(""),
-	redacts: EventId
+	redacts: EventId,
 })
 export type RoomRedactionContent = z.infer<typeof RoomRedactionContent>

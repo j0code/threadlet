@@ -50,7 +50,7 @@ const ClientEvent = z.discriminatedUnion("type", [
 ])
 */
 
-export type EventContent = 
+export type EventContent =
 	| RoomCanonicalAliasContent
 	| RoomCreateContent
 	| RoomJoinRulesContent
@@ -63,7 +63,7 @@ export type EventContent =
 	| RoomRedactionContent
 	| RoomMessageContent
 
-export type EventContentSchema = 
+export type EventContentSchema =
 	| typeof RoomCanonicalAliasContent
 	| typeof RoomCreateContent
 	| typeof RoomJoinRulesContent
@@ -87,7 +87,7 @@ export const EventContentMap = {
 	"m.room.avatar": RoomAvatarContent,
 	"m.room.pinned_events": RoomPinnedEventsContent,
 	"m.room.redaction": RoomRedactionContent,
-	"m.room.message": RoomMessageContent
+	"m.room.message": RoomMessageContent,
 } as const satisfies Record<string, EventContentSchema>
 
 export type SupportedEvents = keyof typeof EventContentMap

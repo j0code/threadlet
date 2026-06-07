@@ -5,9 +5,11 @@ import Avatar from "../Avatar"
 import { EventContentMap, SupportedEvents } from "../../schemas/ClientEvent"
 import { parseEventContent } from "../../events"
 
-export default abstract class EventBase<Type extends SupportedEvents> extends Component {
+export default abstract class EventBase<
+	Type extends SupportedEvents,
+> extends Component {
 	readonly message: MatrixEvent
-	readonly content: z.infer<typeof EventContentMap[Type]>
+	readonly content: z.infer<(typeof EventContentMap)[Type]>
 	readonly mainElement: HTMLDivElement
 	readonly asideElement: HTMLDivElement
 	readonly contentElement: HTMLDivElement

@@ -8,7 +8,10 @@ import { type SupportedStateEvents } from "../schemas/ClientEvent"
 const HIDDEN_EVENTS = ["m.room.redaction"]
 
 export default class EventList extends Component {
-	eventComponents: Map<string, ChatMessageBase | EventMessageBase<SupportedStateEvents>>
+	eventComponents: Map<
+		string,
+		ChatMessageBase | EventMessageBase<SupportedStateEvents>
+	>
 
 	constructor() {
 		super("div", { id: `events` })

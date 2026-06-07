@@ -5,6 +5,6 @@ export const AvatarInfo = BaseImageInfo
 export type AvatarInfo = z.infer<typeof AvatarInfo>
 
 export const RoomAvatarContent = z.object({
-	name: z.string()
+	name: z.string(),
 })
 export type RoomAvatarContent = z.infer<typeof RoomAvatarContent>

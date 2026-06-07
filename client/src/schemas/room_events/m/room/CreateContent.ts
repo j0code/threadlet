@@ -4,7 +4,7 @@ import { RoomType } from "../../../RoomType"
 
 const PreviousRoom = z.object({
 	event_id: EventId.optional(),
-	room_id: RoomId
+	room_id: RoomId,
 })
 export type PreviousRoom = z.infer<typeof PreviousRoom>
 
@@ -13,6 +13,6 @@ export const RoomCreateContent = z.object({
 	"m.federate": z.boolean().default(true),
 	predecessor: PreviousRoom.optional(),
 	room_version: z.string().default("1"),
-	type: RoomType
+	type: RoomType,
 })
 export type RoomCreateContent = z.infer<typeof RoomCreateContent>
