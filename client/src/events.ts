@@ -6,7 +6,6 @@ import {
 } from "./schemas/ClientEvent"
 import { IContent } from "matrix-js-sdk"
 
-// TODO: zod
 export function parseEventContent<Type extends SupportedEvents>(
 	type: Type,
 	content: IContent
