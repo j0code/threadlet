@@ -56,8 +56,6 @@ export default class ChatMessageBase<Type extends "m.room.message" | typeof UNKN
 
 		ctxMenu.reset(ctxMenuItems)
 		this.element.appendChild(ctxMenu.element)
-
-		void this.reset()
 	}
 
 	async reset() {

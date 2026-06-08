@@ -11,6 +11,7 @@ import UnknownEvent from "./UnknownEvent"
 import RoomNameEvent from "./RoomNameEvent"
 import { SupportedStateEvents } from "../../schemas/ClientEvent"
 import ChatMessageBase from "./ChatMessageBase"
+import ErrorEvent from "./ErrorEvent"
 
 const eventTypes = {
 	"m.room.name": RoomNameEvent,
@@ -46,5 +47,9 @@ export function renderEvent(event: MatrixEvent) {
 				: RoomTextMessage
 	}
 
-	return new EventClass(event)
+	try {
+		return new EventClass(event)
+	} catch (e) {
+		return new ErrorEvent(event, e)
+	}
 }

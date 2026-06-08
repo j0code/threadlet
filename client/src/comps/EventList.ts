@@ -38,6 +38,7 @@ export default class EventList extends Component {
 			this.element.scrollHeight - 10
 
 		const comp = renderEvent(event)
+		void comp.reset()
 		this.eventComponents.set(event.getId()!, comp)
 		this.element.appendChild(comp.element)
 
