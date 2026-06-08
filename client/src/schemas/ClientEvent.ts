@@ -51,7 +51,7 @@ const ClientEvent = z.discriminatedUnion("type", [
 ])
 */
 
-export const UNKNOWN_EVENT_KEY: symbol = Symbol("UnknownEvent");
+export const UNKNOWN_EVENT_KEY: symbol = Symbol("UnknownEvent")
 
 export type EventContent =
 	| RoomCanonicalAliasContent
@@ -93,7 +93,7 @@ export const EventContentMap = {
 	"m.room.pinned_events": RoomPinnedEventsContent,
 	"m.room.redaction": RoomRedactionContent,
 	"m.room.message": RoomMessageContent,
-	[UNKNOWN_EVENT_KEY]: UnknownEvent
+	[UNKNOWN_EVENT_KEY]: UnknownEvent,
 } as const satisfies Record<string | symbol, EventContentSchema>
 
 export type SupportedEvents = keyof typeof EventContentMap & string

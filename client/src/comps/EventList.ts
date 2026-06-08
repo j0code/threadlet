@@ -3,14 +3,18 @@ import { MatrixEvent } from "matrix-js-sdk"
 import { renderEvent } from "./events/Event"
 import ChatMessageBase from "./events/ChatMessageBase"
 import EventMessageBase from "./events/EventMessageBase"
-import { UNKNOWN_EVENT_KEY, type SupportedStateEvents } from "../schemas/ClientEvent"
+import {
+	UNKNOWN_EVENT_KEY,
+	type SupportedStateEvents,
+} from "../schemas/ClientEvent"
 
 const HIDDEN_EVENTS = ["m.room.redaction"]
 
 export default class EventList extends Component {
 	eventComponents: Map<
 		string,
-		ChatMessageBase<"m.room.message" | typeof UNKNOWN_EVENT_KEY> | EventMessageBase<SupportedStateEvents>
+		| ChatMessageBase<"m.room.message" | typeof UNKNOWN_EVENT_KEY>
+		| EventMessageBase<SupportedStateEvents>
 	>
 
 	constructor() {

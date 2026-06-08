@@ -7,7 +7,9 @@ import ContextMenu, { ContextMenuItem } from "../ContextMenu"
 import ConfirmForm from "../forms/ConfirmForm"
 import { UNKNOWN_EVENT_KEY } from "../../schemas/ClientEvent"
 
-export default class ChatMessageBase<Type extends "m.room.message" | typeof UNKNOWN_EVENT_KEY = "m.room.message"> extends EventBase<Type> {
+export default class ChatMessageBase<
+	Type extends "m.room.message" | typeof UNKNOWN_EVENT_KEY = "m.room.message",
+> extends EventBase<Type> {
 	constructor(msg: MatrixEvent) {
 		super(msg, "div", { id: `message-${msg.getId()}`, classes: ["message"] })
 

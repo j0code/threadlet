@@ -3,7 +3,9 @@ import ChatMessageBase from "./ChatMessageBase"
 import { markdownToHtml } from "../../md"
 import { UNKNOWN_EVENT_KEY } from "../../schemas/ClientEvent"
 
-export default class UnknownEvent extends ChatMessageBase<typeof UNKNOWN_EVENT_KEY> {
+export default class UnknownEvent extends ChatMessageBase<
+	typeof UNKNOWN_EVENT_KEY
+> {
 	constructor(msg: MatrixEvent) {
 		super(msg)
 		this.element.dataset.eventType = "$unknown"

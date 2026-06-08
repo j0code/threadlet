@@ -1,7 +1,5 @@
 import z from "zod"
-import {
-	EventContentMap,
-} from "./schemas/ClientEvent"
+import { EventContentMap } from "./schemas/ClientEvent"
 import { IContent } from "matrix-js-sdk"
 
 export function parseEventContent<Type extends keyof typeof EventContentMap>(
