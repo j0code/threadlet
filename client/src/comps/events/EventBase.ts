@@ -2,11 +2,11 @@ import z from "zod"
 import { MatrixEvent } from "matrix-js-sdk"
 import Component from "../Component"
 import Avatar from "../Avatar"
-import { EventContentMap, SupportedEvents } from "../../schemas/ClientEvent"
+import { EventContentMap } from "../../schemas/ClientEvent"
 import { parseEventContent } from "../../events"
 
 export default abstract class EventBase<
-	Type extends SupportedEvents,
+	Type extends keyof typeof EventContentMap = keyof typeof EventContentMap,
 > extends Component {
 	readonly message: MatrixEvent
 	readonly content: z.infer<(typeof EventContentMap)[Type]>
@@ -24,7 +24,7 @@ export default abstract class EventBase<
 	) {
 		super(tagName, options)
 		this.message = msg
-		this.content = parseEventContent(msg.getType() as Type, msg.getContent())
+		this.content = parseEventContent(this.type, msg.getContent())
 
 		this.contentElement = document.createElement("div")
 		this.contentElement.className = "message-content md"
@@ -48,4 +48,8 @@ export default abstract class EventBase<
 	}
 
 	abstract reset(): Promise<void>
+
+	get type(): Type {
+		return this.message.getType() as Type
+	}
 }

@@ -9,6 +9,7 @@ import { RoomPinnedEventsContent } from "./room_events/m/room/PinnedEventsConten
 import { RoomMessageContent } from "./room_events/m/room/MessageContent"
 import { RoomTopicContent } from "./room_events/m/room/TopicContent"
 import { RoomRedactionContent } from "./room_events/m/room/RedactionContent"
+import { UnknownEvent } from "./room_events/UnknownEvent"
 
 /*
 For potential future use:
@@ -50,6 +51,8 @@ const ClientEvent = z.discriminatedUnion("type", [
 ])
 */
 
+export const UNKNOWN_EVENT_KEY: symbol = Symbol("UnknownEvent");
+
 export type EventContent =
 	| RoomCanonicalAliasContent
 	| RoomCreateContent
@@ -62,6 +65,7 @@ export type EventContent =
 	| RoomPinnedEventsContent
 	| RoomRedactionContent
 	| RoomMessageContent
+	| UnknownEvent
 
 export type EventContentSchema =
 	| typeof RoomCanonicalAliasContent
@@ -75,6 +79,7 @@ export type EventContentSchema =
 	| typeof RoomPinnedEventsContent
 	| typeof RoomRedactionContent
 	| typeof RoomMessageContent
+	| typeof UnknownEvent
 
 export const EventContentMap = {
 	"m.room.canonical_alias": RoomCanonicalAliasContent,
@@ -88,9 +93,10 @@ export const EventContentMap = {
 	"m.room.pinned_events": RoomPinnedEventsContent,
 	"m.room.redaction": RoomRedactionContent,
 	"m.room.message": RoomMessageContent,
-} as const satisfies Record<string, EventContentSchema>
+	[UNKNOWN_EVENT_KEY]: UnknownEvent
+} as const satisfies Record<string | symbol, EventContentSchema>
 
-export type SupportedEvents = keyof typeof EventContentMap
+export type SupportedEvents = keyof typeof EventContentMap & string
 export type SupportedStateEvents = Exclude<SupportedEvents, "m.room.message">
 
 export function isSupported(type: string): type is SupportedEvents {

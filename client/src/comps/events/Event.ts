@@ -9,12 +9,12 @@ import RoomAudioMessage from "./RoomAudioMessage"
 import RoomFileMessage from "./RoomFileMessage"
 import UnknownEvent from "./UnknownEvent"
 import RoomNameEvent from "./RoomNameEvent"
-import { SupportedEvents } from "../../schemas/ClientEvent"
+import { SupportedStateEvents } from "../../schemas/ClientEvent"
+import ChatMessageBase from "./ChatMessageBase"
 
 const eventTypes = {
-	"m.room.message": RoomTextMessage,
 	"m.room.name": RoomNameEvent,
-} satisfies Record<string, typeof EventBase<SupportedEvents>>
+} satisfies Record<string, typeof EventBase<SupportedStateEvents>>
 
 const msgTypes = {
 	"m.text": RoomTextMessage,
@@ -24,7 +24,7 @@ const msgTypes = {
 	"m.audio": RoomAudioMessage,
 	"m.video": RoomVideoMessage,
 	"m.file": RoomFileMessage,
-} satisfies Record<string, typeof EventBase<"m.room.message">>
+} satisfies Record<string, typeof ChatMessageBase<"m.room.message">>
 
 type EventClasses =
 	| (typeof eventTypes)[keyof typeof eventTypes]

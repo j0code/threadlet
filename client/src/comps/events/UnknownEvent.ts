@@ -1,8 +1,9 @@
 import { MatrixEvent } from "matrix-js-sdk"
 import ChatMessageBase from "./ChatMessageBase"
 import { markdownToHtml } from "../../md"
+import { UNKNOWN_EVENT_KEY } from "../../schemas/ClientEvent"
 
-export default class UnknownEvent extends ChatMessageBase {
+export default class UnknownEvent extends ChatMessageBase<typeof UNKNOWN_EVENT_KEY> {
 	constructor(msg: MatrixEvent) {
 		super(msg)
 	}
@@ -15,5 +16,9 @@ export default class UnknownEvent extends ChatMessageBase {
 				"\n```"
 		)
 		await super.reset()
+	}
+
+	get type() {
+		return UNKNOWN_EVENT_KEY
 	}
 }
