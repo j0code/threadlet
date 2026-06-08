@@ -1,4 +1,4 @@
 import z from "zod"
 
-export const URI = z.string()
-export const GeoURI = z.string()
+export const URI = z.url()
+export const GeoURI = z.url({ protocol: /^geo$/ })
