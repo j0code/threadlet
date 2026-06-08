@@ -9,7 +9,7 @@ import { RoomPinnedEventsContent } from "./room_events/m/room/PinnedEventsConten
 import { RoomMessageContent } from "./room_events/m/room/MessageContent"
 import { RoomTopicContent } from "./room_events/m/room/TopicContent"
 import { RoomRedactionContent } from "./room_events/m/room/RedactionContent"
-import { UnknownEvent } from "./room_events/UnknownEvent"
+import { UnknownEvent } from "./room_events/UnknownEventContent"
 
 /*
 For potential future use:
