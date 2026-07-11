@@ -11,7 +11,7 @@ export default class RoomVideoMessage extends ChatMessageBase {
 	async reset(): Promise<void> {
 		this.contentElement.innerHTML = ""
 
-		const content = parseEventContent(this.message.getContent())
+		const content = parseEventContent(this.getContent())
 		const blobUrl =
 			typeof content.url == "string" ? await getMXCData(content.url) : null
 

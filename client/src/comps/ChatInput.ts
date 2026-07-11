@@ -1,4 +1,4 @@
-import { MsgType } from "matrix-js-sdk"
+import { MatrixEvent, MsgType } from "matrix-js-sdk"
 import { matrix } from "../matrix"
 import Component from "./Component"
 import EmojiPicker from "./EmojiPicker"
@@ -9,6 +9,7 @@ import RoomView from "./views/RoomView"
 export default class ChatInput extends Component {
 	readonly emojiPicker: EmojiPicker
 	readonly input: HTMLDivElement
+	replacingEventId: string | null = null
 
 	constructor(view: PostView | RoomView) {
 		super("div", { id: "chat-input-container" })
@@ -30,6 +31,7 @@ export default class ChatInput extends Component {
 		this.input.setAttribute("placeholder", "Message #channel")
 		this.input.addEventListener("keypress", e => {
 			if (e.code == "Enter" && !e.shiftKey) {
+				const replacingEventId = this.replacingEventId
 				e.preventDefault()
 				const content = this.input.innerText.trim()
 				if (content == "") return
@@ -52,14 +54,31 @@ export default class ChatInput extends Component {
 					const room = view.getCurrentRoom()
 					if (!room) return
 
-					await matrix.sendMessage(room.roomId, {
-						body: content,
-						msgtype: MsgType.Text,
-					})
+					if (!replacingEventId) {
+						await matrix.sendMessage(room.roomId, {
+							body: content,
+							msgtype: MsgType.Text,
+						})
+					} else {
+						await matrix.sendMessage(room.roomId, {
+							body: "* " + content,
+							msgtype: MsgType.Text,
+							"m.new_content": {
+								body: content,
+								msgtype: MsgType.Text,
+							},
+							// @ts-expect-error the matrix-js-sdk types are terrible
+							"m.relates_to": {
+								rel_type: "m.replace",
+								event_id: replacingEventId,
+							},
+						})
+					}
 				}
 
 				console.log("Send MSG:", this.input.innerText)
 				void createMessage()
+				this.replacingEventId = null
 			}
 		})
 		this.input.addEventListener("input", () => {
@@ -87,5 +106,16 @@ export default class ChatInput extends Component {
 		this.element.appendChild(this.input)
 		this.element.appendChild(emojiButton)
 		this.element.appendChild(this.emojiPicker.element)
+	}
+
+	startReplacement(event: MatrixEvent) {
+		this.replacingEventId = event.getId() || null
+		const content = event.getContent()
+		if (content.msgtype === MsgType.Text) {
+			if (this.input) {
+				this.input.textContent = content.body as string || ""
+				this.input.focus()
+			}
+		}
 	}
 }

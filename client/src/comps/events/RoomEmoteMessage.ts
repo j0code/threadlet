@@ -20,9 +20,9 @@ export default class RoomEmoteMessage extends ChatMessageBase {
 		this.contentElement.appendChild(emote)
 
 		const body = document.createElement("span")
-		const content = parseEventContent(this.message.getContent())
+		const content = parseEventContent(this.getContent())
 
-		switch (this.message.getContent().format) {
+		switch (this.getContent().format) {
 			case "org.matrix.custom.html":
 				body.innerHTML = purifyHTML(content.formatted_body ?? "")
 				break

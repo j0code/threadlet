@@ -754,7 +754,8 @@ dialog {
 	overflow: hidden hidden;
 }
 
-.message-content.redacted {
+.message-content.redacted,
+.replaced-marker {
 	font-style: italic;
 	color: var(--text-muted);
 }

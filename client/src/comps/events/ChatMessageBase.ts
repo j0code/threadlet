@@ -1,10 +1,12 @@
 import { twemojiParse } from "../../md"
-import { Direction, MatrixEvent } from "matrix-js-sdk"
+import { Direction, IContent, MatrixEvent } from "matrix-js-sdk"
 import { getMXUser, matrix } from "../../matrix"
 import EventBase from "./EventBase"
 import { relativeTimeFormat } from "../../intl"
 import ContextMenu, { ContextMenuItem } from "../ContextMenu"
 import ConfirmForm from "../forms/ConfirmForm"
+import { app } from "../../main"
+import RoomView from "../views/RoomView"
 
 export default class ChatMessageBase extends EventBase {
 	constructor(msg: MatrixEvent) {
@@ -24,8 +26,9 @@ export default class ChatMessageBase extends EventBase {
 
 		const ctxMenu = new ContextMenu("message-menu", this.element)
 		const ctxMenuItems: ContextMenuItem[] = []
+		const isMyEvent = this.message.getSender() === matrix.getUserId()
 		const canRedact =
-			this.message.getSender() === matrix.getUserId() ||
+			isMyEvent ||
 			room
 				?.getLiveTimeline()
 				.getState(Direction.Forward)
@@ -53,11 +56,35 @@ export default class ChatMessageBase extends EventBase {
 				},
 			})
 		}
+		if (isMyEvent) {
+			ctxMenuItems.push({
+				label: "Replace",
+				action: () => {
+					if (!this.message) return
+					const view = app.getCurrentView()
+					if (!(view instanceof RoomView)) return
+					view.chatInput.startReplacement(this.message)
+				}
+			})
+		}
 
 		ctxMenu.reset(ctxMenuItems)
 		this.element.appendChild(ctxMenu.element)
 
 		void this.reset()
+	}
+
+	async replaceEvent(event: MatrixEvent) {
+		this.message = event
+		await this.reset()
+	}
+
+	getContent() {
+		const content = this.message.getContent()
+		if (content["m.relates_to"]?.rel_type === "m.replace") {
+			return content["m.new_content"] as IContent || content
+		}
+		return content
 	}
 
 	async reset() {
@@ -75,6 +102,15 @@ export default class ChatMessageBase extends EventBase {
 		if (msg.isRedacted()) {
 			this.contentElement.classList.add("redacted")
 			this.contentElement.textContent = "(redacted)"
+			return
+		}
+
+		console.log("Resetting message:", msg.getId(), msg.getContent())
+		if (msg.getContent()["m.relates_to"]?.rel_type === "m.replace" || msg.getOriginalContent() != msg.getContent()) {
+			const replacedMarker = document.createElement("span")
+			replacedMarker.className = "replaced-marker"
+			replacedMarker.textContent = " (replaced)"
+			this.contentElement.appendChild(replacedMarker)
 			return
 		}
 

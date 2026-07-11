@@ -10,9 +10,9 @@ export default class RoomNoticeMessage extends ChatMessageBase {
 	}
 
 	async reset(): Promise<void> {
-		const content = parseEventContent(this.message.getContent())
+		const content = parseEventContent(this.getContent())
 
-		switch (this.message.getContent().format) {
+		switch (this.getContent().format) {
 			case "org.matrix.custom.html":
 				this.contentElement.innerHTML = purifyHTML(content.formatted_body || "")
 				break
