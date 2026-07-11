@@ -20,10 +20,7 @@ export default class TypingIndicator extends Component {
 	}
 
 	reset(users: RoomMember[]) {
-		if(users.length === 0) {
-			return
-		}
-		this.avatarList.reset(users.map(u => u.userId).flatMap(id => [id, id])) // duplicate ids to show avatars twice
+		this.avatarList.reset(users.map(u => u.userId))
 		this.label.innerHTML = this.renderLabel(users)
 	}
 
