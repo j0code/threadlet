@@ -8,7 +8,7 @@ import RoomView from "./views/RoomView"
 // Credits to DeepSeek-R1, wow (edited though)
 export default class ChatInput extends Component {
 	readonly emojiPicker: EmojiPicker
-	readonly chatInput: HTMLDivElement
+	readonly input: HTMLDivElement
 	replacingEventId: string | null = null
 
 	constructor(view: PostView | RoomView) {
@@ -25,17 +25,17 @@ export default class ChatInput extends Component {
 		fileUploadLabel.appendChild(fileInput)
 
 		// Create chat input
-		this.chatInput = document.createElement("div")
-		this.chatInput.className = "chat-input"
-		this.chatInput.setAttribute("contenteditable", "true")
-		this.chatInput.setAttribute("placeholder", "Message #channel")
-		this.chatInput.addEventListener("keypress", e => {
+		this.input = document.createElement("div")
+		this.input.className = "chat-input"
+		this.input.setAttribute("contenteditable", "true")
+		this.input.setAttribute("placeholder", "Message #channel")
+		this.input.addEventListener("keypress", e => {
 			if (e.code == "Enter" && !e.shiftKey) {
 				const replacingEventId = this.replacingEventId
 				e.preventDefault()
-				const content = this.chatInput.innerText.trim()
+				const content = this.input.innerText.trim()
 				if (content == "") return
-				this.chatInput.innerHTML = ""
+				this.input.innerHTML = ""
 
 				async function createMessage() {
 					// const forum_id = view.getCurrentForumId()
@@ -76,14 +76,14 @@ export default class ChatInput extends Component {
 					}
 				}
 
-				console.log("Send MSG:", this.chatInput.innerText)
+				console.log("Send MSG:", this.input.innerText)
 				void createMessage()
 				this.replacingEventId = null
 			}
 		})
-		this.chatInput.addEventListener("input", () => {
+		this.input.addEventListener("input", () => {
 			// this fixes weird browser behavior
-			if (this.chatInput.innerHTML == "<br>") this.chatInput.innerHTML = ""
+			if (this.input.innerHTML == "<br>") this.input.innerHTML = ""
 		})
 
 		// Create emoji button
@@ -97,13 +97,13 @@ export default class ChatInput extends Component {
 			"chat-input-emoji-picker",
 			"chat-input-container",
 			emoji => {
-				this.chatInput.textContent += emoji.native
+				this.input.textContent += emoji.native
 			}
 		)
 
 		// Div-engers, Assemble!
 		this.element.appendChild(fileUploadLabel)
-		this.element.appendChild(this.chatInput)
+		this.element.appendChild(this.input)
 		this.element.appendChild(emojiButton)
 		this.element.appendChild(this.emojiPicker.element)
 	}
@@ -112,9 +112,9 @@ export default class ChatInput extends Component {
 		this.replacingEventId = event.getId() || null
 		const content = event.getContent()
 		if (content.msgtype === MsgType.Text) {
-			if (this.chatInput) {
-				this.chatInput.textContent = content.body as string || ""
-				this.chatInput.focus()
+			if (this.input) {
+				this.input.textContent = content.body as string || ""
+				this.input.focus()
 			}
 		}
 	}

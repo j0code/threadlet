@@ -113,4 +113,8 @@ export default class RoomView extends View {
 	getCurrentRoom() {
 		return this.currentRoom
 	}
+
+	get defaultTextInput() {
+		return this.chatInput.input
+	}
 }

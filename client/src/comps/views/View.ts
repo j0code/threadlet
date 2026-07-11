@@ -23,4 +23,10 @@ export default abstract class View<
 	}
 
 	abstract reset(...args: ResetArgs): void | Promise<void>
+
+	abstract defaultTextInput: HTMLElement | undefined
+
+	get defaultInput() {
+		return this.defaultTextInput
+	}
 }
