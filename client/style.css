@@ -721,13 +721,12 @@ dialog {
 	margin-top: 10px;
 }
 
-.member-avatar,
-.member-avatar img {
+.avatar.member-avatar,
+.avatar.member-avatar img {
 	width: 30px;
 	aspect-ratio: 1 / 1;
 	border-radius: 100%;
-	/* eslint-disable-next-line css/no-important -- It's not unexpected, I expected it! */
-	font-size: 14px !important;
+	font-size: 14px;
 }
 
 .context-menu {
@@ -852,8 +851,7 @@ dialog {
 
 .typing-avatar-list .avatar-list-avatar {
 	height: 1.5em;
-	/* eslint-disable-next-line css/no-important */
-	font-size: 16px !important;
+	font-size: 16px;
 	aspect-ratio: 1 / 1;
 	border-radius: 100%;
 }
