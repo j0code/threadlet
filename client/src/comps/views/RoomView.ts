@@ -1,10 +1,11 @@
 import View from "../views//View"
 import ChatInput from "../ChatInput"
 import EventList from "../EventList"
-import { MatrixEvent, Room, RoomEvent } from "matrix-js-sdk"
+import { MatrixEvent, MatrixEventEvent, Room, RoomEvent } from "matrix-js-sdk"
 import { matrix } from "../../matrix"
 import MemberList from "../MemberList"
 import { parseEventContent } from "../../events"
+import ChatMessageBase from "../events/ChatMessageBase"
 
 export default class RoomView extends View {
 	private currentRoom?: Room
@@ -40,7 +41,27 @@ export default class RoomView extends View {
 	onTimelineEvent(room: Room) {
 		return (event: MatrixEvent) => {
 			if (event.getRoomId() === room.roomId) {
+				if (event.getContent()["m.relates_to"]?.rel_type === "m.replace") {
+					const eventId = event.getContent()["m.relates_to"]?.event_id
+					if (!eventId) return
+					const comp = this.msgList.eventComponents.get(eventId)
+					if (!comp) return
+					if (!(comp instanceof ChatMessageBase)) return
+					void comp.replaceEvent(event)
+					this.msgList.eventComponents.set(event.getId()!, comp)
+					return
+				}
 				this.msgList.pushMessage(event)
+				if (event.isSending()) {
+					const oldId = event.getId()
+					if (!oldId) return
+					event.once(MatrixEventEvent.LocalEventIdReplaced, (newEvent) => {
+						console.log("Event ID replaced:", oldId, "->", newEvent.getId())
+						const comp = this.msgList.eventComponents.get(oldId)
+						this.msgList.eventComponents.delete(oldId)
+						this.msgList.eventComponents.set(newEvent.getId()!, comp!)
+					})
+				}
 			}
 		}
 	}
@@ -65,7 +86,9 @@ export default class RoomView extends View {
 		this.head.reset(room.name)
 		await matrix.roomInitialSync(room.roomId, 20)
 		const events = room.getLiveTimeline().getEvents()
-		this.msgList.reset(events)
+		this.msgList.reset(events.filter(e => {
+			return e.getContent()["m.relates_to"]?.rel_type !== "m.replace"
+		}))
 
 		if (this.timelineEventHandler)
 			matrix.off(RoomEvent.Timeline, this.timelineEventHandler)

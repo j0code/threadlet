@@ -3,7 +3,7 @@ import Component from "../Component"
 import Avatar from "../Avatar"
 
 export default abstract class EventBase extends Component {
-	readonly message: MatrixEvent
+	message: MatrixEvent
 	readonly mainElement: HTMLDivElement
 	readonly asideElement: HTMLDivElement
 	readonly contentElement: HTMLDivElement

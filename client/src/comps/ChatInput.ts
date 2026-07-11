@@ -1,4 +1,4 @@
-import { MsgType } from "matrix-js-sdk"
+import { MatrixEvent, MsgType } from "matrix-js-sdk"
 import { matrix } from "../matrix"
 import Component from "./Component"
 import EmojiPicker from "./EmojiPicker"
@@ -8,6 +8,8 @@ import RoomView from "./views/RoomView"
 // Credits to DeepSeek-R1, wow (edited though)
 export default class ChatInput extends Component {
 	readonly emojiPicker: EmojiPicker
+	readonly chatInput: HTMLDivElement
+	replacingEventId: string | null = null
 
 	constructor(view: PostView | RoomView) {
 		super("div", { id: "chat-input-container" })
@@ -23,16 +25,17 @@ export default class ChatInput extends Component {
 		fileUploadLabel.appendChild(fileInput)
 
 		// Create chat input
-		const chatInput = document.createElement("div")
-		chatInput.className = "chat-input"
-		chatInput.setAttribute("contenteditable", "true")
-		chatInput.setAttribute("placeholder", "Message #channel")
-		chatInput.addEventListener("keypress", e => {
+		this.chatInput = document.createElement("div")
+		this.chatInput.className = "chat-input"
+		this.chatInput.setAttribute("contenteditable", "true")
+		this.chatInput.setAttribute("placeholder", "Message #channel")
+		this.chatInput.addEventListener("keypress", e => {
 			if (e.code == "Enter" && !e.shiftKey) {
+				const replacingEventId = this.replacingEventId
 				e.preventDefault()
-				const content = chatInput.innerText.trim()
+				const content = this.chatInput.innerText.trim()
 				if (content == "") return
-				chatInput.innerHTML = ""
+				this.chatInput.innerHTML = ""
 
 				async function createMessage() {
 					// const forum_id = view.getCurrentForumId()
@@ -51,19 +54,36 @@ export default class ChatInput extends Component {
 					const room = view.getCurrentRoom()
 					if (!room) return
 
-					await matrix.sendMessage(room.roomId, {
-						body: content,
-						msgtype: MsgType.Text,
-					})
+					if (!replacingEventId) {
+						await matrix.sendMessage(room.roomId, {
+							body: content,
+							msgtype: MsgType.Text,
+						})
+					} else {
+						await matrix.sendMessage(room.roomId, {
+							body: "* " + content,
+							msgtype: MsgType.Text,
+							"m.new_content": {
+								body: content,
+								msgtype: MsgType.Text,
+							},
+							// @ts-expect-error the matrix-js-sdk types are terrible
+							"m.relates_to": {
+								rel_type: "m.replace",
+								event_id: replacingEventId,
+							},
+						})
+					}
 				}
 
-				console.log("Send MSG:", chatInput.innerText)
+				console.log("Send MSG:", this.chatInput.innerText)
 				void createMessage()
+				this.replacingEventId = null
 			}
 		})
-		chatInput.addEventListener("input", () => {
+		this.chatInput.addEventListener("input", () => {
 			// this fixes weird browser behavior
-			if (chatInput.innerHTML == "<br>") chatInput.innerHTML = ""
+			if (this.chatInput.innerHTML == "<br>") this.chatInput.innerHTML = ""
 		})
 
 		// Create emoji button
@@ -77,14 +97,25 @@ export default class ChatInput extends Component {
 			"chat-input-emoji-picker",
 			"chat-input-container",
 			emoji => {
-				chatInput.textContent += emoji.native
+				this.chatInput.textContent += emoji.native
 			}
 		)
 
 		// Div-engers, Assemble!
 		this.element.appendChild(fileUploadLabel)
-		this.element.appendChild(chatInput)
+		this.element.appendChild(this.chatInput)
 		this.element.appendChild(emojiButton)
 		this.element.appendChild(this.emojiPicker.element)
+	}
+
+	startReplacement(event: MatrixEvent) {
+		this.replacingEventId = event.getId() || null
+		const content = event.getContent()
+		if (content.msgtype === MsgType.Text) {
+			if (this.chatInput) {
+				this.chatInput.textContent = content.body as string || ""
+				this.chatInput.focus()
+			}
+		}
 	}
 }
