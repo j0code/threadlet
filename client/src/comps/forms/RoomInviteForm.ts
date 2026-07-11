@@ -1,8 +1,8 @@
 import { Room } from "matrix-js-sdk"
 import Form from "./Form"
-import FormTextInput from "./FormTextInput"
-import { matrix } from "../matrix"
-import SubmitButton from "./SubmitButton"
+import FormTextInput from "../form-comps/FormTextInput"
+import { matrix } from "../../matrix"
+import SubmitButton from "../form-comps/SubmitButton"
 
 export default class RoomInviteForm extends Form {
 	room: Room | null = null

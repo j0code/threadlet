@@ -1,5 +1,5 @@
-import Component from "./Component"
-import EmojiButton from "./EmojiButton"
+import Component from "../Component"
+import EmojiButton from "../EmojiButton"
 
 export default class FormTextarea extends Component {
 	private readonly textarea: HTMLTextAreaElement

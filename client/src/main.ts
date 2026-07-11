@@ -1,13 +1,11 @@
-import "../style.css"
-import "../md.css"
 import "highlight.js/styles/github-dark.min.css"
 import App from "./comps/App"
 import { User } from "matrix-js-sdk"
 import Login from "./comps/Login"
-import RoomView from "./comps/RoomView"
-import RoomCreationForm from "./comps/RoomCreationForm"
-import RoomInvitationForm from "./comps/RoomInvitationForm"
-import RoomInviteForm from "./comps/RoomInviteForm"
+import RoomView from "./comps/views/RoomView"
+import RoomCreationForm from "./comps/forms/RoomCreationForm"
+import RoomInvitationForm from "./comps/forms/RoomInvitationForm"
+import RoomInviteForm from "./comps/forms/RoomInviteForm"
 
 export let app: App
 export let clientUser: User

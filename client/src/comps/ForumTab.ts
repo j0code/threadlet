@@ -4,7 +4,7 @@ import { twemojiParse } from "../md"
 import Component from "./Component"
 import ContextMenu from "./ContextMenu"
 import { app } from "../main"
-import ConfirmForm from "./ConfirmForm"
+import ConfirmForm from "./forms/ConfirmForm"
 
 export default class ForumTab extends Component {
 	readonly tab: HTMLElement

@@ -12,7 +12,7 @@ export default class Login extends Component {
 		this.element.appendChild(title)
 
 		const morpheusImg = document.createElement("img")
-		morpheusImg.src = "/2pills.png"
+		morpheusImg.src = "/assets/2pills.png"
 		morpheusImg.id = "morpehusImg"
 		this.element.appendChild(morpheusImg)
 

@@ -738,9 +738,14 @@ dialog {
 	gap: 5px;
 	position: absolute;
 	margin: 0;
+	user-select: none;
 
 	&:popover-open {
 		display: flex;
+	}
+
+	.context-menu-item {
+		cursor: pointer;
 	}
 }
 
