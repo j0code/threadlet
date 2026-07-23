@@ -2,9 +2,8 @@ import { MatrixEvent } from "matrix-js-sdk"
 import EventMessageBase from "./EventMessageBase"
 import { getMXUser } from "../../matrix"
 import { twemojiParse } from "../../md"
-import { parseEventContent } from "../../events"
 
-export default class RoomNameEvent extends EventMessageBase {
+export default class RoomNameEvent extends EventMessageBase<"m.room.name"> {
 	constructor(msg: MatrixEvent) {
 		super(msg)
 		void this.reset()
@@ -16,9 +15,7 @@ export default class RoomNameEvent extends EventMessageBase {
 		const { mxid, displayname } = await getMXUser(this.message.getSender()!)
 		const authorName = twemojiParse(displayname || mxid || "Unknown User")
 
-		const content = parseEventContent(this.message.getContent())
-		// @ts-expect-error content.name should be string
-		const roomName = twemojiParse(content.name || "Unknown")
+		const roomName = twemojiParse(this.content.name || "Unknown")
 
 		this.nameElement.innerHTML = authorName
 		this.contentElement.innerHTML = `<span>changed the room name to ${roomName}</span>`

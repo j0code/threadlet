@@ -1,7 +1,7 @@
 import { MatrixEvent } from "matrix-js-sdk"
 import ChatMessageBase from "./ChatMessageBase"
 import { getMXCData } from "../../matrix"
-import { parseEventContent } from "../../events"
+import { File } from "../../schemas/msgtypes/m/File"
 
 export default class RoomFileMessage extends ChatMessageBase {
 	constructor(msg: MatrixEvent) {
@@ -11,7 +11,8 @@ export default class RoomFileMessage extends ChatMessageBase {
 	async reset(): Promise<void> {
 		this.contentElement.innerHTML = ""
 
-		const content = parseEventContent(this.message.getContent())
+		const content = this.content as File
+
 		const blobUrl =
 			typeof content.url == "string" ? await getMXCData(content.url) : null
 

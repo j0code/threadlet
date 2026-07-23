@@ -3,11 +3,19 @@ import { MatrixEvent } from "matrix-js-sdk"
 import { renderEvent } from "./events/Event"
 import ChatMessageBase from "./events/ChatMessageBase"
 import EventMessageBase from "./events/EventMessageBase"
+import {
+	UNKNOWN_EVENT_KEY,
+	type SupportedStateEvents,
+} from "../schemas/ClientEvent"
 
 const HIDDEN_EVENTS = ["m.room.redaction"]
 
 export default class EventList extends Component {
-	eventComponents: Map<string, ChatMessageBase | EventMessageBase>
+	eventComponents: Map<
+		string,
+		| ChatMessageBase<"m.room.message" | typeof UNKNOWN_EVENT_KEY>
+		| EventMessageBase<SupportedStateEvents>
+	>
 
 	constructor() {
 		super("div", { id: `events` })
@@ -34,6 +42,7 @@ export default class EventList extends Component {
 			this.element.scrollHeight - 10
 
 		const comp = renderEvent(event)
+		void comp.reset()
 		this.eventComponents.set(event.getId()!, comp)
 		this.element.appendChild(comp.element)
 

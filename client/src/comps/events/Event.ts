@@ -9,11 +9,13 @@ import RoomAudioMessage from "./RoomAudioMessage"
 import RoomFileMessage from "./RoomFileMessage"
 import UnknownEvent from "./UnknownEvent"
 import RoomNameEvent from "./RoomNameEvent"
+import { SupportedStateEvents } from "../../schemas/ClientEvent"
+import ChatMessageBase from "./ChatMessageBase"
+import ErrorEvent from "./ErrorEvent"
 
 const eventTypes = {
-	"m.room.message": RoomTextMessage,
 	"m.room.name": RoomNameEvent,
-} satisfies Record<string, typeof EventBase>
+} satisfies Record<string, typeof EventBase<SupportedStateEvents>>
 
 const msgTypes = {
 	"m.text": RoomTextMessage,
@@ -23,7 +25,7 @@ const msgTypes = {
 	"m.audio": RoomAudioMessage,
 	"m.video": RoomVideoMessage,
 	"m.file": RoomFileMessage,
-} satisfies Record<string, typeof EventBase>
+} satisfies Record<string, typeof ChatMessageBase<"m.room.message">>
 
 type EventClasses =
 	| (typeof eventTypes)[keyof typeof eventTypes]
@@ -45,5 +47,9 @@ export function renderEvent(event: MatrixEvent) {
 				: RoomTextMessage
 	}
 
-	return new EventClass(event)
+	try {
+		return new EventClass(event)
+	} catch (e) {
+		return new ErrorEvent(event, e)
+	}
 }

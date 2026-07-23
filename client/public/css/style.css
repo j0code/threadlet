@@ -829,6 +829,14 @@ dialog {
 	}
 }
 
+.message[data-event-type="$error"] {
+	background-color: rgb(255 0 0 / 0.05);
+
+	.message-content.md > pre > code.language-text {
+		color: #ff8080;
+	}
+}
+
 .modal {
 	background-color: var(--background-primary);
 	border: none;

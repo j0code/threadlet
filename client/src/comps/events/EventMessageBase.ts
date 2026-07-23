@@ -1,8 +1,11 @@
 import { MatrixEvent } from "matrix-js-sdk"
 import EventBase from "./EventBase"
 import { relativeTimeFormat } from "../../intl"
+import { type SupportedStateEvents } from "../../schemas/ClientEvent"
 
-export default class EventMessageBase extends EventBase {
+export default class EventMessageBase<
+	Type extends SupportedStateEvents,
+> extends EventBase<Type> {
 	constructor(msg: MatrixEvent) {
 		super(msg, "div", { id: `message-${msg.getId()}`, classes: ["message"] })
 

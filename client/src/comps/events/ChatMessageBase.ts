@@ -5,8 +5,11 @@ import EventBase from "./EventBase"
 import { relativeTimeFormat } from "../../intl"
 import ContextMenu, { ContextMenuItem } from "../ContextMenu"
 import ConfirmForm from "../forms/ConfirmForm"
+import { UNKNOWN_EVENT_KEY } from "../../schemas/ClientEvent"
 
-export default class ChatMessageBase extends EventBase {
+export default class ChatMessageBase<
+	Type extends "m.room.message" | typeof UNKNOWN_EVENT_KEY = "m.room.message",
+> extends EventBase<Type> {
 	constructor(msg: MatrixEvent) {
 		super(msg, "div", { id: `message-${msg.getId()}`, classes: ["message"] })
 
@@ -17,8 +20,7 @@ export default class ChatMessageBase extends EventBase {
 		this.asideElement.append(this.avatar.element)
 		this.mainElement.append(header, this.contentElement)
 
-		const content = this.message.getContent()
-		this.element.dataset.msgtype = content.msgtype || "m.text"
+		this.element.dataset.msgtype = this.content.msgtype
 
 		const room = matrix.getRoom(this.message.getRoomId())
 
@@ -56,8 +58,6 @@ export default class ChatMessageBase extends EventBase {
 
 		ctxMenu.reset(ctxMenuItems)
 		this.element.appendChild(ctxMenu.element)
-
-		void this.reset()
 	}
 
 	async reset() {

@@ -10,12 +10,11 @@ export interface MXUser {
 
 export interface IContent {
 	[key: string]: unknown
-	body: string
 	formatted_body?: string
 	msgtype?: MsgType | string
 	membership?: Membership
 	avatar_url?: string
-	displayname?: string
+	displayname?: string | null
 	"m.relates_to"?: IEventRelation
 
 	"m.mentions"?: IMentions

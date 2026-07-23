@@ -25,7 +25,8 @@
 		"marked": "^18.0.4",
 		"marked-alert": "^2.1.2",
 		"marked-highlight": "^2.2.4",
-		"matrix-js-sdk": "^41.5.0"
+		"matrix-js-sdk": "^41.5.0",
+		"zod": "^4.4.3"
 	},
 	"devDependencies": {
 		"@eslint/css": "^1.2.0",

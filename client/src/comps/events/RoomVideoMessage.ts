@@ -1,7 +1,7 @@
 import { MatrixEvent } from "matrix-js-sdk"
 import ChatMessageBase from "./ChatMessageBase"
 import { getMXCData } from "../../matrix"
-import { parseEventContent } from "../../events"
+import { Video } from "../../schemas/msgtypes/m/Video"
 
 export default class RoomVideoMessage extends ChatMessageBase {
 	constructor(msg: MatrixEvent) {
@@ -11,7 +11,7 @@ export default class RoomVideoMessage extends ChatMessageBase {
 	async reset(): Promise<void> {
 		this.contentElement.innerHTML = ""
 
-		const content = parseEventContent(this.message.getContent())
+		const content = this.content as Video
 		const blobUrl =
 			typeof content.url == "string" ? await getMXCData(content.url) : null
 
