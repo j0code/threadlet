@@ -400,6 +400,7 @@ body {
 	margin: var(--gap);
 	gap: var(--gap-half);
 	anchor-name: --emoji-picker-anchor;
+	margin-top: 0;
 }
 
 .file-upload-button,
@@ -720,13 +721,12 @@ dialog {
 	margin-top: 10px;
 }
 
-.member-avatar,
-.member-avatar img {
+.avatar.member-avatar,
+.avatar.member-avatar img {
 	width: 30px;
 	aspect-ratio: 1 / 1;
 	border-radius: 100%;
-	/* eslint-disable-next-line css/no-important -- It's not unexpected, I expected it! */
-	font-size: 14px !important;
+	font-size: 14px;
 }
 
 .context-menu {
@@ -779,6 +779,7 @@ dialog {
 	display: flex;
 	flex-direction: column;
 	flex: 1 1 auto;
+	gap: var(--gap-half);
 }
 
 .message audio,
@@ -843,4 +844,43 @@ dialog {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
+}
+
+#typing-indicator {
+	display: flex;
+	gap: var(--space-width);
+	align-items: center;
+	margin-left: var(--gap);
+	min-height: 20px;
+}
+
+.typing-avatar-list .avatar-list-avatar {
+	height: 1.5em;
+	font-size: 16px;
+	aspect-ratio: 1 / 1;
+	border-radius: 100%;
+}
+
+#avatar-list .avatar-list-avatar:not(:first-child) {
+	margin-right: -16px;
+}
+
+.avatar-list-avatar {
+	border: 4px solid var(--background-primary);
+}
+
+#avatar-list {
+	display: flex;
+	flex-direction: row-reverse;
+	align-items: center;
+}
+
+.typing-label {
+	font-size: 0.75em;
+	color: var(--text-muted);
+}
+
+.typing-user {
+	font-weight: bold;
+	color: white;
 }

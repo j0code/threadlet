@@ -7,6 +7,8 @@ import RoomView from "./views/RoomView"
 
 // Credits to DeepSeek-R1, wow (edited though)
 export default class ChatInput extends Component {
+	public static readonly TYPING_TIMEOUT = 10000
+
 	readonly emojiPicker: EmojiPicker
 	readonly input: HTMLDivElement
 
@@ -65,6 +67,27 @@ export default class ChatInput extends Component {
 		this.input.addEventListener("input", () => {
 			// this fixes weird browser behavior
 			if (this.input.innerHTML == "<br>") this.input.innerHTML = ""
+		})
+		let lastTypingSent = 0
+		let lastTypingValue = false
+		chatInput.addEventListener("keyup", async () => {
+			if (!(view instanceof RoomView)) return
+			if (view.getCurrentRoom() == undefined) return
+			const isEmpty = chatInput.innerText.trim() == ""
+			if (
+				lastTypingValue != isEmpty ||
+				Date.now() - lastTypingSent > ChatInput.TYPING_TIMEOUT
+			) {
+				lastTypingSent = Date.now()
+				lastTypingValue = isEmpty
+				// TODO: configurable timeout?
+				// TODO: allow disabling typing notifications?
+				await matrix.sendTyping(
+					view.getCurrentRoom()!.roomId,
+					!isEmpty,
+					ChatInput.TYPING_TIMEOUT
+				)
+			}
 		})
 
 		// Create emoji button
