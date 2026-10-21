@@ -23,7 +23,7 @@ export default class RoomList extends Component {
 
 		for (const forum of rooms.filter(r => r.getMyMembership() != "leave")) {
 			const tab = new ForumTab(forum)
-			tab.tab.addEventListener("click", () => {
+			tab.element.addEventListener("click", () => {
 				const membership = forum.getMyMembership()
 				//app.renderView(membership == "join" ? views.roomView : views.roomInviteView, forum)
 				if (membership == "join") {
