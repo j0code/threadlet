@@ -30,6 +30,14 @@ type EventClasses =
 	| (typeof msgTypes)[keyof typeof msgTypes]
 	| typeof UnknownEvent
 
+export function getEventTimestamp(message: MatrixEvent): Date {
+	const originalTs = message.getContent()["de.importer.original_ts"] as unknown
+	if (originalTs && typeof originalTs === "number") {
+		return new Date(originalTs)
+	}
+	return message.getDate() || new Date()
+}
+
 export function renderEvent(event: MatrixEvent) {
 	const type = event.getType()
 

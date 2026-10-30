@@ -5,6 +5,7 @@ import EventBase from "./EventBase"
 import { relativeTimeFormat } from "../../intl"
 import ContextMenu, { ContextMenuItem } from "../ContextMenu"
 import ConfirmForm from "../forms/ConfirmForm"
+import { getEventTimestamp } from "./Event"
 
 export default class ChatMessageBase extends EventBase {
 	constructor(msg: MatrixEvent) {
@@ -66,10 +67,10 @@ export default class ChatMessageBase extends EventBase {
 		this.nameElement.innerHTML = twemojiParse(
 			displayname || msg.getSender() || "Unknown"
 		)
-		this.timestampElement.dateTime = msg.getDate()?.toISOString() || ""
+		this.timestampElement.dateTime = getEventTimestamp(msg).toISOString() || ""
 		// this.timestampElement.textContent = msg.getDate()?.toISOString() || ""
 		this.timestampElement.textContent = relativeTimeFormat(
-			msg.getDate() || new Date()
+			getEventTimestamp(msg) || new Date()
 		)
 
 		if (msg.isRedacted()) {

@@ -1,6 +1,7 @@
 import { MatrixEvent } from "matrix-js-sdk"
 import EventBase from "./EventBase"
 import { relativeTimeFormat } from "../../intl"
+import { getEventTimestamp } from "./Event"
 
 export default class EventMessageBase extends EventBase {
 	constructor(msg: MatrixEvent) {
@@ -19,10 +20,10 @@ export default class EventMessageBase extends EventBase {
 	// eslint-disable-next-line @typescript-eslint/require-await
 	async reset() {
 		const msg = this.message
-		this.timestampElement.dateTime = msg.getDate()?.toISOString() || ""
+		this.timestampElement.dateTime = getEventTimestamp(msg).toISOString() || ""
 		// this.timestampElement.textContent = msg.getDate()?.toISOString() || ""
 		this.timestampElement.textContent = relativeTimeFormat(
-			msg.getDate() || new Date()
+			getEventTimestamp(msg) || new Date()
 		)
 	}
 }
