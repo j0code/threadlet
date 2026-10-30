@@ -6,11 +6,18 @@ export interface ContextMenuItem {
 	action: () => MaybePromise<void>
 }
 
+export interface ContextMenuOptions {
+	ignoredElementTypes?: (keyof HTMLElementTagNameMap)[]
+}
+
 export default class ContextMenu extends Component {
 	public readonly trigger: HTMLElement
+	public readonly options: ContextMenuOptions
 
-	constructor(className: string, trigger: HTMLElement) {
+	constructor(className: string, trigger: HTMLElement, options?: ContextMenuOptions) {
 		super("div", { classes: ["context-menu", className] })
+
+		this.options = options || {}
 
 		this.element.popover = "manual"
 
@@ -18,6 +25,8 @@ export default class ContextMenu extends Component {
 
 		let open = false
 		this.trigger.addEventListener("contextmenu", e => {
+			const elementTag = (e.target as HTMLElement).tagName.toLowerCase() as keyof HTMLElementTagNameMap
+			if (this.options.ignoredElementTypes?.includes(elementTag)) return
 			e.preventDefault()
 			if (this.element.children.length === 0) return
 			const elem = this.element as HTMLDialogElement

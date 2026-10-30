@@ -22,7 +22,9 @@ export default class ChatMessageBase extends EventBase {
 
 		const room = matrix.getRoom(this.message.getRoomId())
 
-		const ctxMenu = new ContextMenu("message-menu", this.element)
+		const ctxMenu = new ContextMenu("message-menu", this.element, {
+			ignoredElementTypes: ["video", "img", "audio", "a"]
+		})
 		const ctxMenuItems: ContextMenuItem[] = []
 		const canRedact =
 			this.message.getSender() === matrix.getUserId() ||
